@@ -45,13 +45,15 @@
    "fieldname": "applies_to",
    "fieldtype": "Select",
    "label": "Applies To",
-   "options": "Spoken\nWritten\nBoth"
+   "options": "Spoken\nWritten\nBoth",
+   "default": "Both"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_active",
    "fieldtype": "Check",
    "label": "Is Active"
+   
   },
   {
    "default": "0",

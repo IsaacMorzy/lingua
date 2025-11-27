@@ -1,7 +1,7 @@
 app_name = "lingua"
 app_title = "Lingua"
 app_publisher = "IsaacMorzy"
-app_description = "App to streamine a language institution"
+app_description = "App to streamine operations of a language institution"
 app_email = "morzyzack@gmail.com"
 app_license = "mit"
 
@@ -241,4 +241,3 @@ app_license = "mit"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
