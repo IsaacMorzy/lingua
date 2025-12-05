@@ -1,25 +1,25 @@
 app_name = "lingua"
 app_title = "Lingua"
 app_publisher = "IsaacMorzy"
-app_description = "Frappe app to streamline operations of foreign language schools, from levels and languages to classes, students, and billing."
+app_description = "pp to streamline operations of foreign language schools, from levels and languages to classes, students, and billing."
 app_email = "morzyzack@gmail.com"
 app_license = "mit"
 
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "lingua",
-# 		"logo": "/assets/lingua/logo.png",
-# 		"title": "Lingua",
-# 		"route": "/lingua",
-# 		"has_permission": "lingua.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+	{
+		"name": "lingua",
+		"logo": "/assets/lingua/logo.png",
+		"title": "Lingua",
+		"route": "/lingua",
+		"has_permission": "lingua.api.permission.has_app_permission",
+	}
+]
 
 # Includes in <head>
 # ------------------

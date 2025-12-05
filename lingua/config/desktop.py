@@ -16,6 +16,13 @@ def get_data():
 					"name": "Lingua Language",
 					"label": _("Languages"),
 				},
+				# {
+				# 	"type": "doctype",
+				# 	"name": "Lingua Language Level",
+				# 	"label": _("Language Levels"),
+				# },
 			],
 		},
+		# ... other Lingua groups (Academics, Placement, etc.) ...
 	]
+

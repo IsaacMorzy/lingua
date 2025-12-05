@@ -1,0 +1,139 @@
+{
+  "doctype": "DocType",
+  "name": "Lingua Language Level",
+  "module": "Lingua",
+  "istable": 0,
+  "custom": 0,
+  "engine": "InnoDB",
+  "allow_rename": 1,
+  "track_changes": 1,
+  "index_web_pages_for_search": 1,
+  "row_format": "Dynamic",
+  "rows_threshold_for_grid_search": 20,
+  "autoname": "autoincrement",
+  "naming_rule": "Autoincrement",
+  "title_field": "level_name",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "search_fields": "language,level_system,level_code,level_name",
+  "field_order": [
+    "section_break_main",
+    "language",
+    "level_system",
+    "level_code",
+    "level_name",
+    "sequence",
+    "is_active",
+    "is_default_starting_level",
+    "section_break_details",
+    "skill_profile",
+    "min_hours",
+    "external_reference",
+    "description",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_break_main",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "language",
+      "label": "Language",
+      "fieldtype": "Link",
+      "options": "Lingua Language",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "level_system",
+      "label": "Level System",
+      "fieldtype": "Link",
+      "options": "Lingua Level System",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "level_code",
+      "label": "Level Code",
+      "fieldtype": "Data",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "level_name",
+      "label": "Level Name",
+      "fieldtype": "Data",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "sequence",
+      "label": "Sequence",
+      "fieldtype": "Int",
+      "reqd": 1,
+      "default": "0",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "is_active",
+      "label": "Is Active",
+      "fieldtype": "Check",
+      "default": "1",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "is_default_starting_level",
+      "label": "Is Default Starting Level",
+      "fieldtype": "Check",
+      "default": "0"
+    },
+    {
+      "fieldname": "section_break_details",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "skill_profile",
+      "label": "Skill Profile",
+      "fieldtype": "Select",
+      "options": "Spoken\nWritten\nIntegrated\nOther"
+    },
+    {
+      "fieldname": "min_hours",
+      "label": "Recommended Min Hours",
+      "fieldtype": "Float"
+    },
+    {
+      "fieldname": "external_reference",
+      "label": "External Reference",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "description",
+      "label": "Description",
+      "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "notes",
+      "label": "Notes",
+      "fieldtype": "Small Text"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "report": 1,
+      "share": 1
+    }
+  ],
+  "actions": [],
+  "links": [],
+  "states": []
+}
