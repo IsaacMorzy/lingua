@@ -25,4 +25,3 @@ def get_data():
 		},
 		# ... other Lingua groups (Academics, Placement, etc.) ...
 	]
-
