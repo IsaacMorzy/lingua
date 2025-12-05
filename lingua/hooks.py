@@ -8,18 +8,18 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "lingua",
-# 		"logo": "/assets/lingua/logo.png",
-# 		"title": "Lingua",
-# 		"route": "/lingua",
-# 		"has_permission": "lingua.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+	{
+		"name": "lingua",
+		"logo": "/assets/lingua/logo.png",
+		"title": "Lingua",
+		"route": "/lingua",
+		"has_permission": "lingua.api.permission.has_app_permission",
+	}
+]
 
 # Includes in <head>
 # ------------------
