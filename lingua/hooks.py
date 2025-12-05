@@ -1,7 +1,7 @@
 app_name = "lingua"
 app_title = "Lingua"
 app_publisher = "IsaacMorzy"
-app_description = "App to streamine operations of a language institution"
+app_description = "Frappe app to streamline operations of foreign language schools, from levels and languages to classes, students, and billing."
 app_email = "morzyzack@gmail.com"
 app_license = "mit"
 
