@@ -7,3 +7,14 @@ dist/
 build/
 *.DS_Store
 
+# Astro frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.astro/
+lingua/www/*
+lingua/public/frontend/assets
+lingua/public/frontend/images
+
+
+# Local env (never committed)
+frontend/.env

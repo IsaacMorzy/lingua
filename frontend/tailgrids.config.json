@@ -1,0 +1,6 @@
+{
+  "theme": "light",
+  "alias": "@",
+  "framework": "Astro",
+  "mainCssFile": "src/styles/global.css"
+}

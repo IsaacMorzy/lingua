@@ -1,0 +1,39 @@
+{
+  "name": "lingua-frontend",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "node scripts/clean.js && astro build --base=/assets/lingua/frontend/ && node scripts/move-assets.js",
+    "preview": "astro preview --base=/assets/lingua/frontend/",
+    "build:test": "astro build --outDir=/tmp/lingua-test",
+    "test:visual": "npm run build:test && playwright test",
+    "test:visual:update": "npm run build:test && playwright test --update-snapshots",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^6.0.1",
+    "@shiftescape/astro-bundle-budget": "^0.1.5",
+    "@tailgrids/icons": "^2.0.0",
+    "@tailwindcss/vite": "^4.3.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^7.0.7",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "react": "^19.2.7",
+    "react-aria-components": "^1.19.0",
+    "react-dom": "^19.2.7",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@base-ui/react": "^1.6.0",
+    "@playwright/test": "^1.61.1",
+    "@tailgrids/cli": "^1.4.2",
+    "@tailwindcss/forms": "^0.5.11",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^5.0.0"
+  }
+}
