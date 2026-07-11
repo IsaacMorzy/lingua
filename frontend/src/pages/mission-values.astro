@@ -1,0 +1,186 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { facultyByDepartment } from '@/lib/data';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const principles = [
+  {
+    title: 'Learner-first',
+    description: 'Every decision, curricula, scheduling, support, fees, is reviewed against the question, "Is this the best outcome for our learner?"',
+    icon: '🎯',
+  },
+  {
+    title: 'Quality before quantity',
+    description: "We grow the institution carefully. Class caps protect feedback quality and instructor attention. We prefer saying no to wrong-fit programmes.",
+    icon: '⚖️',
+  },
+  {
+    title: 'Accessible by design',
+    description: 'High-contrast UI, captioned media, mobile-first pages, bursary and financial aid pathways. Accessibility is not an aftersight.',
+    icon: '♿',
+  },
+  {
+    title: 'African in context, global in standard',
+    description: 'Our programmes reflect the realities and opportunities of the Kenyan and East African context, but benchmark against international CEFR and industry standards.',
+    icon: '🌍',
+  },
+  {
+    title: 'Ethical in every default',
+    description: 'No dark patterns in admissions, no hidden fees, no data silos we cannot explain in plain English to a student.',
+    icon: '✅',
+  },
+  {
+    title: 'Transparent and accountable',
+    description: 'We publish pass-rates, employment outcomes, and pricing openly. We publish when we miss and how we plan to improve.',
+    icon: '🔍',
+  },
+];
+
+const values = [
+  { letter: 'E', name: 'Excellence', description: 'High standards for our instructors, our curricula, and our outcomes. We expect our graduates to compete regionally and globally.' },
+  { letter: 'I', name: 'Inclusivity', description: 'Languages and skills are a public good. We welcome learners from every background, faith, county, and economic circumstance.' },
+  { letter: 'I', name: 'Integrity', description: 'We say what we will do and do what we say. We publish our data. We acknowledge our mistakes.' },
+  { letter: 'A', name: 'Accessibility', description: 'Physical, financial, and digital barriers to education are unacceptable. We design around them.' },
+];
+
+const stats = [
+  { value: '94%', label: 'First-sitting exam pass-rate (B2+)' },
+  { value: '78%', label: 'Tech bootcamp placement within 6 months' },
+  { value: '1:12', label: 'Typical instructor-to-student ratio' },
+  { value: '40%', label: 'Students on financial aid or bursary' },
+];
+
+const facultyCount = facultyByDepartment('Languages').length + facultyByDepartment('Technology').length + facultyByDepartment('Business').length + facultyByDepartment('TVETA').length;
+---
+
+<Layout
+  title="Mission & Values | IJLAPS"
+  description="IJLAPS mission, vision, and values: excellence, inclusivity, integrity, and accessibility. Read our public commitments to learners, partners, and the Kenyan workforce."
+  canonicalPath="/mission-values"
+  keywords={['IJLAPS mission', 'IJLAPS values', 'TVETA certified values', 'educational principles Kenya']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about' }, { label: 'Mission & Values' }]} />
+
+  <PageHero
+    eyebrow="Mission & Values"
+    title="What we stand for, in plain language."
+    subtitle="Beyond classrooms and certs, IJLAPS operates from a small set of principles. They are public here because we believe they are easier to hold when they are written down."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-8 lg:grid-cols-2">
+        <article class="rounded-2xl bg-primary-subtle p-8 md:p-12">
+          <Badge color="primary" size="md" className="mb-4">Our Mission</Badge>
+          <h2 class="text-3xl font-bold text-body">Empowering Kenya's workforce with globally competitive skills.</h2>
+          <p class="mt-6 text-lg text-body-secondary">
+            We deliver TVETA-certified education in languages, technology, business, and vocational skills that
+            opens real careers, in Nairobi, across the East African Community, and in the global digital
+            economy. Every graduate of IJLAPS leaves with both the exam certificate and the practical fluency to
+            use it.
+          </p>
+        </article>
+        <article class="rounded-2xl bg-slate-900 p-8 text-white md:p-12">
+          <Badge color="primary" size="md" className="mb-4 bg-white/20 text-white border-0">Our Vision</Badge>
+          <h2 class="text-3xl font-bold">A leading centre for technical and vocational education in East Africa.</h2>
+          <p class="mt-6 text-lg text-slate-300">
+            We are building a place of learning where Kenyan and East African students, researchers, and partners
+            can engage with the world's languages, technologies, and business practices without leaving the
+            region, and where those who do go abroad leave prepared to lead.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Operating Principles</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">The principles that guide our work</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Values are easy to print on a wall. Operating principles show up in decisions. These are the pressure
+          tests we apply to hiring, partnerships, curriculum review, and student services.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {principles.map((p) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="mb-4 text-4xl">{p.icon}</div>
+              <CardTitle>{p.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-body-secondary">{p.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Core Values</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Four values, kept simple</h2>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {values.map((v) => (
+          <Card className="text-center shadow-sm">
+            <CardHeader>
+              <div class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary text-2xl font-extrabold text-white">{v.letter}</div>
+              <CardTitle>{v.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{v.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">By the numbers</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Outcome transparency</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          We publish these numbers because they're how prospective students should pick a programme. We update them
+          yearly after cohort close-out.
+        </p>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((s) => (
+          <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+            <div class="text-4xl font-extrabold text-primary">{s.value}</div>
+            <div class="mt-2 text-sm font-medium text-body-secondary">{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <p class="mt-8 text-center text-sm text-body-secondary">{facultyCount}+ faculty and instructors across four departments.</p>
+    </div>
+  </section>
+
+  <CTABand
+    title="Want to learn more about how we operate?"
+    description="Read about our leadership, the history of the institution, and how we continuously improve."
+    primaryCta={{ href: '/leadership', label: 'Meet our leadership' }}
+    secondaryCta={{ href: '/history', label: 'Read our history' }}
+  />
+</Layout>

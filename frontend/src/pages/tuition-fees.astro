@@ -1,0 +1,288 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { TableRoot, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/tailgrids/core/table';
+import { Link } from '@/components/tailgrids/core/link';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
+import { programsByCategory } from '@/lib/data';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const langLevels = [
+  { code: 'A1', fees: 'KES 18,000', duration: '8 weeks', schedule: 'Twice weekly' },
+  { code: 'A2', fees: 'KES 20,000', duration: '8 weeks', schedule: 'Twice weekly' },
+  { code: 'B1', fees: 'KES 22,000', duration: '10 weeks', schedule: 'Tue/Thu + Sat' },
+  { code: 'B2', fees: 'KES 24,000', duration: '10 weeks', schedule: 'Tue/Thu + Sat' },
+  { code: 'C1', fees: 'KES 28,000', duration: '12 weeks', schedule: 'Tue/Thu + Sat' },
+  { code: 'C2', fees: 'KES 32,000', duration: '12 weeks', schedule: 'Tue/Thu + Sat' },
+];
+
+const techPrograms = programsByCategory('Tech').slice(0, 8);
+const businessPrograms = programsByCategory('Business').slice(0, 6);
+
+const applicationFee = 'KES 2,500';
+const joiningFee = 'KES 5,000';
+
+const included = [
+  'Tuition and all classroom sessions',
+  'Course materials and digital resources',
+  'Access to language labs and computer labs',
+  'Library access (multilingual reference)',
+  'Cultural Café and conversation clubs',
+  'Cohort WhatsApp group and student portal',
+  'Final assessment and IJLAPS certificate',
+  'Career-services onboarding (where applicable)',
+];
+
+const notIncluded = [
+  'External exam fees (IELTS, DELF/DALF, HSK, ALPT, JLPT), paid directly to exam centres',
+  'Books where you prefer physical copies (digital resources included)',
+  'Travel costs for on-site apprenticeships',
+  'Personal devices and stationery',
+];
+
+const paymentSchedule = [
+  { stage: 'Application fee', due: 'On application form submission', amount: applicationFee },
+  { stage: 'Confirmation fee', due: 'Within 7 days of admission letter', amount: joiningFee },
+  { stage: 'Tuition balance', due: '30 days before cohort start (or in two instalments, see below)', amount: 'Balance of programme fee' },
+];
+
+const refunds = [
+  'Full refund minus KES 1,000 admin if withdrawn >30 days before cohort start.',
+  '50% refund if withdrawn 8–30 days before cohort start.',
+  'No refund if withdrawn <8 days before cohort start or after.',
+  'Refunds in cases of institution-cancelled intake are processed within 14 working days.',
+];
+---
+
+<Layout
+  title="Tuition & Fees | IJLAPS"
+  description="Tuition and fee schedule for IJLAPS language levels, tech bootcamps, business programmes, and TVETA certifications. Transparent pricing, what's included, payment schedule, and refund policy."
+  canonicalPath="/tuition-fees"
+  keywords={['IJLAPS tuition', 'IJLAPS fees', 'TVETA fees', 'bootcamp fees Kenya', 'language course fees Nairobi']}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/admissions', label: 'Admissions' }, { href: '', label: 'Tuition & Fees' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Admissions"
+    title="Transparent fees, no surprises."
+    subtitle="We publish our prices in full and explain what is included. If you can't find the fee for your programme here, contact admissions."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Languages</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Language level fees</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Base fees for CEFR-aligned language levels. Specific cohorts may include elective modules at additional
+          cost, those are clearly itemised on each language page.
+        </p>
+      </div>
+
+      <TableRoot>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Level</TableHead>
+            <TableHead>Schedule</TableHead>
+            <TableHead>Duration</TableHead>
+            <TableHead className="text-right">Tuition</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {langLevels.map((row) => (
+            <TableRow>
+              <TableCell className="font-bold text-body">{row.code}</TableCell>
+              <TableCell className="text-sm text-body-secondary">{row.schedule}</TableCell>
+              <TableCell className="text-sm text-body-secondary">{row.duration}</TableCell>
+              <TableCell className="text-right font-bold text-primary">{row.fees}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </TableRoot>
+      <p class="mt-4 text-sm text-body-secondary">Exam fees (DELF/DALF, IELTS, HSK, ALPT, JLPT) are paid directly to the examining body. IJLAPS handles registration on your behalf.</p>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Technology</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Tech programme fees</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Bootcamp and short-course fees. We list the most popular mode; alternatives appear in the programme detail page.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        {techPrograms.map((p) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="flex items-center justify-between">
+                <CardTitle className="text-lg">{p.title}</CardTitle>
+                <Badge color="primary" size="sm">{p.mode}</Badge>
+              </div>
+            </CardHeader>
+<CardContent>
+              <p class="text-sm text-body-secondary">{p.tagline}</p>
+            </CardContent>
+            <CardFooter>
+              <div class="text-sm text-body-secondary">
+                <p><strong class="text-body">Indicated fee:</strong> {p.modes[0].fee} · {p.modes[0].weeks} weeks</p>
+                {p.modes[1] && (
+                  <p class="mt-1"><strong class="text-body">Alternative mode:</strong> {p.modes[1].fee} · {p.modes[1].weeks} weeks</p>
+                )}
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Business & TVETA</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Business programmes</h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {businessPrograms.map((p) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg">{p.title}</CardTitle>
+            </CardHeader>
+<CardContent>
+              <p class="text-sm text-body-secondary">{p.tagline}</p>
+            </CardContent>
+            <CardFooter>
+              <div class="flex items-center gap-2 text-sm">
+                <Badge color="primary" size="sm">{p.mode}</Badge>
+                <span class="font-bold text-primary">{p.modes[0].fee}</span>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+      <p class="mt-6 text-center text-sm text-body-secondary">
+        For TVETA-certified programmes (electrical, plumbing, ICT diploma, etc.), see the <a href="/programs/tveta" class="font-semibold text-primary">TVETA programmes page</a>.
+      </p>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="grid gap-8 md:grid-cols-2">
+        <div class="rounded-2xl bg-surface p-8 ring-1 ring-border">
+          <h2 class="text-2xl font-bold text-body">What's included</h2>
+          <p class="mt-3 text-body-secondary">Every IJLAPS programme includes these baseline services.</p>
+          <List class="mt-6 max-w-none" hideDividers>
+            {included.map((item) => (
+              <li class="flex items-start gap-2 text-sm text-body-secondary">
+                <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{item}</span>
+              </li>
+            ))}
+          </List>
+        </div>
+        <div class="rounded-2xl bg-surface p-8 ring-1 ring-border">
+          <h2 class="text-2xl font-bold text-body">What's not included</h2>
+          <p class="mt-3 text-body-secondary">Costs outside tuition that you should plan for.</p>
+          <List class="mt-6 max-w-none" hideDividers>
+            {notIncluded.map((item) => (
+              <li class="flex items-start gap-2 text-sm text-body-secondary">
+                <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-warning" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                </svg>
+                <span>{item}</span>
+              </li>
+            ))}
+          </List>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Payment schedule</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">When you pay, and how much</h2>
+      </div>
+
+      <TableRoot>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Stage</TableHead>
+            <TableHead>Due</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paymentSchedule.map((row) => (
+            <TableRow>
+              <TableCell className="font-bold text-body">{row.stage}</TableCell>
+              <TableCell className="text-sm text-body-secondary">{row.due}</TableCell>
+              <TableCell className="text-right font-bold text-primary">{row.amount}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </TableRoot>
+
+      <Alert status="info" className="mt-8">
+        <AlertIndicator />
+        <AlertContent>
+          <AlertTitle>Payment plans.</AlertTitle>
+          <AlertDescription>Tuition can be paid in two equal instalments spaced 30 days apart for programmes over 12 weeks. Installments are arranged at the time of confirmation.</AlertDescription>
+        </AlertContent>
+      </Alert>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Refund policy</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">If you need to withdraw</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          We keep our refund policy simple and published. Application and confirmation fees are non-refundable
+          except where the institution cancels an intake.
+        </p>
+      </div>
+
+      <ul class="grid gap-4 md:grid-cols-2">
+        {refunds.map((r) => (
+          <li class="rounded-lg border border-border bg-surface p-4 text-sm text-body-secondary">{r}</li>
+        ))}
+      </ul>
+
+      <div class="mt-12 text-center">
+        <Link variant="primary" size="md" href="/financial-aid">
+          Questions about cost? See Financial Aid →
+        </Link>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Have questions about fees or payment plans?"
+    description="Our admissions team will help you understand the cost of the programme you want and arrange payment plans where eligible."
+    primaryCta={{ href: '/contact', label: 'Talk to admissions' }}
+    secondaryCta={{ href: '/financial-aid', label: 'Financial Aid' }}
+  />
+</Layout>

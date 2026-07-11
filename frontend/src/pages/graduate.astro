@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Link } from '@/components/tailgrids/core/link';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const gradBootcamps = [
+  {
+    title: 'Full Stack Software Engineering',
+    subtitle: '27–35 wks · Bootcamp',
+    description: 'Career-launching intensive with portfolio shipping and 12 months of career-services support.',
+    href: '/programs/tech/full-stack-software-engineering',
+    outcomes: ['Front-end developer roles', 'Full-stack developer roles', 'Internships at partner tech firms'],
+  },
+  {
+    title: 'Data Science Bootcamp',
+    subtitle: '23–27 wks · Bootcamp',
+    description: 'Project-driven programme covering Python, ML, LLMs, and deployment.',
+    href: '/programs/tech/data-science',
+    outcomes: ['Data analyst roles', 'Data scientist roles', 'ML engineer (entry) roles'],
+  },
+  {
+    title: 'Cybersecurity Bootcamp',
+    subtitle: '24–32 wks · Bootcamp',
+    description: 'thorough cyber-defence training aligned to NIST and CIS Controls.',
+    href: '/programs/tech/cybersecurity',
+    outcomes: ['SOC analyst roles', 'Junior pen-tester roles', 'Security engineer roles'],
+  },
+  {
+    title: 'AWS DevOps Engineering',
+    subtitle: '16 wks · Bootcamp',
+    description: 'Cloud automation with AWS, Terraform, Kubernetes, and CI/CD pipelines.',
+    href: '/programs/tech/aws-devops-engineering',
+    outcomes: ['DevOps engineer roles', 'Cloud engineer roles', 'SRE (entry) roles'],
+  },
+];
+
+const shortCourses = [
+  { title: 'Generative AI Essentials', duration: '2 wks', href: '/programs/tech/generative-ai-essentials' },
+  { title: 'Applied AI Engineering', duration: '8 wks', href: '/programs/tech/applied-ai-engineering' },
+  { title: 'AI Agents & Workflow Automation', duration: '3 wks', href: '/programs/tech/ai-agents-automation' },
+  { title: 'Data Analytics with Excel & Power BI', duration: '8 wks', href: '/programs/tech/data-analytics-excel-powerbi' },
+  { title: 'Certified Data Protection Officer', duration: '4 wks', href: '/programs/tech/certified-data-protection-officer' },
+  { title: 'Digital Marketing with AI', duration: '6 wks', href: '/programs/tech/digital-marketing-ai' },
+];
+
+const certifications = [
+  'IJLAPS Full Stack Certificate',
+  'IJLAPS Data Science Certificate',
+  'IJLAPS Cybersecurity Certificate',
+  'AWS Solutions Architect Associate prep',
+  'NVIDIA NCA-GENL prep track',
+  'CompTIA Security+ prep track',
+];
+---
+
+<Layout
+  title="Graduate Programs | IJLAPS"
+  description="IJLAPS graduate-level programmes: technology bootcamps, AI short courses, and the certified Data Protection Officer pathway. Career-launching, with portfolio outcomes."
+  canonicalPath="/graduate"
+  keywords={['IJLAPS graduate', 'tech bootcamp Kenya', 'graduate certificate Nairobi', 'AWS bootcamp Kenya']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Graduate Programs' }]} />
+
+  <PageHero
+    eyebrow="Academics"
+    title="Career-launching programmes."
+    subtitle="IJLAPS graduate-level programmes run as intensive bootcamps and short courses, anchored to portfolio outcomes and industry-recognised certifications."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Bootcamps</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Technology bootcamps</h2>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        {gradBootcamps.map((b) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="flex items-baseline justify-between gap-3">
+                <CardTitle className="text-xl">{b.title}</CardTitle>
+                <Badge color="primary" size="sm">{b.subtitle}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{b.description}</p>
+              <h4 class="mt-4 text-xs font-bold uppercase tracking-wider text-body-secondary">Career outcomes</h4>
+              <List class="mt-2 max-w-none" hideDividers>
+                {b.outcomes.map((o) => (
+                  <li class="flex items-start gap-2 text-sm text-body-secondary"><span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>{o}</li>
+                ))}
+              </List>
+            </CardContent>
+            <CardFooter>
+              <Link variant="primary" size="sm" href={b.href}>
+                Programme details →
+              </Link>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Short Courses</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Focused short courses</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Specialised programmes ranging from 2 to 10 weeks, designed for working professionals who want
+          to upskill in a specific area.
+        </p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {shortCourses.map((c) => (
+          <a href={c.href} class="group block transition-shadow hover:shadow-md">
+            <Card className="flex flex-col gap-2 shadow-sm">
+              <CardHeader>
+                <div class="flex items-baseline justify-between gap-3">
+                  <CardTitle className="text-lg">{c.title}</CardTitle>
+                  <Badge color="secondary" size="sm">{c.duration}</Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <span class="text-sm font-medium text-primary">View course →</span>
+              </CardContent>
+            </Card>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Certifications</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Certifications our programmes prepare you for</h2>
+        <p class="mt-4 text-lg text-body-secondary">External and IJLAPS-issued certifications align with international standards where possible.</p>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {certifications.map((c) => (
+          <div class="flex items-start gap-3 rounded-lg bg-canvas p-4 text-sm font-medium text-body-secondary">
+            <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+            </svg>
+            {c}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Ready to launch your career?"
+    description="Speak with our admissions team about the right bootcamp or short course for your goals."
+    primaryCta={{ href: '/programs/tech', label: 'See Tech Programs' }}
+    secondaryCta={{ href: '/contact', label: 'Talk to admissions' }}
+  />
+</Layout>

@@ -1,0 +1,185 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const features = [
+  {
+    title: 'Live cohort sessions',
+    description: 'Real-time classes with IJLAPS faculty, scheduled evenings and Saturdays to fit working professionals.',
+    icon: '🎥',
+  },
+  {
+    title: 'On-demand recording library',
+    description: 'Every cohort session is recorded and indexed for revision, with transcripts in English and the target language.',
+    icon: '📼',
+  },
+  {
+    title: 'Mentorship and office hours',
+    description: 'Weekly one-to-one office hours with your cohort lead and asynchronous messaging support.',
+    icon: '🤝',
+  },
+  {
+    title: 'Online proctored exams',
+    description: 'Remote exam sittings with browser-lockdown, identity verification, and human invigilation.',
+    icon: '🛡️',
+  },
+  {
+    title: 'Digital student portal',
+    description: 'Single sign-on to your cohort, library, recordings, exam registration, and certifications.',
+    icon: '🔐',
+  },
+  {
+    title: 'Cohort WhatsApp community',
+    description: 'Optional WhatsApp group moderated by your cohort lead, alongside the formal portal channels.',
+    icon: '💬',
+  },
+];
+
+const tools = [
+  'Zoom / Google Meet for live classes',
+  'Moodle student portal',
+  'Slack or Discord for cohort discussion',
+  'Browser-locked proctoring for exams',
+  'WhatsApp community (optional)',
+];
+
+const onlinePrograms = [
+  { name: 'Full-time Remote Software Engineering', href: '/programs/tech/full-stack-software-engineering', mode: 'Full-time Remote' },
+  { name: 'Part-time Remote Software Engineering', href: '/programs/tech/full-stack-software-engineering', mode: 'Part-time Remote' },
+  { name: 'Online Data Science (Part-time)', href: '/programs/tech/data-science', mode: 'Part-time Remote' },
+  { name: 'Online Language Levels (all languages)', href: '/languages', mode: 'Evening & Weekend' },
+  { name: 'Online Digital Marketing', href: '/programs/business/digital-marketing', mode: 'Part-time Evening' },
+];
+---
+
+<Layout
+  title="Online Education | IJLAPS"
+  description="IJLAPS online education programmes: live cohorts, recording libraries, mentorship, and remote proctored exams. Study anywhere in Kenya, or worldwide, with the same faculty."
+  canonicalPath="/online-education"
+  keywords={['IJLAPS online', 'online bootcamp Kenya', 'online language course Nairobi', 'TVETA online']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Online Education' }]} />
+
+  <PageHero
+    eyebrow="Online Education"
+    title="Same faculty. Same certification. Anywhere."
+    subtitle="Our online programmes combine live cohort sessions with recorded lectures, mentorship, and remote proctored exams, so you can study without relocating or quitting your job."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Features</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">What you get in an online programme</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Online at IJLAPS is not "videos and a forum." It's live classes, accountability, exams, and the same
+          certification as the on-campus equivalent.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {features.map((f) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="mb-4 text-4xl">{f.icon}</div>
+              <CardTitle>{f.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-body-secondary">{f.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Tools</Badge>
+          <h2 class="text-3xl font-bold text-body">The IJLAPS online stack</h2>
+          <p class="mt-4 text-body-secondary">
+            We choose tools that work on a low-bandwidth smartphone through to a high-end developer workstation,             because our learners are everywhere in Kenya.
+          </p>
+          <List class="mt-6 max-w-none" hideDividers>
+            {tools.map((t) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary"></span>
+                <span class="text-body-secondary">{t}</span>
+              </li>
+            ))}
+          </List>
+        </div>
+
+        <Alert status="info">
+          <AlertIndicator />
+          <AlertContent>
+            <AlertTitle>What you need: A learner-friendly setup</AlertTitle>
+            <AlertDescription>
+              <ul class="space-y-2 text-body-secondary">
+                <li>A laptop or smartphone (most programmes are smartphone-friendly)</li>
+                <li>Stable internet for live sessions (5 Mbps+ recommended)</li>
+                <li>Quiet space during cohort hours</li>
+                <li>Time-blocking discipline, 6–12 hours per week</li>
+              </ul>
+              <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'md', class: 'mt-4 inline-flex' })}>
+                Talk to admissions about online options
+              </a>
+            </AlertDescription>
+          </AlertContent>
+        </Alert>
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Programmes available online</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Most programmes have a remote option</h2>
+      </div>
+
+      <ul class="grid gap-3 md:grid-cols-2">
+        {onlinePrograms.map((p) => (
+          <li>
+            <a href={p.href} class="block">
+              <Card className="p-5">
+                <CardContent className="px-0 py-0">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <span class="block font-semibold text-body">{p.name}</span>
+                      <span class="text-xs uppercase tracking-wider text-body-secondary">{p.mode}</span>
+                    </div>
+                    <svg class="h-4 w-4 text-muted" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </CardContent>
+              </Card>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CTABand
+    title="Save commute time. Keep your job."
+    description="Our online programmes let you keep working while earning a career-launching qualification."
+    primaryCta={{ href: '/programs/tech', label: 'See Tech Programs' }}
+    secondaryCta={{ href: '/languages', label: 'See languages' }}
+  />
+</Layout>

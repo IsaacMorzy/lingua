@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import StatRow from '../components/StatRow.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+
+const departments = [
+  {
+    title: 'School of Languages',
+    description: 'Master English, French, Arabic, Chinese, and more. Our language programs prepare students for global communication and international opportunities.',
+    icon: '🗣️',
+    courses: ['English', 'French', 'Arabic', 'Chinese', 'Swahili'],
+    iconColor: 'bg-primary-subtle text-primary',
+    borderAccent: 'border-l-primary',
+  },
+  {
+    title: 'School of Technology',
+    description: 'Build skills in ICT, software development, digital literacy, and emerging technologies that power the modern economy.',
+    icon: '💻',
+    courses: ['ICT', 'Software Development', 'Digital Skills', 'Cybersecurity Basics'],
+    iconColor: 'bg-primary text-white',
+    borderAccent: 'border-l-primary-focus',
+  },
+  {
+    title: 'School of Business',
+    description: 'Develop practical business skills in entrepreneurship, accounting, marketing, and management.',
+    icon: '📊',
+    courses: ['Entrepreneurship', 'Accounting', 'Marketing', 'Management'],
+    iconColor: 'bg-primary-subtle text-primary',
+    borderAccent: 'border-l-primary',
+  },
+  {
+    title: 'TVETA Courses',
+    description: 'Competency-based technical and vocational programs recognized by TVETA for quality and workforce relevance.',
+    icon: '🎓',
+    courses: ['Technical Skills', 'Vocational Training', 'Trade Certifications'],
+    iconColor: 'bg-primary-subtle text-primary',
+    borderAccent: 'border-l-primary-focus',
+  },
+] as const;
+---
+
+<Layout title="Departments | IJLAPS" description="Explore academic departments at IJLAPS." canonicalPath="/departments">
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Departments' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Departments"
+    title="Academic Departments"
+    subtitle="Discover programs designed to equip you with in-demand skills across languages, technology, business, and vocational training."
+  />
+
+  <StatRow
+    heading="Departments at a glance"
+    stats={[
+      { value: '4', label: 'Schools' },
+      { value: '14', label: 'Programmes' },
+      { value: '10', label: 'Languages' },
+      { value: '40%', label: 'Students on aid' },
+    ]}
+  />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="grid gap-8 md:grid-cols-2">
+        {
+          departments.map((dept) => (
+            <Card className={dept.borderAccent + ' transition-shadow hover:shadow-lg'}>
+              <CardHeader>
+                <div class:list={['mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl text-3xl', dept.iconColor]}>
+                  {dept.icon}
+                </div>
+                <CardTitle className="mb-2 text-2xl">{dept.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p class="mb-4 text-body-secondary">{dept.description}</p>
+                <div class="flex flex-wrap gap-2">
+                  {dept.courses.map((course) => (
+                    <Badge key={course} color="primary" size="sm">
+                      {course}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16 bg-primary">
+    <div class="container-main text-center">
+      <h2 class="text-3xl font-bold text-white md:text-4xl">Not sure where to start?</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
+        Our admissions team can help you choose the right program for your goals.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="/admissions" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
+          Admissions
+        </a>
+        <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,210 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import LanguageLevels from '../../components/LanguageLevels.astro';
+import LanguageTimeline from '../../components/LanguageTimeline.astro';
+import CTABand from '../../components/CTABand.astro';
+import { Link } from '@/components/tailgrids/core/link';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { LANGUAGES, type Language } from '../../lib/data';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+export async function getStaticPaths() {
+  return LANGUAGES.map((lang) => ({
+    params: { slug: lang.slug },
+    props: { lang },
+  }));
+}
+
+const { lang } = Astro.props as { lang: Language };
+const siteUrl = 'https://ijlaps.ac.ke';
+
+const courseJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: `${lang.name} Language Programme, IJLAPS`,
+  description: lang.shortDescription,
+  provider: {
+    '@type': 'EducationalOrganization',
+    name: 'IJLAPS',
+    url: siteUrl,
+  },
+  educationalCredentialAwarded: 'IJLAPS ' + lang.name + ' Certificate',
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'onsite',
+    startDate: lang.events.find((e) => e.type === 'intake')?.date || '2026-01-13',
+    location: { '@type': 'Place', name: 'IJLAPS Westlands Campus, Nairobi' },
+  },
+};
+---
+
+<Layout
+  title={`${lang.name} | IJLAPS`}
+  description={`${lang.name} language programme at IJLAPS, ${lang.shortDescription} CEFR-aligned with internationally-recognised exam preparation.`}
+  canonicalPath={`/languages/${lang.slug}`}
+  keywords={[lang.name, 'language school Nairobi', 'CEFR', lang.examBoards.join(', '), lang.code]}
+  jsonLd={[courseJsonLd]}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/languages', label: 'Languages' }, { href: '', label: lang.name }]} dividerType="chevron" />
+
+  <section class="bg-slate-900 py-20 md:py-32">
+    <div class="container-main">
+      <div class="grid items-center gap-12 lg:grid-cols-[2fr_1fr]">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">{lang.name} Programme</Badge>
+          <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+            <span class="mr-3">{lang.flagEmoji}</span>{lang.name} Language at IJLAPS
+          </h1>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 md:text-xl">
+            {lang.shortDescription}
+          </p>
+          <div class="mt-8 flex flex-wrap gap-2">
+            {lang.examBoards.map((b) => <Badge color="success" size="sm">{b}</Badge>)}
+          </div>
+          <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+            <a href="/how-to-apply" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>Apply now</a>
+            <a href="#levels" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>View levels</a>
+          </div>
+        </div>
+        <div class="rounded-2xl bg-white/10 p-8">
+          <p class="text-xs font-bold uppercase tracking-wider text-warning">Key stat</p>
+          <div class="mt-2 text-5xl font-extrabold text-white">{lang.heroStat.value}</div>
+          <p class="mt-2 text-sm text-slate-300">{lang.heroStat.label}</p>
+
+          <div class="mt-6 grid grid-cols-3 gap-3 text-center text-xs">
+            {lang.factSheet.map((f) => (
+              <div class="rounded-md bg-white/10 p-3">
+                <div class="text-sm font-bold text-white">{f.value}</div>
+                <div class="mt-1 leading-tight text-slate-400">{f.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-3">
+        <div class="lg:col-span-2">
+          <Badge color="primary" size="md" className="mb-4">About the {lang.name} programme</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">Why learn {lang.name} at IJLAPS?</h2>
+          <p class="mt-6 text-lg text-body-secondary">{lang.longDescription}</p>
+
+          <h3 class="mt-10 text-xl font-bold text-body">Why learn {lang.name}?</h3>
+          <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+            {lang.whyLearn.map((r) => (
+              <li class="flex items-start gap-3 rounded-lg bg-primary-subtle p-4 text-sm text-body-secondary">
+                <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                {r}
+              </li>
+            ))}
+          </ul>
+
+          <h3 class="mt-10 text-xl font-bold text-body">Career outcomes</h3>
+          <p class="mt-3 text-body-secondary">Where {lang.name} fluency opens doors in the East African market.</p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            {lang.careerOutcomes.map((o) => (
+              <div class="rounded-lg border border-border bg-surface p-4 text-sm font-medium text-body-secondary">{o}</div>
+            ))}
+          </div>
+        </div>
+
+        <aside class="space-y-6">
+          <div class="rounded-xl bg-primary-subtle p-6">
+            <h3 class="text-lg font-bold text-body">Programme at a glance</h3>
+            <dl class="mt-4 space-y-3 text-sm">
+              <div class="flex justify-between"><dt class="text-body-secondary">Total levels</dt><dd class="font-bold text-body">A1 → C2</dd></div>
+              <div class="flex justify-between"><dt class="text-body-secondary">Total weeks</dt><dd class="font-bold text-body">{lang.totalWeeks}</dd></div>
+              <div class="flex justify-between"><dt class="text-body-secondary">Intakes / year</dt><dd class="font-bold text-body">{lang.cohortsPerYear}</dd></div>
+              <div class="flex justify-between"><dt class="text-body-secondary">Exam boards</dt><dd class="font-bold text-body">{lang.examBoards.length}</dd></div>
+            </dl>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Other languages</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <List class="max-w-none" hideDividers>
+                {LANGUAGES.filter((l) => l.slug !== lang.slug).slice(0, 8).map((other) => (
+                  <li>
+                    <a href={`/languages/${other.slug}`} class="flex items-center justify-between text-body-secondary hover:text-primary">
+                      {other.name}
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                  </li>
+                ))}
+              </List>
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <LanguageLevels levels={lang.levels} languageName={lang.name} />
+
+  <LanguageTimeline events={lang.events} languageName={lang.name} />
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Modes of study</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">How you can study {lang.name}</h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        <Card className="shadow-sm">
+          <CardHeader>
+            <CardTitle>On campus</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-body-secondary">In-person classes at our Westlands campus, with full lab and library access.</p>
+          </CardContent>
+          <CardFooter>
+            <Link variant="primary" size="sm" href="/campus">Tour the campus →</Link>
+          </CardFooter>
+        </Card>
+        <Card className="shadow-sm">
+          <CardHeader>
+            <CardTitle>Online</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-body-secondary">Live online cohorts with recordings and remote proctored exams.</p>
+          </CardContent>
+          <CardFooter>
+            <Link variant="primary" size="sm" href="/online-education">Online education →</Link>
+          </CardFooter>
+        </Card>
+        <Card className="shadow-sm">
+          <CardHeader>
+            <CardTitle>Off-campus</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p class="text-sm text-body-secondary">Satellite study centres across Kenya for selected language levels.</p>
+          </CardContent>
+          <CardFooter>
+            <Link variant="primary" size="sm" href="/off-campus-learning">Off-campus learning →</Link>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title={`Start ${lang.name} at the next intake.`}
+    description="Apply online, or talk to admissions for placement guidance."
+    primaryCta={{ href: '/how-to-apply', label: 'Apply now' }}
+    secondaryCta={{ href: '/dates-deadlines', label: 'See intake dates' }}
+  />
+</Layout>

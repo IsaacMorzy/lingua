@@ -1,0 +1,159 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+
+const timeline = [
+  {
+    year: '2010',
+    label: 'Founding',
+    body: 'Three language instructors and one IT trainer open a small tutor centre in Westlands, Nairobi, focused on English for working professionals and introductory ICT courses.',
+  },
+  {
+    year: '2013',
+    label: 'First TVETA accreditation',
+    body: 'After three years of offering short courses, we receive our first TVETA registration for a Certificate in Information Communication Technology.',
+  },
+  {
+    year: '2015',
+    label: 'Languages portfolio expansion',
+    body: 'We launch French under the DELF/DALF framework, followed by Arabic (ALPT) and Mandarin Chinese (HSK). Kiswahili joins as a compulsory base for local teachers.',
+  },
+  {
+    year: '2017',
+    label: 'Move to the Westlands campus',
+    body: 'Our current 6,400 m² campus opens on its present site, with 24 lecture rooms, 5 language laboratories, and the first dedicated computer lab.',
+  },
+  {
+    year: '2019',
+    label: 'TVETA diploma in ICT',
+    body: 'A two-year diploma programme is accredited by TVETA, with an industrial-attachment requirement that places graduates across 35 partner organisations.',
+  },
+  {
+    year: '2021',
+    label: 'Technology bootcamps',
+    body: 'We launch the Full Stack Software Engineering and Data Science Bootcamps, the first intensive, career-launching tech programmes in our history.',
+  },
+  {
+    year: '2023',
+    label: 'Cybersecurity and DevOps',
+    body: 'Cybersecurity Bootcamp and AWS DevOps Engineering cohorts join the portfolio, alongside the certified Data Protection Officer course.',
+  },
+  {
+    year: '2025',
+    label: 'Online Education programme',
+    body: 'A fully-online study pathway is launched, with live cohorts, recordings, and remote proctoring for exam sittings.',
+  },
+  {
+    year: '2026',
+    label: 'Today',
+    body: 'We serve 5,000+ learners across languages, technology, business, and TVETA tracks. 2,400+ English learners, 720 French learners, and a growing tech cohort continue to set the pace.',
+  },
+];
+
+const milestones = [
+  { label: 'Founded', value: '2010' },
+  { label: 'TVETA-accredited since', value: '2013' },
+  { label: 'Languages offered', value: '10' },
+  { label: 'Bootcamps live', value: '4' },
+];
+---
+
+<Layout
+  title="Our History | IJLAPS"
+  description="From a four-person tutor centre in Westlands to a multi-school TVETA-certified institution. The story of how IJLAPS grew, and the choices that shaped it."
+  canonicalPath="/history"
+  keywords={['IJLAPS history', 'TVETA accreditation history', 'Nairobi education history']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about' }, { label: 'History' }]} />
+
+  <PageHero
+    eyebrow="History"
+    title="A small tutor centre that became an institution."
+    subtitle="IJLAPS didn't appear as a finished university. It grew over fifteen years through choices about curriculum, partnerships, and what kind of institution we wanted to be."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto max-w-3xl">
+        <p class="mb-4 text-lg text-body-secondary">
+          IJLAPS began in 2010 as a tutor centre run by three language instructors and one IT trainer. From the
+          outset, we treated every classroom as a small experiment: would this curriculum work for adult
+          learners in Nairobi? Would this teaching style survive contact with shift workers and parents?
+        </p>
+        <p class="text-lg text-body-secondary">
+          Over the next five years those experiments multiplied. By 2015 the centre was offering French, Arabic,
+          Mandarin, and Kiswahili, alongside TVETA-accredited ICT and foundational business courses. In 2017 we
+          moved into the Westlands campus we still occupy today. The rest of this page is a chronological look at
+          the decisions that shaped the institution, including the moments where we chose to slow down.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Key Milestones</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Fifteen years, told as a timeline</h2>
+      </div>
+
+      <ol class="relative mx-auto max-w-4xl border-l border-border pl-8">
+        {timeline.map((item, index) => (
+          <li class:list={['relative pb-12', index === timeline.length - 1 ? '' : '']}>
+            <span class="absolute -left-[42px] flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-white ring-4 ring-white">
+              {item.year.slice(-2)}
+            </span>
+            <Card className="shadow-sm">
+              <CardHeader>
+                <div class="flex items-baseline gap-3">
+                  <span class="text-2xl font-extrabold text-primary">{item.year}</span>
+                  <span class="text-sm font-semibold uppercase tracking-wider text-body-secondary">{item.label}</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p class="text-body-secondary">{item.body}</p>
+              </CardContent>
+            </Card>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">The shape of today</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Where we are now</h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-4">
+        {milestones.map((m) => (
+          <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+            <div class="text-3xl font-extrabold text-primary">{m.value}</div>
+            <div class="mt-2 text-sm font-medium text-body-secondary">{m.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div class="mx-auto mt-12 max-w-3xl text-center">
+        <p class="text-lg text-body-secondary">
+          The story isn't only about what we've added, it's also about what we deliberately didn't. We have
+          declined short-term partnerships that conflicted with our learner-first principles. We have chosen to
+          prefer TVETA-recognised pathways over volume. The history is in those choices too.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Explore the institution today"
+    description="See the people behind the institution and the values that shape how we operate."
+    primaryCta={{ href: '/leadership', label: 'Meet our leadership' }}
+    secondaryCta={{ href: '/mission-values', label: 'Mission & Values' }}
+  />
+</Layout>

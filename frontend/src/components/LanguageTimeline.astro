@@ -1,0 +1,99 @@
+---
+import type { LanguageEvent } from '@/lib/data';
+import { Link } from '@/components/tailgrids/core/link';
+import { Badge } from '@/components/tailgrids/core/badge';
+
+export interface Props {
+  events: LanguageEvent[];
+  title?: string;
+  subtitle?: string;
+  languageName?: string;
+}
+
+const { events, title, subtitle, languageName } = Astro.props;
+
+const typeColors: Record<LanguageEvent['type'], { color: 'primary' | 'success' | 'warning' | 'error'; label: string; dotColor: string }> = {
+  intake: { color: 'primary', label: 'Intake', dotColor: 'bg-primary' },
+  exam: { color: 'warning', label: 'Exam Sitting', dotColor: 'bg-warning' },
+  workshop: { color: 'success', label: 'Workshop', dotColor: 'bg-secondary' },
+  deadline: { color: 'error', label: 'Deadline', dotColor: 'bg-error' },
+};
+
+const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
+
+const df = new Intl.DateTimeFormat('en-KE', { year: 'numeric', month: 'short', day: 'numeric' });
+
+const yearGroups: Record<string, typeof sorted> = {};
+for (const e of sorted) {
+  const year = e.date.slice(0, 4);
+  if (!yearGroups[year]) yearGroups[year] = [];
+  yearGroups[year].push(e);
+}
+---
+
+<section id="calendar" class="section bg-canvas">
+  <div class="container-main">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="mb-4 inline-block rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-secondary">
+        Calendar {languageName ? `· ${languageName}` : ''}
+      </span>
+      <h2 class="text-3xl font-bold text-body md:text-4xl">{title ?? 'Upcoming intakes, exams & deadlines'}</h2>
+      {subtitle && <p class="mt-4 text-lg text-body-secondary">{subtitle}</p>}
+    </div>
+
+    <div class="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-[260px_1fr]">
+      <aside class="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-body-secondary">Legend</h3>
+        <ul class="space-y-2">
+          {Object.entries(typeColors).map(([key, meta]) => (
+            <li class="flex items-center gap-3 text-sm text-body-secondary">
+              <span class={['inline-block h-3 w-3 rounded-full', meta.dotColor]}></span>
+              {meta.label}
+            </li>
+          ))}
+        </ul>
+        <p class="mt-6 rounded-lg bg-surface p-4 text-sm text-body-secondary ring-1 ring-border">
+          All dates are Nairobi (EAT). Registration cut-offs are firm, late applications are queued to the
+          next available sitting.
+        </p>
+      </aside>
+
+      <div class="space-y-10">
+        {Object.entries(yearGroups).map(([year, items]) => (
+          <div>
+            <h3 class="mb-4 text-lg font-bold text-body">{year} Schedule</h3>
+            <ol class="overflow-hidden rounded-xl bg-surface ring-1 ring-border divide-y divide-border">
+              {items.map((event) => {
+                const meta = typeColors[event.type];
+                const dateObj = new Date(event.date);
+                return (
+                  <li class="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-ink-soft transition-colors">
+                    <time datetime={event.date} class="flex w-20 flex-shrink-0 flex-col items-center justify-center text-center">
+                      <span class="text-xs font-semibold uppercase tracking-wider text-body-secondary">
+                        {df.format(dateObj).split(' ')[1]}
+                      </span>
+                      <span class="text-2xl font-extrabold text-body">
+                        {df.format(dateObj).split(' ')[0]}
+                      </span>
+                    </time>
+                    <span class={['h-2.5 w-2.5 flex-shrink-0 rounded-full', meta.dotColor]}></span>
+                    <div class="flex flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                      <div class="text-sm font-medium text-body">{event.label}</div>
+                      <Badge color={meta.color} size="sm">{meta.label}</Badge>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-12 text-center">
+      <Link variant="primary" size="sm" href="/dates-deadlines">
+        See full academic calendar →
+      </Link>
+    </div>
+  </div>
+</section>

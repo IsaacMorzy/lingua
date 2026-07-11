@@ -1,0 +1,224 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import StatRow from '../components/StatRow.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS, FACULTY, facultyByDepartment } from '@/lib/data';
+
+const languagePrograms = [
+  { name: 'English', href: '/languages/english' },
+  { name: 'French', href: '/languages/french' },
+  { name: 'Kiswahili', href: '/languages/swahili' },
+  { name: 'Arabic', href: '/languages/arabic' },
+  { name: 'Mandarin Chinese', href: '/languages/chinese-mandarin' },
+  { name: 'German', href: '/languages/german' },
+  { name: 'Spanish', href: '/languages/spanish' },
+  { name: 'Japanese', href: '/languages/japanese' },
+  { name: 'Portuguese', href: '/languages/portuguese' },
+  { name: 'Italian', href: '/languages/italian' },
+];
+
+const techPrograms = [
+  { name: 'Full Stack Software Engineering', href: '/programs/tech/full-stack-software-engineering' },
+  { name: 'Data Science Bootcamp', href: '/programs/tech/data-science' },
+  { name: 'Cybersecurity Bootcamp', href: '/programs/tech/cybersecurity' },
+  { name: 'AWS DevOps Engineering', href: '/programs/tech/aws-devops-engineering' },
+  { name: 'Generative AI Essentials', href: '/programs/tech/generative-ai-essentials' },
+  { name: 'Applied AI Engineering', href: '/programs/tech/applied-ai-engineering' },
+  { name: '+8 more tech programmes', href: '/programs/tech' },
+];
+
+const businessPrograms = [
+  { name: 'Business Management', href: '/programs/business/business-management' },
+  { name: 'Digital Marketing', href: '/programs/business/digital-marketing' },
+  { name: 'Business Analytics', href: '/programs/business/business-analytics' },
+  { name: 'Entrepreneurship Accelerator', href: '/programs/business/entrepreneurship' },
+  { name: '+3 more', href: '/programs/business' },
+];
+
+const tvetaPrograms = [
+  { name: 'Diploma in ICT', href: '/programs/tveta/ict-diploma' },
+  { name: 'Electrical Installation', href: '/programs/tveta/electrical-installation' },
+  { name: 'Plumbing & Pipe Fitting', href: '/programs/tveta/plumbing-pipe-fitting' },
+  { name: 'Welding & Metal Fabrication', href: '/programs/tveta/welding-fabrication' },
+  { name: '+1 more', href: '/programs/tveta' },
+];
+
+
+---
+
+<Layout
+  title="Schools | IJLAPS"
+  description="The four schools of IJLAPS: Languages, Technology, Business, and TVETA Trades. Programmes, faculty leads, and learning outcomes."
+  canonicalPath="/schools"
+  keywords={['IJLAPS schools', 'School of Languages Nairobi', 'School of Technology', 'School of Business', 'TVETA trades']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Schools' }]} />
+
+  <PageHero
+    eyebrow="Schools"
+    title="Four schools, one institution."
+    subtitle="Languages, Technology, Business, and TVETA Trades. Each school has its own faculty leadership, curriculum design, and outcomes, shared under one academic-quality framework."
+  />
+
+  <StatRow
+    heading="Schools at a glance"
+    stats={[
+      { value: '4', label: 'Schools' },
+      { value: '10', label: 'Languages' },
+      { value: '26+', label: 'Tech & business programmes' },
+      { value: '5', label: 'TVETA trades' },
+    ]}
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <a id="languages" />
+      <div class="grid gap-12 lg:grid-cols-[1fr_2fr]">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">School of Languages</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">{languagePrograms.length} languages, CEFR-aligned, with international exam prep.</h2>
+          <p class="mt-4 text-body-secondary">
+            The School of Languages runs our language programmes, from foundational A1 to professional C2.
+            Every programme is anchored in the Common European Framework of Reference for Languages and prepares
+            students for internationally-recognised certifications.
+          </p>
+          <div class="mt-6 rounded-xl bg-primary-subtle p-6">
+            <p class="text-sm font-semibold uppercase tracking-wider text-primary">Faculty lead</p>
+            <p class="mt-1 text-base font-bold text-body">Dr. Wanjiru Mwangi</p>
+            <p class="mt-1 text-sm text-body-secondary">Director of Languages</p>
+          </div>
+        </div>
+        <div>
+          <div class="rounded-xl bg-canvas p-6">
+            <p class="mb-3 text-sm font-bold uppercase tracking-wider text-body-secondary">All languages</p>
+            <ul class="grid gap-2 sm:grid-cols-2">
+              {languagePrograms.map((p) => (
+                <li>
+                  <a href={p.href} class="flex items-center justify-between rounded-lg bg-surface p-3 transition-shadow hover:shadow-sm">
+                    <span class="text-sm font-medium text-body-secondary">{p.name}</span>
+                    <svg class="h-4 w-4 text-muted" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <a id="technology" />
+      <div class="grid gap-12 lg:grid-cols-[1fr_2fr]">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">School of Technology</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">Career-launching bootcamps and the ICT diploma.</h2>
+          <p class="mt-4 text-body-secondary">
+            The School of Technology runs our career-launching bootcamps, Software Engineering, Data Science,
+            Cybersecurity, AWS DevOps, plus shorter courses in AI, data analytics, and the data protection
+            officer certification. It also directs the TVETA-accredited Diploma in ICT.
+          </p>
+          <div class="mt-6 rounded-xl bg-primary-subtle p-6">
+            <p class="text-sm font-semibold uppercase tracking-wider text-primary">Faculty lead</p>
+            <p class="mt-1 text-base font-bold text-body">Patrick Otieno</p>
+            <p class="mt-1 text-sm text-body-secondary">Head of Technology</p>
+          </div>
+          <p class="mt-4 text-sm text-body-secondary">{TECH_PROGRAMS.length} live tech programmes across bootcamps and short courses.</p>
+        </div>
+        <div class="rounded-xl bg-surface p-6 ring-1 ring-border">
+          <p class="mb-3 text-sm font-bold uppercase tracking-wider text-body-secondary">Featured programmes</p>
+          <ul class="space-y-2">
+            {techPrograms.map((p) => (
+              <li>
+                <a href={p.href} class="flex items-center justify-between rounded-lg bg-canvas p-3 transition-shadow hover:shadow-sm">
+                  <span class="text-sm font-medium text-body-secondary">{p.name}</span>
+                  <svg class="h-4 w-4 text-muted" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <a id="business" />
+      <div class="grid gap-12 lg:grid-cols-[1fr_2fr]">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">School of Business</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">Practice-led programmes in management and entrepreneurship.</h2>
+          <p class="mt-4 text-body-secondary">
+            The School of Business runs certificates, diplomas, and short courses aimed at working professionals
+            and early-stage founders. Programmes blend case studies, client projects, and learner-led ventures.
+          </p>
+          <div class="mt-6 rounded-xl bg-primary-subtle p-6">
+            <p class="text-sm font-semibold uppercase tracking-wider text-primary">Faculty lead</p>
+            <p class="mt-1 text-base font-bold text-body">Susan Kariuki</p>
+            <p class="mt-1 text-sm text-body-secondary">Head of Business</p>
+          </div>
+        </div>
+        <div class="rounded-xl bg-canvas p-6">
+          <p class="mb-3 text-sm font-bold uppercase tracking-wider text-body-secondary">Featured programmes</p>
+          <ul class="space-y-2">
+            {businessPrograms.map((p) => (
+              <li>
+                <a href={p.href} class="flex items-center justify-between rounded-lg bg-surface p-3 transition-shadow hover:shadow-sm">
+                  <span class="text-sm font-medium text-body-secondary">{p.name}</span>
+                  <svg class="h-4 w-4 text-muted" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <a id="tveta" />
+      <div class="grid gap-12 lg:grid-cols-[1fr_2fr]">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">TVETA Programmes</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">Competency-based trades and certifications.</h2>
+          <p class="mt-4 text-body-secondary">
+            TVETA Programmes are competency-based, with certificates and diplomas recognised by the Technical and
+            Vocational Education and Training Authority. Pathways blend classroom theory, workshop practice, and
+            on-site apprenticeships.
+          </p>
+          <div class="mt-6 rounded-xl bg-primary-subtle p-6">
+            <p class="text-sm font-semibold uppercase tracking-wider text-primary">Faculty lead</p>
+            <p class="mt-1 text-base font-bold text-body">Eng. Daniel Rotich</p>
+            <p class="mt-1 text-sm text-body-secondary">Lead, TVETA Trades</p>
+          </div>
+        </div>
+        <div class="rounded-xl bg-surface p-6 ring-1 ring-border">
+          <p class="mb-3 text-sm font-bold uppercase tracking-wider text-body-secondary">Featured programmes</p>
+          <ul class="space-y-2">
+            {tvetaPrograms.map((p) => (
+              <li>
+                <a href={p.href} class="flex items-center justify-between rounded-lg bg-canvas p-3 transition-shadow hover:shadow-sm">
+                  <span class="text-sm font-medium text-body-secondary">{p.name}</span>
+                  <svg class="h-4 w-4 text-muted" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Talk to a school"
+    description="Each school is led by an experienced programme director. Schedule a conversation about the right programme for your goals."
+    primaryCta={{ href: '/contact', label: 'Speak to admissions' }}
+    secondaryCta={{ href: '/leadership', label: 'Meet the leadership' }}
+  />
+</Layout>

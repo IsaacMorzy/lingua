@@ -1,0 +1,64 @@
+---
+import type { CefrLevel } from '@/lib/data';
+import { Badge } from '@/components/tailgrids/core/badge';
+
+export interface Props {
+  levels: CefrLevel[];
+  languageName?: string;
+}
+
+const { levels, languageName } = Astro.props;
+
+const levelColors: Record<CefrLevel['code'], { color: 'success' | 'primary' | 'info' | 'warning' | 'error'; label: string }> = {
+  A1: { color: 'success', label: 'Foundation' },
+  A2: { color: 'primary', label: 'Elementary' },
+  B1: { color: 'info', label: 'Intermediate' },
+  B2: { color: 'primary', label: 'Upper-Int.' },
+  C1: { color: 'warning', label: 'Advanced' },
+  C2: { color: 'error', label: 'Proficient' },
+};
+---
+
+<section id="levels" class="section bg-surface">
+  <div class="container-main">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="mb-4 inline-block rounded-full bg-primary-subtle px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+        CEFR Levels {languageName ? `· ${languageName}` : ''}
+      </span>
+      <h2 class="text-3xl font-bold text-body md:text-4xl">From beginner to proficient, A1 → C2</h2>
+      <p class="mt-4 text-lg text-body-secondary">
+        Our language programmes follow the Common European Framework of Reference for Languages. Every learner
+        progresses through six clearly defined levels with continuous assessment and internationally recognised
+        certification.
+      </p>
+    </div>
+
+    <div class="mt-12 overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y divide-border md:divide-y-0 md:divide-x">
+        {levels.map((level, index) => (
+          <article class:list={['p-6', index !== 0 ? 'border-t border-border md:border-t-0' : '']}>
+            <div class="mb-3 flex items-center justify-between">
+              <span class="text-3xl font-extrabold text-primary">{level.code}</span>
+              <Badge color={levelColors[level.code].color} size="sm">{levelColors[level.code].label}</Badge>
+            </div>
+            <h3 class="mb-1 text-lg font-semibold text-body">{level.name}</h3>
+            <p class="mb-4 text-sm text-body-secondary">{level.summary}</p>
+            <ul class="space-y-1.5">
+              {level.outcomes.map((outcome) => (
+                <li class="flex items-start gap-2 text-sm text-body-secondary">
+                  <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{outcome}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="mt-5 text-xs font-medium uppercase tracking-wider text-body-secondary">
+              ~{level.durationWeeks} weeks · Final assessment
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

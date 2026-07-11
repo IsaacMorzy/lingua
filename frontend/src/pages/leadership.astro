@@ -1,0 +1,219 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import StatRow from '../components/StatRow.astro';
+import CTABand from '../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Avatar, AvatarFallback } from '@/components/tailgrids/core/avatar';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+
+const leadership = [
+  {
+    name: 'Dr. Joyce Achieng',
+    title: 'Vice-Chancellor',
+    initials: 'JA',
+    bio: 'Founded IJLAPS in 2010 with three colleagues. Twenty-five years in curriculum design and TVETA standards. PhD in Education from Moi University.',
+    credentials: ['PhD Education', 'TVETA Standards Committee 2018–2024', 'Author of two textbooks'],
+  },
+  {
+    name: 'Daniel Mwenda',
+    title: 'Deputy Vice-Chancellor, Academics',
+    initials: 'DM',
+    bio: 'Leads curriculum design and instructor development across the four schools. Previously Dean at a regional university.',
+    credentials: ['MSc Linguistics', '15 years in academic leadership'],
+  },
+  {
+    name: 'Faith Nyambura',
+    title: 'Director of Finance & Operations',
+    initials: 'FN',
+    bio: 'CFO of IJLAPS and steward of the financial-aid programme. CPA(K) with prior background in higher education finance.',
+    credentials: ['CPA(K)', 'MBA Finance'],
+  },
+  {
+    name: 'Patrick Otieno',
+    title: 'Director of Technology',
+    initials: 'PO',
+    bio: 'Head of the School of Technology and lead of the bootcamp portfolio. Full-stack engineer turned educator.',
+    credentials: ['BSc Computer Science', 'AWS Solutions Architect'],
+  },
+  {
+    name: 'Dr. Wanjiru Mwangi',
+    title: 'Director of Languages',
+    initials: 'WM',
+    bio: 'Applied linguist overseeing CEFR-aligned curriculum and DELF/DALF, IELTS, HSK, and ALPT exam preparation.',
+    credentials: ['PhD Bilingual Education', 'Cambridge DELTA'],
+  },
+  {
+    name: 'Susan Kariuki',
+    title: 'Director of Business & TVETA',
+    initials: 'SK',
+    bio: 'Twenty-year practitioner across SME development, marketing, and procurement. Directs both the School of Business and the TVETA programmes.',
+    credentials: ['MBA Strathmore', 'CIPD Member'],
+  },
+];
+
+const board = [
+  { name: 'Prof. Peter Wanjala', role: 'Chair, Board of Governors', background: 'Former Vice-Chancellor, Maseno University' },
+  { name: 'Jane Wairimu', role: 'Member', background: 'CEO, a Nairobi-based edtech company' },
+  { name: 'Eng. Daniel Rotich', role: 'Member', background: 'Engineering consultant; alumnus of IJLAPS 2012' },
+  { name: 'Mary Otieno', role: 'Student Representative', background: 'BSc ICT candidate, cohort 2025' },
+];
+---
+
+<Layout
+  title="Our Leadership | IJLAPS"
+  description="Meet the executive team and Board of Governors that shape the institution, Vice-Chancellor, Directors, and Governors with decades of education and industry practice."
+  canonicalPath="/leadership"
+  keywords={['IJLAPS leadership', 'IJLAPS board of governors', 'Vice-Chancellor IJLAPS']}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/about', label: 'About' }, { href: '', label: 'Our Leadership' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Leadership"
+    title="The people accountable for the institution."
+    subtitle="IJLAPS is led by people who have spent their careers in classrooms, language labs, boardrooms, and TVETA workshops. Meet the executive team and our Board of Governors."
+  />
+
+  <StatRow
+    heading="Leadership at a glance"
+    stats={[
+      { value: '6', label: 'Executive leads' },
+      { value: '4', label: 'Board of Governors' },
+      { value: '4', label: 'Department heads' },
+      { value: '25+', label: 'Years in education (average)' },
+    ]}
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Executive Team</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">The team running the institution</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Executive leaders with direct responsibility for academic quality, financial sustainability, and the
+          day-to-day learning of our students.
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {leadership.map((leader) => (
+          <Card className="flex flex-col shadow-sm">
+            <CardHeader>
+              <div class="flex items-center gap-4">
+                <Avatar size="xxl">
+                  <AvatarFallback>{leader.initials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle>{leader.name}</CardTitle>
+                  <p class="text-sm font-medium text-primary">{leader.title}</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{leader.bio}</p>
+              <ul class="mt-4 space-y-1">
+                {leader.credentials.map((c) => (
+                  <li class="text-xs text-body-secondary">• {c}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Board of Governors</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Independent oversight</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          The Board of Governors provides external oversight on strategy, financial integrity, and academic quality.
+          It includes a student representative elected by the student body.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        {board.map((member) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <CardTitle>{member.name}</CardTitle>
+              <p class="mt-1 text-sm font-medium text-primary">{member.role}</p>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{member.background}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Department Heads</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Programme leadership</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Heads of academic departments own curriculum, instructor development, and outcomes for their schools.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <a href="/schools#languages" class="block transition-shadow hover:shadow-lg">
+          <Card className="text-center shadow-sm">
+            <CardHeader>
+              <CardTitle>School of Languages</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">Curriculum & assessment across 10 languages.</p>
+              <p class="mt-4 text-sm font-semibold text-primary">Dr. Wanjiru Mwangi</p>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="/schools#technology" class="block transition-shadow hover:shadow-lg">
+          <Card className="text-center shadow-sm">
+            <CardHeader>
+              <CardTitle>School of Technology</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">Bootcamps, ICT diploma, and DevOps.</p>
+              <p class="mt-4 text-sm font-semibold text-primary">Patrick Otieno</p>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="/schools#business" class="block transition-shadow hover:shadow-lg">
+          <Card className="text-center shadow-sm">
+            <CardHeader>
+              <CardTitle>School of Business</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">Management, marketing, and entrepreneurship.</p>
+              <p class="mt-4 text-sm font-semibold text-primary">Susan Kariuki</p>
+            </CardContent>
+          </Card>
+        </a>
+        <a href="/schools#tveta" class="block transition-shadow hover:shadow-lg">
+          <Card className="text-center shadow-sm">
+            <CardHeader>
+              <CardTitle>TVETA Programmes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">Trades and competency-based certifications.</p>
+              <p class="mt-4 text-sm font-semibold text-primary">Eng. Daniel Rotich</p>
+            </CardContent>
+          </Card>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Want to work with our leadership?"
+    description="Industry partnerships, research collaboration, and governance opportunities."
+    primaryCta={{ href: '/contact', label: 'Reach out to leadership' }}
+    secondaryCta={{ href: '/campus', label: 'Visit our campus' }}
+  />
+</Layout>

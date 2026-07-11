@@ -1,0 +1,150 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import CTABand from '../components/CTABand.astro';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const PHONE = '+254 700 000 000';
+const EMAIL = 'info@ijlaps.ac.ke';
+const LOCATION = 'IJLAPS Main Campus, Nairobi, Kenya';
+
+const contactMethods = [
+  { title: 'Email', value: EMAIL, href: `mailto:${EMAIL}`, icon: '✉️' },
+  { title: 'Phone', value: PHONE, href: `tel:${PHONE.replace(/\s/g, '')}`, icon: '📞' },
+  { title: 'Location', value: LOCATION, icon: '📍' },
+] as const;
+---
+
+<Layout title="Contact | IJLAPS" description="Get in touch with IJLAPS." canonicalPath="/contact">
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Contact' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Contact Us"
+    title="Get in Touch"
+    subtitle="Have questions about admissions, courses, or partnerships? Reach out and our team will respond shortly."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Send a Message</Badge>
+          <h2 class="text-3xl font-bold text-body">We'd love to hear from you</h2>
+          <p class="mt-4 text-lg text-body-secondary">
+            Fill out the form below and we will get back to you within two business days.
+          </p>
+
+          <form
+            id="contact-form"
+            class="mt-8 space-y-6"
+            aria-label="Contact form"
+            action={`mailto:${EMAIL}`}
+            method="GET"
+          >
+            <div>
+              <label for="name" class="block text-sm font-semibold text-body-secondary">Full name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                minlength="2"
+                class="mt-2 block w-full rounded-md border border-border-heavy bg-surface px-4 py-3 text-body focus:border-primary focus:ring-primary"
+              />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-semibold text-body-secondary">Email address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="mt-2 block w-full rounded-md border border-border-heavy bg-surface px-4 py-3 text-body focus:border-primary focus:ring-primary"
+              />
+            </div>
+            <div>
+              <label for="message" class="block text-sm font-semibold text-body-secondary">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+                minlength="10"
+                class="mt-2 block w-full rounded-md border border-border-heavy bg-surface px-4 py-3 text-body focus:border-primary focus:ring-primary"
+              ></textarea>
+            </div>
+            <button type="submit" class={buttonStyles({ variant: 'primary', size: 'lg' })}>
+              Send Message
+            </button>
+            <div id="form-status" class="hidden text-sm" aria-live="polite"></div>
+          </form>
+
+          <script type="module">
+            import { initContactForm } from '@/scripts/contact-form';
+            initContactForm();
+          </script>
+        </div>
+
+        <div class="space-y-8">
+          <div>
+            <Badge color="primary" size="md" className="mb-4">Contact Information</Badge>
+<h2 class="text-3xl font-bold text-body">Reach us directly</h2>
+          <p class="mt-4 text-lg text-body-secondary">
+              Prefer to reach us directly? Use any of the channels below.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            {
+              contactMethods.map((method) =>
+                method.href ? (
+                  <a href={method.href} class="block transition-shadow hover:shadow-md">
+                    <Card className="shadow-sm">
+                      <CardHeader>
+                        <div class="mb-2 text-2xl">{method.icon}</div>
+                        <CardTitle className="text-sm font-semibold uppercase tracking-wider text-body-secondary">{method.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p class="text-lg font-semibold text-body">{method.value}</p>
+                      </CardContent>
+                    </Card>
+                  </a>
+                ) : (
+                  <Card className="shadow-sm">
+                    <CardHeader>
+                      <div class="mb-2 text-2xl">{method.icon}</div>
+                      <CardTitle className="text-sm font-semibold uppercase tracking-wider text-body-secondary">{method.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p class="text-lg font-semibold text-body">{method.value}</p>
+                    </CardContent>
+                  </Card>
+                )
+              )
+            }
+          </div>
+
+          <Alert status="info">
+            <AlertIndicator />
+            <AlertContent>
+              <AlertTitle>Office hours</AlertTitle>
+              <AlertDescription>Monday to Friday: 8:00 AM to 5:00 PM · Saturday: 8:00 AM, 12:00 PM</AlertDescription>
+            </AlertContent>
+          </Alert>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Ready to start your journey?"
+    description="Apply now or browse our programmes to find the right fit for your career goals."
+    primaryCta={{ href: '/admissions', label: 'Apply Now' }}
+    secondaryCta={{ href: '/courses', label: 'Browse programmes' }}
+  />
+</Layout>

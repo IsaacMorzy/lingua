@@ -1,0 +1,172 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import CTABand from '../../../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { programsByCategory, type Program } from '../../../lib/data';
+import { Link } from '@/components/tailgrids/core/link';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+
+type Category = Program['category'];
+
+export async function getStaticPaths() {
+  const categories: Category[] = ['Tech', 'Business', 'TVETA', 'Professional', 'Vocational'];
+  return categories.map((category) => {
+    const slug = category.toLowerCase();
+    return {
+      params: { category: slug },
+      props: {
+        category,
+        title: `IJLAPS ${category} Programmes`,
+        description: `Explore IJLAPS ${category} programmes, bootcamps, certificates, diplomas, and TVETA-accredited tracks.`,
+        programs: programsByCategory(category),
+      },
+    };
+  });
+}
+
+const { category, title: pageTitle, description: pageDescription, programs } = Astro.props as {
+  category: Category;
+  title: string;
+  description: string;
+  programs: Program[];
+};
+
+const eyebrow: Record<Category, string> = {
+  Tech: 'Tech Programmes',
+  Business: 'Business Programmes',
+  TVETA: 'TVETA Programmes',
+  Professional: 'Professional Courses',
+  Vocational: 'Vocational Training',
+};
+
+const introBlurb: Record<Category, string> = {
+  Tech:
+    'Career-launching bootcamps and short courses in software engineering, data, cybersecurity, AI, and DevOps. 12 months of career support included with full bootcamps.',
+  Business:
+    'Practice-led certificates and short courses in management, marketing, analytics, and entrepreneurship. Designed for working professionals and early-stage founders.',
+  TVETA:
+    'Competency-based trades and technical certifications accredited by the Technical and Vocational Education and Training Authority (TVETA).',
+  Professional:
+    'Industry-recognised professional qualifications for Diani tourism and hospitality. Tour guiding, front office, travel operations, and airline cabin crew.',
+  Vocational:
+    'Practical vocational training in hairdressing, computer packages, and madrasa. Build hands-on skills for real careers.',
+};
+
+const stats: Record<Category, { value: string; label: string }[]> = {
+  Tech: [
+    { value: '14', label: 'Live programmes' },
+    { value: '78%', label: 'Job placement within 6 months' },
+    { value: '12 mo.', label: 'Career-services support' },
+    { value: 'AWS / CompTIA prep', label: 'External certifications' },
+  ],
+  Business: [
+    { value: '7', label: 'Live programmes' },
+    { value: '90%', label: 'Completion rate' },
+    { value: '6 mo.', label: 'Career-services support' },
+    { value: 'Local cases', label: 'Kenyan context' },
+  ],
+  TVETA: [
+    { value: '5', label: 'Live programmes' },
+    { value: '85%', label: 'Artisan placement' },
+    { value: 'TVETA', label: 'Certificate / Diploma' },
+    { value: '24–96 wks', label: 'Programme duration' },
+  ],
+  Professional: [
+    { value: '4', label: 'Professional courses' },
+    { value: '85%', label: 'Placement rate' },
+    { value: 'Tourism focus', label: 'Diani economy' },
+    { value: '12–26 wks', label: 'Programme duration' },
+  ],
+  Vocational: [
+    { value: '3', label: 'Vocational courses' },
+    { value: '90%', label: 'Attachment placement' },
+    { value: '8–48 wks', label: 'Programme duration' },
+    { value: 'Open entry', label: 'Minimal prerequisites' },
+  ],
+};
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalPath={`/programs/${category.toLowerCase()}`}
+  keywords={['IJLAPS', 'TVETA', 'bootcamp', category, 'Kenya', 'training']}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/courses', label: 'Programs' }, { href: '', label: pageTitle.replace('IJLAPS ', '') }]} dividerType="chevron" />
+
+  <section class="bg-slate-900 py-20 md:py-32">
+    <div class="container-main text-center">
+      <Badge color="primary" size="md" className="mb-4">{eyebrow[category]}</Badge>
+      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{pageTitle}</h1>
+      <p class="mx-auto mt-6 max-w-3xl text-lg text-slate-300 md:text-xl">{introBlurb[category]}</p>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {stats[category].map((s) => (
+          <div class="rounded-xl border border-border bg-surface p-6 text-center">
+            <div class="text-3xl font-extrabold text-primary">{s.value}</div>
+            <div class="mt-1 text-sm font-medium text-body-secondary">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Programmes</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">All {category} programmes</h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {programs.map((p) => (
+          <Card className="flex flex-col shadow-sm">
+            <CardHeader>
+              <div class="flex items-baseline justify-between gap-3">
+                <CardTitle className="text-lg">{p.title}</CardTitle>
+                <Badge color="primary" size="sm">{p.mode}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{p.tagline}</p>
+              <div class="mt-4 rounded-md border border-border bg-surface p-3 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-body-secondary">From</span>
+                  <span class="font-bold text-primary">{p.modes[0].fee}</span>
+                </div>
+                <div class="mt-1 flex justify-between">
+                  <span class="text-body-secondary">Duration</span>
+                  <span class="font-medium text-body">{p.modes[0].weeks} wks</span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Link variant="primary" size="sm" href={`/programs/${category.toLowerCase()}/${p.slug}`}>
+                View programme →
+              </Link>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+
+      <div class="mt-12 rounded-2xl bg-primary-subtle p-8 text-center">
+        <h3 class="text-xl font-bold text-body">Need help comparing programmes?</h3>
+        <p class="mx-auto mt-3 max-w-2xl text-body-secondary">Our admissions team can talk you through mode, schedule, prerequisites, and financial-aid eligibility.</p>
+        <a href="/contact" class={`${buttonStyles({ variant: 'primary', appearance: 'fill', size: 'md' })} mt-6 inline-flex`}>Talk to admissions</a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title={`Ready to begin a ${category} programme?`}
+    description="3 intakes per year · flexible payment plans · financial aid available"
+    primaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
+    secondaryCta={{ href: '/tuition-fees', label: 'Tuition & fees' }}
+  />
+</Layout>

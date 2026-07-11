@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const requirements = [
+  'Completed application form',
+  'Copies of academic certificates',
+  'National ID or passport copy',
+  'Two passport-size photographs',
+  'Application fee payment receipt',
+] as const;
+
+const steps = [
+  { step: '01', title: 'Apply Online', description: 'Fill out the application form with your personal and academic details.' },
+  { step: '02', title: 'Submit Documents', description: 'Upload or bring your academic certificates and identification documents.' },
+  { step: '03', title: 'Pay Application Fee', description: 'Complete the non-refundable application fee payment.' },
+  { step: '04', title: 'Receive Admission Letter', description: 'Get your admission letter and join date once your application is reviewed.' },
+] as const;
+
+const highlights = [
+  { value: 'KES 2,500', label: 'Application Fee', note: 'Non-refundable, payable once per intake.' },
+  { value: 'Jan / Sep', label: 'Intakes', note: 'Main intakes at the start of the year and September.' },
+  { value: '4–24 Weeks', label: 'Duration', note: 'Varies by course and certification level.' },
+] as const;
+---
+
+<Layout title="Admissions | IJLAPS" description="Apply to IJLAPS, a TVETA-certified institution in Kenya offering languages, technology, business, and vocational programmes. Three intakes per year, financial aid available." canonicalPath="/admissions" keywords={['IJLAPS admissions', 'TVETA admissions Kenya', 'Nairobi university admissions', 'language school apply']}>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Admissions' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Admissions Overview"
+    title="Start Your Journey at IJLAPS"
+    subtitle="Join a community of learners preparing for the modern workforce. Applications are open for all programmes, three intakes per year, with bursaries and financial aid for eligible applicants."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Requirements</Badge>
+          <h2 class="text-3xl font-bold text-body">What You Need</h2>
+          <p class="mt-4 text-lg text-body-secondary">
+            Prepare the following documents to complete your application. Requirements may vary by program.
+          </p>
+          <List class="mt-8 max-w-none" hideDividers>
+            {
+              requirements.map((req) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs text-white">✓</span>
+                  <span class="text-body-secondary">{req}</span>
+                </li>
+              ))
+            }
+          </List>
+        </div>
+
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Process</Badge>
+          <h2 class="text-3xl font-bold text-body">Application Steps</h2>
+          <div class="mt-8 space-y-8">
+            {
+              steps.map((item) => (
+                <div class="flex gap-4">
+                  <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">
+                    {item.step}
+                  </span>
+                  <div>
+                    <h3 class="text-lg font-semibold text-body">{item.title}</h3>
+                    <p class="mt-1 text-body-secondary">{item.description}</p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="grid gap-8 lg:grid-cols-3">
+        {
+          highlights.map((item) => (
+            <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+              <div class="text-3xl font-extrabold text-primary">{item.value}</div>
+              <div class="mt-2 font-semibold text-body">{item.label}</div>
+              <p class="mt-2 text-sm text-body-secondary">{item.note}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <CTABand
+    eyebrow="Next steps"
+    title="Ready to apply?"
+    description="See how to apply, check tuition and fees, or browse financial aid options."
+    primaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
+    secondaryCta={{ href: '/tuition-fees', label: 'Tuition & fees' }}
+  />
+</Layout>

@@ -1,0 +1,169 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CTABand from '../../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { LANGUAGES } from '@/lib/data';
+
+const totalLearners = LANGUAGES.reduce((acc, l) => acc + 218, 1240);
+
+const grouped = {
+  global: ['English', 'French', 'Arabic', 'Mandarin Chinese', 'German', 'Spanish', 'Japanese'],
+  regional: ['Kiswahili', 'Portuguese', 'Italian'],
+};
+---
+
+<Layout
+  title="Languages | IJLAPS"
+  description="All 10 languages taught at IJLAPS, English, French, Arabic, Mandarin Chinese, German, Kiswahili, Spanish, Japanese, Portuguese, Italian. CEFR A1-C2 with internationally-recognised exam preparation."
+  canonicalPath="/languages"
+  keywords={['IJLAPS languages', 'language school Nairobi', 'CEFR language programmes', 'TVETA language certificate']}
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Languages taught at IJLAPS',
+      itemListElement: LANGUAGES.map((l, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: l.name,
+        url: `https://ijlaps.ac.ke/languages/${l.slug}`,
+      })),
+    },
+  ]}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Languages' }]} dividerType="chevron" />
+
+  <section class="bg-slate-900 py-20 md:py-32">
+    <div class="container-main text-center">
+      <Badge color="primary" size="md" className="mb-4">Languages</Badge>
+      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+        10 languages. CEFR-aligned. Exam-ready.
+      </h1>
+      <p class="mx-auto mt-6 max-w-3xl text-lg text-slate-300 md:text-xl">
+        From foundational literacy through academic and professional proficiency. Every IJLAPS language programme
+        is anchored in the Common European Framework of Reference for Languages (CEFR) and prepares students
+        for internationally-recognised certifications.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href="#catalog" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>Browse languages</a>
+        <a href="/how-to-apply" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>Apply now</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Overview</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">A portfolio shaped by regional demand</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          We teach the languages that matter to East African learners, for trade, scholarship, civil service, and
+          regional mobility. Every programme includes internationally-recognised exam preparation from B1.
+        </p>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-xl border border-border bg-surface p-6 text-center">
+          <div class="text-3xl font-extrabold text-primary">{LANGUAGES.length}</div>
+          <div class="mt-1 text-sm font-medium text-body-secondary">Languages taught</div>
+        </div>
+        <div class="rounded-xl border border-border bg-surface p-6 text-center">
+          <div class="text-3xl font-extrabold text-primary">A1 → C2</div>
+          <div class="mt-1 text-sm font-medium text-body-secondary">CEFR Levels covered</div>
+        </div>
+        <div class="rounded-xl border border-border bg-surface p-6 text-center">
+          <div class="text-3xl font-extrabold text-primary">4,790+</div>
+          <div class="mt-1 text-sm font-medium text-body-secondary">Active language learners</div>
+        </div>
+        <div class="rounded-xl border border-border bg-surface p-6 text-center">
+          <div class="text-3xl font-extrabold text-primary">3</div>
+          <div class="mt-1 text-sm font-medium text-body-secondary">Intake windows per year</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalog" class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">All Languages</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Browse our full language catalog</h2>
+      </div>
+
+      <div>
+        <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-body-secondary">Global languages</h3>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {LANGUAGES.filter((l) => grouped.global.includes(l.name)).map((lang) => (
+            <a href={`/languages/${lang.slug}`} class="group block h-full">
+              <Card className="h-full rounded-xl border border-border transition-shadow hover:shadow-lg">
+                <CardHeader>
+                  <div class="flex items-center gap-3">
+                    <span class="text-3xl">{lang.flagEmoji}</span>
+                    <div>
+                      <h4 class="text-lg font-bold text-body">{lang.name}</h4>
+                      <p class="text-xs uppercase tracking-wider text-body-secondary">{lang.code} · {lang.totalWeeks} wks total</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p class="flex-1 text-sm text-body-secondary">{lang.shortDescription}</p>
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    <Badge color="primary" size="sm">{lang.examBoards[0]}</Badge>
+                    <Badge color="neutral" size="sm">{lang.cohortsPerYear}× intakes / yr</Badge>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-primary-focus">
+                    {lang.name} programme →
+                  </span>
+                </CardFooter>
+              </Card>
+            </a>
+          ))}
+        </div>
+
+        <h3 class="mb-4 mt-12 text-sm font-bold uppercase tracking-wider text-body-secondary">Regional languages</h3>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {LANGUAGES.filter((l) => grouped.regional.includes(l.name)).map((lang) => (
+            <a href={`/languages/${lang.slug}`} class="group block h-full">
+              <Card className="h-full rounded-xl border border-border transition-shadow hover:shadow-lg">
+                <CardHeader>
+                  <div class="flex items-center gap-3">
+                    <span class="text-3xl">{lang.flagEmoji}</span>
+                    <div>
+                      <h4 class="text-lg font-bold text-body">{lang.name}</h4>
+                      <p class="text-xs uppercase tracking-wider text-body-secondary">{lang.code} · {lang.totalWeeks} wks total</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p class="flex-1 text-sm text-body-secondary">{lang.shortDescription}</p>
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    <Badge color="primary" size="sm">{lang.examBoards[0]}</Badge>
+                    <Badge color="neutral" size="sm">{lang.cohortsPerYear}× intakes / yr</Badge>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:text-primary-focus">
+                    {lang.name} programme →
+                  </span>
+                </CardFooter>
+              </Card>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    eyebrow="Online"
+    title="Not in Nairobi? Study languages online."
+    description="Our live online cohort system runs the same CEFR-aligned curriculum with evening and weekend schedules."
+    primaryCta={{ href: '/online-education', label: 'Online education' }}
+    secondaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
+  />
+</Layout>

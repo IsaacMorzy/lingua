@@ -1,0 +1,211 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import CTABand from '../../../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS, PROFESSIONAL_PROGRAMS, VOCATIONAL_PROGRAMS, type Program } from '../../../lib/data';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+export async function getStaticPaths() {
+  const all: Program[] = [...TECH_PROGRAMS, ...BUSINESS_PROGRAMS, ...TVETA_PROGRAMS, ...PROFESSIONAL_PROGRAMS, ...VOCATIONAL_PROGRAMS];
+  return all.map((p) => ({
+    params: { category: p.category.toLowerCase(), slug: p.slug },
+    props: { program: p },
+  }));
+}
+
+const { program } = Astro.props as { program: Program };
+const cat = program.category.toLowerCase();
+
+const totalHours = program.curriculum.reduce((acc, m) => acc + m.hours, 0);
+
+const courseJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: program.title,
+  description: program.description,
+  provider: { '@type': 'EducationalOrganization', name: 'IJLAPS', url: 'https://ijlaps.ac.ke' },
+  educationalCredentialAwarded: program.certifications?.[0] ?? 'IJLAPS ' + program.title + ' Certificate',
+  hasCourseInstance: program.modes.map((m) => ({
+    '@type': 'CourseInstance',
+    courseMode: m.schedule.toLowerCase().includes('remote') ? 'online' : 'onsite',
+    name: m.name,
+    duration: `P${m.weeks}W`,
+    offers: { '@type': 'Offer', price: m.fee.replace(/[^0-9]/g, ''), priceCurrency: 'KES' },
+  })),
+};
+---
+
+<Layout
+  title={`${program.title} | IJLAPS`}
+  description={`${program.tagline} ${program.description}`}
+  canonicalPath={`/programs/${cat}/${program.slug}`}
+  keywords={[program.title, program.category, 'IJLAPS', 'TVETA', 'Kenya', program.mode]}
+  jsonLd={[courseJsonLd]}
+>
+  <Breadcrumbs items={[
+    { href: '/', label: 'Home' },
+    { href: '/courses', label: 'Programs' },
+    { href: `/programs/${cat}`, label: `${program.category} Programs` },
+    { href: '', label: program.title },
+  ]} dividerType="chevron" />
+
+  <section class="bg-slate-900 py-20 md:py-32">
+    <div class="container-main">
+      <div class="mx-auto max-w-4xl text-center">
+        <Badge color="primary" size="md" className="mb-4">{program.category} · {program.mode}</Badge>
+        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{program.title}</h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-300 md:text-xl">{program.tagline}</p>
+
+        <div class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {program.outcomes.map((o) => (
+            <div class="rounded-md bg-white/10 p-3">
+              <div class="text-base font-bold text-white">{o.value}</div>
+              <div class="mt-1 text-xs text-slate-300">{o.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/how-to-apply" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>Apply now</a>
+          <a href="#modes" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>See modes of study</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-[1fr_2fr]">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">About this programme</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">Programme overview</h2>
+        </div>
+        <div class="prose prose-lg max-w-none">
+          <p class="text-lg text-body-secondary">{program.description}</p>
+
+          <h3 class="mt-8 text-xl font-bold text-body">Tools you'll use</h3>
+          <div class="mt-3 flex flex-wrap gap-2">
+            {program.tools.map((t) => <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">{t}</span>)}
+          </div>
+
+          <h3 class="mt-8 text-xl font-bold text-body">Prerequisites</h3>
+          <List class="mt-3 max-w-none" hideDividers>
+            {program.admissionPrerequisites.map((r) => (
+              <li class="flex items-start gap-2"><span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>{r}</li>
+            ))}
+          </List>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section id="modes" class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Modes of study</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Choose the path that fits your life</h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        {program.modes.map((m) => (
+          <Card className={['relative shadow-sm', m.isPopular ? 'ring-2 ring-primary' : ''].filter(Boolean).join(' ')}>
+            {m.isPopular && (
+              <span class="absolute -top-3 right-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow">POPULAR</span>
+            )}
+            <CardHeader>
+              <CardTitle>{m.name}</CardTitle>
+              <p class="mt-1 text-sm text-body-secondary">{m.schedule}</p>
+            </CardHeader>
+            <CardContent>
+              <div class="border-t border-border pt-4">
+                <div class="text-3xl font-extrabold text-primary">{m.fee}</div>
+                <div class="mt-1 text-sm text-body-secondary">{m.weeks} weeks total</div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Curriculum</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">What you'll learn</h2>
+        <p class="mt-4 text-lg text-body-secondary">{totalHours}+ contact hours across {program.curriculum.length} modules.</p>
+      </div>
+
+      <ol class="space-y-4">
+        {program.curriculum.map((m, i) => (
+          <li>
+            <Card className="shadow-sm">
+              <CardContent className="grid gap-4 md:grid-cols-[60px_1fr]">
+                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-xl font-extrabold text-primary">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <div class="flex items-baseline justify-between gap-3">
+                    <CardTitle className="text-xl">{m.title}</CardTitle>
+                    <Badge color="gray" size="sm">{m.hours} hours</Badge>
+                  </div>
+                  <ul class="mt-3 grid gap-1.5 sm:grid-cols-2">
+                    {m.topics.map((t) => (
+                      <li class="flex items-start gap-2 text-sm text-body-secondary"><svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-secondary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Career outcomes</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Where {program.title} takes you</h2>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        {program.careers.map((c) => (
+          <Card className="text-center shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-base">{c.role}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-primary">{c.avgSalaryKes}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {program.certifications && (
+        <div class="mt-12 rounded-2xl bg-primary-subtle p-8 text-center">
+          <h3 class="text-xl font-bold text-body">Certifications this programme prepares you for</h3>
+          <ul class="mt-4 flex flex-wrap justify-center gap-3">
+            {program.certifications.map((c) => <span class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-primary ring-1 ring-primary">{c}</span>)}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <CTABand
+    title={`Apply to ${program.title}`}
+    description="3 intakes per year. Apply online or talk to admissions for placement guidance."
+    primaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
+    secondaryCta={{ href: `/programs/${cat}`, label: `Back to ${program.category} programmes` }}
+  />
+</Layout>

@@ -1,0 +1,162 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const centres = [
+  { city: 'Mombasa', focus: 'Hospitality English + Maritime Kiswahili' },
+  { city: 'Kisumu', focus: 'TVETA Trades + Lake-region entrepreneurship' },
+  { city: 'Eldoret', focus: 'Agriculture analytics + English for agritech' },
+  { city: 'Nakuru', focus: 'TVETA Trades + Tourism languages' },
+];
+
+const partnerships = [
+  { count: '12', label: 'Employer partners for industrial attachment' },
+  { count: '4', label: 'Satellite study centres nationwide' },
+  { count: '35', label: 'Organisations that host TVETA apprentices' },
+  { count: '20+', label: 'Schools with placement pathways' },
+];
+
+const offCampusPathways = [
+  {
+    title: 'Industrial attachment',
+    description: 'Mandatory 6-month attachment with an employer partner for all Diploma in ICT students and 4-week apprenticeships for TVETA trades.',
+    forWho: 'Diploma & TVETA students',
+  },
+  {
+    title: 'Employer-embedded language training',
+    description: 'Customised English, French, or Mandarin cohorts delivered on-site for hotels, NGOs, manufacturers, and government agencies.',
+    forWho: 'Working professionals (cohort basis)',
+  },
+  {
+    title: 'Community study circles',
+    description: 'Free or subsidised short courses run in partnership with county governments and community organisations.',
+    forWho: 'Community members',
+  },
+  {
+    title: 'International study trips',
+    description: 'Optional immersion experiences in Dar es Salaam, Kigali, Kampala, or abroad, for language learners ready for the next step.',
+    forWho: 'Advanced-language learners',
+  },
+];
+---
+
+<Layout
+  title="Off-Campus Learning | IJLAPS"
+  description="IJLAPS off-campus learning pathways: satellite study centres across Kenya, employer partnerships, industrial attachments, and community study circles."
+  canonicalPath="/off-campus-learning"
+  keywords={['IJLAPS off-campus', 'industrial attachment Kenya', 'satellite study centre', 'community study circle']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Off-Campus Learning' }]} />
+
+  <PageHero
+    eyebrow="Off-Campus Learning"
+    title="Learning doesn't only happen in Westlands."
+    subtitle="We bring our teaching to where our learners and partners are, across Kenya and into the workplaces that hire our graduates."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Satellite Centres</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Four study centres beyond Nairobi</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Each satellite centre runs selected cohorts that match regional demand, hospitality English in Mombasa,
+          agritech in Eldoret, TVETA trades in Kisumu and Nakuru.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {centres.map((c) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <CardTitle>{c.city}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{c.focus}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Partnerships</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">The numbers behind the network</h2>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {partnerships.map((p) => (
+          <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+            <div class="text-4xl font-extrabold text-primary">{p.count}</div>
+            <div class="mt-2 text-sm font-medium text-body-secondary">{p.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Pathways</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Off-campus pathways</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Off-campus learning at IJLAPS covers workplace embeds, community programmes, and applied learning
+          outside the classroom.
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        {offCampusPathways.map((p, i) => (
+          <Card className="flex flex-col shadow-sm">
+            <CardHeader>
+              <div class="flex items-baseline justify-between gap-3">
+                <CardTitle className="text-xl">{p.title}</CardTitle>
+                <Badge color="primary" size="sm">Pathway {i + 1}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-body-secondary">{p.description}</p>
+            </CardContent>
+            <CardFooter>
+              <p class="text-sm font-medium text-primary">{p.forWho}</p>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-primary">
+    <div class="container-main text-center">
+      <h2 class="text-3xl font-bold text-white md:text-4xl">Partner with IJLAPS</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
+        Organisations interested in industrial attachment, employer-embedded training, or community programmes
+        can reach our partnerships team.
+      </p>
+      <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg', class: 'mt-8 inline-flex' })}>
+        Reach partnerships team
+      </a>
+    </div>
+  </section>
+
+  <CTABand
+    title="Curious about studying off-campus?"
+    description="Reach out to admissions for location-specific availability and timings."
+    primaryCta={{ href: '/contact', label: 'Talk to admissions' }}
+    secondaryCta={{ href: '/online-education', label: 'See online education' }}
+  />
+</Layout>

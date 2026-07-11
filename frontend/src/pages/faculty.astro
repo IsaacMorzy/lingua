@@ -1,0 +1,127 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Avatar, AvatarFallback } from '@/components/tailgrids/core/avatar';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { FACULTY, facultyByDepartment } from '@/lib/data';
+
+const groups = [
+  { dept: 'Languages', title: 'School of Languages' },
+  { dept: 'Technology', title: 'School of Technology' },
+  { dept: 'Business', title: 'School of Business' },
+  { dept: 'TVETA', title: 'TVETA Programmes' },
+] as const;
+
+const recruitment = [
+  'Demonstrated subject-matter expertise',
+  'Three years+ teaching or industry practice',
+  'A teaching philosophy aligned with our learner-first principles',
+  'Demonstrated commitment to inclusive pedagogy',
+];
+---
+
+<Layout
+  title="Faculty | IJLAPS"
+  description="Meet the IJLAPS faculty and instructors, language teachers, tech practitioners, business trainers, and TVETA trades leads. Full school-by-school directory."
+  canonicalPath="/faculty"
+  keywords={['IJLAPS faculty', 'IJLAPS instructors', 'Nairobi language teachers', 'tech bootcamp instructors Kenya']}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/academics', label: 'Academics' }, { href: '', label: 'Faculty' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Faculty"
+    title="The people who teach you."
+    subtitle="Every IJLAPS instructor is selected for subject expertise, industry practice, and a teaching philosophy that matches our learner-first principles."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">At a glance</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">{FACULTY.length}+ lead instructors across four schools</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Our faculty directory lists the lead instructors and heads of department. Programme pages list the full
+          cohort team, including teaching assistants and language coaches.
+        </p>
+      </div>
+
+      <div class="space-y-16">
+        {groups.map((g) => (
+          <div>
+            <div class="mb-6 flex items-baseline gap-3">
+              <h2 class="text-2xl font-bold text-body md:text-3xl">{g.title}</h2>
+              <Badge color="primary" size="sm">{g.dept}</Badge>
+            </div>
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {facultyByDepartment(g.dept).map((f) => (
+                <Card className="flex flex-col shadow-sm">
+                  <CardHeader>
+                    <div class="mb-4 flex items-center gap-4">
+                      <Avatar size="xxl">
+                        <AvatarFallback>{f.initials}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <CardTitle>{f.name}</CardTitle>
+                        <p class="text-sm font-medium text-primary">{f.title}</p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p class="text-sm text-body-secondary">{f.bio}</p>
+                    <ul class="mt-4 space-y-1">
+                      {f.credentials.map((c) => (
+                        <li class="text-xs text-body-secondary">• {c}</li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Hiring</Badge>
+          <h2 class="text-3xl font-bold text-body md:text-4xl">We hire practising experts.</h2>
+<p class="mt-4 text-lg text-body-secondary">
+            IJLAPS faculty are practitioners, language teachers with active classroom lives, software engineers
+            who still ship production code, business trainers who run real companies. We hire for what you do
+            today, not what you did ten years ago.
+          </p>
+          <ul class="mt-6 space-y-3">
+            {recruitment.map((r) => (
+              <li class="flex items-start gap-2 text-sm text-body-secondary"><span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary"></span>{r}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="rounded-2xl bg-primary p-8 text-white md:p-12">
+          <h3 class="text-2xl font-bold">Open applications</h3>
+          <p class="mt-4 text-white/85">
+            We accept rolling applications for future cohorts. Send a CV and a short note about the programme you'd
+            like to teach to the people team.
+          </p>
+          <a href="/contact" class={`${buttonStyles({ variant: 'primary', appearance: 'outline', size: 'md' })} border-white text-white hover:bg-white hover:text-primary`}>
+            Submit teaching application
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Want to teach with us?"
+    description="Open applications from practising language teachers, software engineers, business trainers, and TVETA tradespeople."
+    primaryCta={{ href: '/contact', label: 'Submit application' }}
+    secondaryCta={{ href: '/leadership', label: 'Meet leadership' }}
+  />
+</Layout>

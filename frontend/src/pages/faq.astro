@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+
+const faqs = [
+  {
+    q: 'What is IJLAPS?',
+    a: 'IJLAPS is a TVETA-certified institution in Kenya. We teach languages, technology bootcamps, business programmes, and vocational trades. Three intakes a year, online and on-campus pathways, and language programmes aligned to CEFR for ten world languages.',
+  },
+  {
+    q: 'Are your programmes accredited?',
+    a: 'Yes. Our TVETA certificates and diplomas are recognised by the Technical and Vocational Education and Training Authority. Our language tracks prepare students for internationally-recognised Cambridge, IELTS, DELF/DALF, HSK, ALPT, JLPT, DELE, and CELPE-Bras examinations.',
+  },
+  {
+    q: 'How do I apply?',
+    a: 'Visit the How to Apply page for the four-step process and document checklist. Online application takes about 20 minutes. The admissions team is reachable Monday through Friday, 9am to 4pm East Africa Time.',
+  },
+  {
+    q: 'Do you offer online classes?',
+    a: 'Live online cohorts are available for every language programme from A1. Tech bootcamps run part-time remote tracks in software engineering and data. Recorded sessions, mentorship, and remote proctored exams are standard.',
+  },
+  {
+    q: 'How much does it cost?',
+    a: 'Tuition depends on the programme. Each programme page lists the modes of study and fees. Bursaries and financial aid are available, see the Financial Aid page.',
+  },
+  {
+    q: 'Do you offer student support?',
+    a: 'Yes. Academic advising, accessibility support, career counselling, and language-coach office hours are bundled into every programme. We design for working adults as well as new school-leavers.',
+  },
+  {
+    q: 'Where is the campus?',
+    a: 'IJLAPS Westlands in Nairobi. We also run four satellite study centres in Mombasa, Kisumu, Eldoret, and Nakuru. The Industrial Attachment programme places TVETA students with 35 partner organisations across Kenya.',
+  },
+];
+---
+
+<Layout
+  title="FAQ | IJLAPS"
+  description="Common questions about admissions, fees, financial aid, online education, languages, and the campus at IJLAPS."
+  canonicalPath="/faq"
+  keywords={['IJLAPS FAQ', 'TVETA admissions Kenya', 'language programme questions']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Campus Life', href: '/events' }, { label: 'FAQ' }]} />
+
+  <PageHero
+    eyebrow="FAQ"
+    title="Common questions, honest answers."
+    subtitle="If your question is not here, our admissions team is one click away."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main max-w-3xl">
+      <div class="divide-y divide-border rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
+        {
+          faqs.map((faq, i) => (
+            <details class="group p-5 sm:p-6 marker:hidden open:bg-primary-subtle/40 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-start justify-between gap-4 list-none text-lg font-semibold text-body group-open:text-primary">
+                <span>{faq.q}</span>
+                <span
+                  aria-hidden="true"
+                  class="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-border text-base text-primary transition-transform group-open:rotate-45"
+                >
+                  +
+                </span>
+              </summary>
+              <p class="mt-3 text-base leading-6 text-body-secondary">{faq.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    eyebrow="Still have questions?"
+    title="Talk to admissions."
+    description="Open Monday to Friday, 9am to 4pm. We respond within one working day."
+    primaryCta={{ href: '/contact', label: 'Contact admissions' }}
+    secondaryCta={{ href: '/admissions', label: 'Admissions overview' }}
+  />
+</Layout>

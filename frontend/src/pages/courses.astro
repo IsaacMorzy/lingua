@@ -1,0 +1,230 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS, LANGUAGES } from '@/lib/data';
+
+interface Course {
+  title: string;
+  category: 'Technology' | 'Business' | 'Languages' | 'TVETA' | 'Tech';
+  categoryKey: 'Tech' | 'Business' | 'TVETA' | 'Languages';
+  href: string;
+  duration: string;
+  description: string;
+  level: string;
+  mode: string;
+}
+
+const languageCourses: Course[] = LANGUAGES.map((l) => ({
+  title: `${l.name} Language Programme`,
+  category: 'Languages',
+  categoryKey: 'Languages',
+  href: `/languages/${l.slug}`,
+  duration: `${l.totalWeeks} wks (A1→C2)`,
+  description: l.shortDescription,
+  level: 'A1 → C2',
+  mode: `${l.cohortsPerYear}× intakes / yr`,
+}));
+
+const techCourses: Course[] = TECH_PROGRAMS.map((p) => ({
+  title: p.title,
+  category: 'Technology',
+  categoryKey: 'Tech',
+  href: `/programs/tech/${p.slug}`,
+  duration: `${p.modes[0].weeks} wks · ${p.modes[0].name}`,
+  description: p.tagline,
+  level: p.mode,
+  mode: p.modes[0].schedule,
+}));
+
+const businessCourses: Course[] = BUSINESS_PROGRAMS.map((p) => ({
+  title: p.title,
+  category: 'Business',
+  categoryKey: 'Business',
+  href: `/programs/business/${p.slug}`,
+  duration: `${p.modes[0].weeks} wks · ${p.modes[0].name}`,
+  description: p.tagline,
+  level: p.mode,
+  mode: p.modes[0].schedule,
+}));
+
+const tvetaCourses: Course[] = TVETA_PROGRAMS.map((p) => ({
+  title: p.title,
+  category: 'TVETA',
+  categoryKey: 'TVETA',
+  href: `/programs/tveta/${p.slug}`,
+  duration: `${p.modes[0].weeks} wks`,
+  description: p.tagline,
+  level: p.mode,
+  mode: p.modes[0].schedule,
+}));
+
+const courses: Course[] = [...techCourses, ...businessCourses, ...tvetaCourses, ...languageCourses];
+
+const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
+
+
+---
+
+<Layout title="Courses | IJLAPS" description="Explore TVETA-certified courses at IJLAPS: language programmes A1→C2 in 10 languages, technology bootcamps, business programmes, and vocational training." canonicalPath="/courses" keywords={['IJLAPS courses', 'TVETA courses Kenya', 'language programmes Nairobi', 'tech bootcamp']}>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Courses' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="All Programmes"
+    title="Explore Our Courses"
+    subtitle="Browse TVETA-certified programmes across languages, technology, business, and vocational training. Filter by category to find your match."
+  />
+
+  <section class="bg-surface border-b border-border py-6">
+    <div class="container-main">
+      <div class="flex flex-wrap items-center gap-3 text-sm">
+        <span class="font-semibold uppercase tracking-wider text-body-secondary">Jump to:</span>
+        <a href="/languages" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Languages (10)</a>
+        <a href="/programs/tech" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Tech Programmes</a>
+        <a href="/programs/business" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Business Programmes</a>
+        <a href="/programs/tveta" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">TVETA Programmes</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mb-8 flex flex-wrap items-center justify-center gap-2" aria-label="Course categories" id="category-filters">
+        {
+          categories.map((category, index) => (
+            <button
+              type="button"
+              data-category={category}
+              class:list={[
+                'rounded-full px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                index === 0
+                  ? 'bg-primary text-white'
+                  : 'bg-surface text-body-secondary hover:bg-slate-100 dark:hover:bg-ink-soft',
+              ]}
+              aria-pressed={index === 0 ? 'true' : 'false'}
+            >
+              {category}
+            </button>
+          ))
+        }
+      </div>
+
+      <div id="courses-grid" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          courses.map((course) => (
+            <article
+              class="course-card"
+              data-course-category={course.categoryKey}
+            >
+              <Card className="h-full rounded-xl border border-border transition-shadow hover:shadow-lg">
+                <CardHeader>
+                  <div class="flex items-center justify-between">
+                    <Badge color="secondary" size="sm">
+                      {course.category}
+                    </Badge>
+                    <span class="text-sm text-body-secondary">{course.duration}</span>
+                  </div>
+                  <h3 class="mt-3 text-xl font-semibold text-body">{course.title}</h3>
+                </CardHeader>
+                <CardContent>
+                  <p class="mb-4 flex-1 text-body-secondary">{course.description}</p>
+                  <div class="mb-4 flex flex-wrap gap-2">
+                    <Badge color="neutral" size="sm">{course.level}</Badge>
+                    <Badge color="neutral" size="sm">{course.mode}</Badge>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <a
+                    href={course.href}
+                    class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'sm' })}
+                  >
+                    View programme
+                  </a>
+                </CardFooter>
+              </Card>
+            </article>
+          ))
+        }
+      </div>
+
+      <p id="no-courses" class="hidden text-center text-lg text-body-secondary">
+        No courses found in this category.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16 bg-primary">
+    <div class="container-main text-center">
+      <h2 class="text-3xl font-bold text-white md:text-4xl">Need help choosing a course?</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
+        Our admissions team is ready to guide you toward the right program.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="/admissions" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
+          Apply Now
+        </a>
+        <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>
+          Contact Admissions
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    function initCourseFilters() {
+      const filterContainer = document.getElementById('category-filters');
+      const grid = document.getElementById('courses-grid');
+      const noCourses = document.getElementById('no-courses');
+
+      if (!filterContainer || !grid || !noCourses) return;
+
+      const buttons = filterContainer.querySelectorAll('button[data-category]');
+      const cards = grid.querySelectorAll('.course-card');
+
+      function filterCourses(category) {
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const cardCategory = card.getAttribute('data-course-category');
+          const matches = category === 'All' || cardCategory === category;
+
+          if (matches) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (visibleCount === 0) {
+          noCourses.classList.remove('hidden');
+        } else {
+          noCourses.classList.add('hidden');
+        }
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const category = button.getAttribute('data-category') || 'All';
+
+          buttons.forEach((btn) => {
+            btn.setAttribute('aria-pressed', 'false');
+            btn.classList.remove('bg-primary', 'text-white');
+            btn.classList.add('bg-surface', 'text-body-secondary', 'hover:bg-slate-100');
+          });
+
+          button.setAttribute('aria-pressed', 'true');
+          button.classList.remove('bg-white', 'text-slate-700', 'hover:bg-slate-100');
+          button.classList.add('bg-primary', 'text-white');
+
+          filterCourses(category);
+        });
+      });
+    }
+
+    initCourseFilters();
+  </script>
+</Layout>

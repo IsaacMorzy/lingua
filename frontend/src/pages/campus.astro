@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CTABand from '../components/CTABand.astro';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const facilities = [
+  {
+    title: 'Main Library & Quiet Study Hall',
+    description: 'A 12,000-volume reference library with multilingual sections (English, French, Arabic, Kiswahili), free Wi-Fi, and a silent-study area.',
+    icon: '📚',
+  },
+  {
+    title: 'Multimedia Language Labs',
+    description: 'Twelve booths per lab, equipped with headsets, speech-recording software, and curated listening tracks for A1 → C2 learners.',
+    icon: '🎧',
+  },
+  {
+    title: 'Computer Labs & Cyber Range',
+    description: 'Two general-purpose computer labs plus a dedicated cyber range for our Cybersecurity Bootcamp cohorts.',
+    icon: '💻',
+  },
+  {
+    title: 'Maker Workshop',
+    description: 'TVETA virtual workshops for plumbing, electrical installation, and welding practice under instructor supervision.',
+    icon: '🛠️',
+  },
+  {
+    title: 'Cultural Café',
+    description: 'A conversational space for weekly language exchanges, French table, Mandarin corner, Arabic circle, and Swahili storytelling.',
+    icon: '☕',
+  },
+  {
+    title: 'Student Hub',
+    description: 'Common area with snacks, lockers, and student-led clubs, debate, journalism, coding, and entrepreneurship.',
+    icon: '🧩',
+  },
+];
+
+const atAGlance = [
+  { label: 'Total floor area', value: '6,400 m²' },
+  { label: 'Lecture rooms', value: '24' },
+  { label: 'Language laboratories', value: '5' },
+  { label: 'Computer laboratories', value: '3' },
+  { label: 'Workshop bays', value: '4' },
+  { label: 'Library seats', value: '180' },
+];
+---
+
+<Layout
+  title="Our Campus | IJLAPS"
+  description="The IJLAPS campus in Westlands, Nairobi: modern language labs, a 12,000-volume library, cyber range, and TVETA workshops. Tour the facilities that support our students."
+  canonicalPath="/campus"
+  keywords={['IJLAPS campus', 'Nairobi university', 'language lab', 'TVETA workshop', 'Nairobi learning environment']}
+>
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about' }, { label: 'Our Campus' }]} />
+
+  <PageHero
+    eyebrow="Campus"
+    title="A campus designed for how you actually learn."
+    subtitle="Our Westlands campus blends calm study spaces with maker workshops, cyber ranges, and dedicated language laboratories, purpose-built for the way our students learn today."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">At a glance</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">The space, in numbers</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Our campus was rebuilt for the IJLAPS mission in 2019: a calm environment where language, technology, and
+          business students can learn side-by-side without compromise.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {atAGlance.map((item) => (
+          <div class="rounded-xl border border-border bg-surface p-6 text-center">
+            <div class="text-3xl font-extrabold text-primary">{item.value}</div>
+            <div class="mt-1 text-sm font-medium text-body-secondary">{item.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Facilities</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Spaces built for our programmes</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          From a multilingual library to a working cyber range, every facility is curated to support specific learning
+          outcomes in our language, technology, and TVETA tracks.
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {facilities.map((f) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="mb-4 text-4xl">{f.icon}</div>
+              <CardTitle>{f.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-body-secondary">{f.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Visit us</Badge>
+          <h2 class="text-3xl font-bold text-body">Open days, every intake</h2>
+          <p class="mt-4 text-lg text-body-secondary">
+            We host open days every intake (January, May, and September), and prospective students are welcome to
+            schedule a tour of any language lab, technology bay, or workshop at any time of year. Tours typically run
+            60–75 minutes and are led by an admissions counsellor.
+          </p>
+          <p class="mt-4 text-lg text-body-secondary">
+            Closing on a programme? We can route you through the relevant spaces and arrange a brief meeting with a
+            faculty lead from the same department.
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="/dates-deadlines" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'md' })}>View open day schedule</a>
+            <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'md' })}>Book a private tour</a>
+          </div>
+        </div>
+
+        <div class="rounded-2xl bg-primary p-10 text-white">
+          <h3 class="text-2xl font-bold">Beyond the campus</h3>
+          <p class="mt-4 text-white/85">
+            IJLAPS also runs off-campus learning experiences across Kenya, partner workplaces, regional vocational
+            centres, and online cohorts.
+          </p>
+          <List class="mt-6 max-w-none text-sm text-white/85" hideDividers>
+            <li>• 12 partner workplaces for technology and business attachments</li>
+            <li>• 4 satellite study centres across Mombasa, Kisumu, Eldoret, and Nakuru</li>
+            <li>• Live online rooms for every level of every programme</li>
+          </List>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Come see the campus for yourself"
+    description="A 60-minute tour is the fastest way to know if IJLAPS is the right fit for you."
+    primaryCta={{ href: '/contact', label: 'Book a tour' }}
+    secondaryCta={{ href: '/dates-deadlines', label: 'See open day schedule' }}
+  />
+</Layout>

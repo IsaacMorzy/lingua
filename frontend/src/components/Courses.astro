@@ -1,0 +1,55 @@
+---
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+
+const courses = [
+  {
+    title: 'Languages',
+    description: 'English, French, Arabic, Chinese, and more for global communication.',
+    icon: '🗣️',
+  },
+  {
+    title: 'Technology',
+    description: 'ICT, software development, digital skills, and emerging tech.',
+    icon: '💻',
+  },
+  {
+    title: 'Business',
+    description: 'Entrepreneurship, accounting, marketing, and management.',
+    icon: '📊',
+  },
+  {
+    title: 'TVETA Courses',
+    description: 'Competency-based technical and vocational programs.',
+    icon: '🎓',
+  },
+] as const;
+---
+
+<section class="section bg-canvas">
+  <div class="container-main">
+    <div class="mb-12 text-center">
+      <Badge color="primary" size="md" className="mb-4">Departments</Badge>
+      <h2 class="text-3xl font-bold text-body md:text-4xl">Our Academic Departments</h2>
+      <p class="mt-4 text-lg text-body-secondary">
+        Discover programs designed to equip you with in-demand skills.
+      </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {
+        courses.map((course) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="mb-4 text-4xl">{course.icon}</div>
+              <CardTitle>{course.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p class="text-body-secondary">{course.description}</p>
+            </CardContent>
+          </Card>
+        ))
+      }
+    </div>
+  </div>
+</section>

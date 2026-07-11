@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import StatRow from '../components/StatRow.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { AspectRatio } from '@/components/tailgrids/core/aspect-ratio';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+
+// TODO: Replace Unsplash placeholder images with real blog post images from Frappe or local assets.
+const posts = [
+  {
+    title: 'Why TVETA Certification Matters for Your Career',
+    excerpt: 'Understanding the value of accredited technical and vocational education in Kenya.',
+    category: 'Education',
+    date: '12 Jan 2026',
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c661?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Top Languages to Learn in 2026',
+    excerpt: 'A guide to the most in-demand languages for business and travel.',
+    category: 'Languages',
+    date: '05 Jan 2026',
+    image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Student Success Story: From IJLAPS to Tech Lead',
+    excerpt: 'How one graduate turned classroom learning into a thriving technology career.',
+    category: 'Stories',
+    date: '22 Dec 2025',
+    image: 'https://images.unsplash.com/photo-1516321318423-2d4e1e9f27e5?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Preparing for Our Annual Career Fair',
+    excerpt: 'Tips for students ready to meet employers and sample their skills.',
+    category: 'Events',
+    date: '15 Dec 2025',
+    image: 'https://images.unsplash.com/photo-1556761175-5973dc0f3f0f?auto=format&fit=crop&w=800&q=80',
+  },
+] as const;
+---
+
+<Layout title="Blog | IJLAPS" description="News, stories, and updates from IJLAPS." canonicalPath="/blog">
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Blog' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Blog"
+    title="News & Stories"
+    subtitle="Stay updated with the latest from IJLAPS, education insights, student stories, and events."
+  />
+
+  <StatRow
+    heading="Blog at a glance"
+    stats={[
+      { value: '48', label: 'Articles published' },
+      { value: '5', label: 'Categories' },
+      { value: '12', label: 'Contributing authors' },
+      { value: '4 min', label: 'Average read' },
+    ]}
+  />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <h2 class="sr-only">Topics</h2>
+      <div class="mb-8 flex flex-wrap items-center justify-center gap-2" aria-label="Topics">
+        <span class="mr-2 text-sm font-semibold uppercase tracking-wider text-body-secondary">Topics</span>
+        {['Education', 'Languages', 'Stories', 'Events', 'Admissions'].map((topic) => (
+          <a href={`#${topic.toLowerCase()}`} class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">{topic}</a>
+        ))}
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {
+          posts.map((post) => (
+            <article>
+              <Card className="overflow-hidden rounded-xl border border-border transition-shadow hover:shadow-lg">
+                <AspectRatio ratio="video" className="overflow-hidden">
+                  <img
+                    src={post.image}
+                    alt=""
+                    class="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:scale-105"
+                    loading="lazy"
+                  />
+                </AspectRatio>
+                <CardHeader>
+                  <div class="mb-3 flex items-center justify-between">
+                    <Badge color="primary" size="sm">{post.category}</Badge>
+                    <span class="text-sm text-body-secondary">{post.date}</span>
+                  </div>
+                  <h2 class="text-xl font-semibold text-body">{post.title}</h2>
+                </CardHeader>
+                <CardContent>
+                  <p class="text-body-secondary">{post.excerpt}</p>
+                </CardContent>
+                <CardFooter>
+                  <a href="/blog" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'sm' })}>
+                    Read more
+                  </a>
+                </CardFooter>
+              </Card>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

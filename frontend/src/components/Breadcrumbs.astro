@@ -1,0 +1,45 @@
+---
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+export interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.label,
+    item: crumb.href ? `https://ijlaps.ac.ke${crumb.href}` : undefined,
+  })),
+};
+---
+
+<nav class="bg-surface border-b border-border" aria-label="Breadcrumb">
+  <div class="container-main py-3">
+    <ol class="flex flex-wrap items-center gap-2 text-sm text-body-secondary">
+      {crumbs.map((crumb, index) => (
+        <li class="flex items-center gap-2">
+          {crumb.href ? (
+            <a href={crumb.href} class="hover:text-primary transition-colors">{crumb.label}</a>
+          ) : (
+            <span aria-current="page" class="font-semibold text-body">{crumb.label}</span>
+          )}
+          {index < crumbs.length - 1 && (
+            <svg class="h-4 w-4 text-muted" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M7.293 4.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L11.586 10 7.293 5.707a1 1 0 010-1.414z" />
+            </svg>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</nav>

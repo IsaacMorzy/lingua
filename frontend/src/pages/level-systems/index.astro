@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getResourceList } from '../../lib/api';
+import { Badge } from '@/components/tailgrids/core/badge';
+
+interface LinguaLevelSystem {
+  name: string;
+  system_code: string;
+  system_name: string;
+  is_active: number;
+  is_default: number;
+  skill_target: string;
+}
+
+const systems = await getResourceList<LinguaLevelSystem>('Lingua Level System', { is_active: 1 });
+---
+
+<Layout title="Level Systems | Lingua">
+  <main class="min-h-screen bg-canvas p-6">
+    <div class="mx-auto max-w-5xl space-y-8">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-primary">Level Systems</h1>
+        <a href="/" class="text-sm text-body-secondary hover:text-primary">&larr; Back to home</a>
+      </div>
+
+      {systems.length === 0 ? (
+        <p class="text-body-secondary">No active level systems found.</p>
+      ) : (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {systems.map((system) => (
+            <a
+              href={`/level-systems/${system.system_code}`}
+              class="block rounded-xl bg-surface p-6 shadow-sm border border-border hover:shadow-md transition"
+            >
+              <div class="flex items-center gap-3">
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white font-bold">
+                  {system.system_code}
+                </span>
+                <div>
+                  <h2 class="text-lg font-semibold text-body">{system.system_name}</h2>
+                  <p class="text-sm text-body-secondary">Code: {system.system_code}</p>
+                </div>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <Badge color="gray" size="sm">{system.skill_target}</Badge>
+                {system.is_default ? (
+                  <Badge color="primary" size="sm">Default</Badge>
+                ) : null}
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </main>
+</Layout>

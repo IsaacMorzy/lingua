@@ -1,0 +1,18 @@
+---
+import { Badge } from '@/components/tailgrids/core/badge';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  align?: 'left' | 'center';
+}
+
+const { eyebrow, title, subtitle, align = 'center' } = Astro.props;
+---
+
+<div class:list={[align === 'center' ? 'text-center mx-auto max-w-3xl' : 'max-w-3xl']}>
+  {eyebrow && <Badge color="primary" size="md" className="mb-4">{eyebrow}</Badge>}
+  <h2 class="text-3xl font-bold text-body md:text-4xl">{title}</h2>
+  {subtitle && <p class="mt-4 text-lg text-body-secondary">{subtitle}</p>}
+</div>

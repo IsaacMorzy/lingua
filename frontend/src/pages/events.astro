@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import StatRow from '../components/StatRow.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+
+const events = [
+  {
+    title: 'Open Day 2026',
+    date: '15 February 2026',
+    day: '15',
+    month: 'Feb',
+    location: 'IJLAPS Main Campus',
+    description: 'Explore our facilities, meet instructors, and learn about our programs.',
+  },
+  {
+    title: 'Career Fair',
+    date: '22 March 2026',
+    day: '22',
+    month: 'Mar',
+    location: 'IJLAPS Main Campus',
+    description: 'Connect with employers and explore career opportunities after graduation.',
+  },
+  {
+    title: 'Language Immersion Week',
+    date: '10–14 April 2026',
+    day: '10–14',
+    month: 'Apr',
+    location: 'Online & On-Campus',
+    description: 'A week of workshops, conversations, and cultural activities in multiple languages.',
+  },
+  {
+    title: 'Tech Hackathon',
+    date: '5–7 May 2026',
+    day: '5–7',
+    month: 'May',
+    location: 'IJLAPS Technology Lab',
+    description: 'Team up to solve real-world problems using technology and innovation.',
+  },
+  {
+    title: 'Cohort sample & Demo Day',
+    date: '28 June 2026',
+    day: '28',
+    month: 'Jun',
+    location: 'IJLAPS Technology Lab',
+    description: 'Final-project demos across our tech bootcamps. Employers and family welcome.',
+  },
+  {
+    title: 'Admissions Q&A Live',
+    date: '12 July 2026',
+    day: '12',
+    month: 'Jul',
+    location: 'Online',
+    description: 'Open Q&A with the admissions team: deadlines, financial aid, and choosing the right programme.',
+  },
+] as const;
+---
+
+<Layout title="Events | IJLAPS" description="Upcoming events at IJLAPS." canonicalPath="/events">
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Events' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Events"
+    title="Upcoming Events"
+    subtitle="Join us for open days, career fairs, workshops, and student activities."
+  />
+
+  <StatRow
+    heading="Events at a glance"
+    stats={[
+      { value: '12+', label: 'Events per year' },
+      { value: '4', label: 'Event categories' },
+      { value: '2,400+', label: 'Attendees in 2025' },
+      { value: '35', label: 'Industry partners' },
+    ]}
+  />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="grid gap-6">
+        {
+          events.map((event) => (
+            <article>
+              <Card className="rounded-xl border border-border transition-shadow hover:shadow-lg p-2">
+                <CardHeader>
+                  <div class="flex items-start gap-6">
+                    <div class="flex h-24 w-24 flex-shrink-0 flex-col items-center justify-center rounded-xl bg-primary text-white">
+                      <span class="text-xs font-semibold uppercase tracking-wider">{event.month}</span>
+                      <span class="text-2xl font-extrabold">{event.day}</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="mb-2 flex flex-wrap items-center gap-2">
+                        <Badge color="primary" size="sm">Upcoming</Badge>
+                        <span class="text-sm text-body-secondary">{event.location}</span>
+                      </div>
+                      <h2 class="text-xl font-semibold text-body md:text-2xl">{event.title}</h2>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p class="mt-2 text-body-secondary">{event.description}</p>
+                </CardContent>
+                <CardFooter>
+                  <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'sm' })}>
+                    Register Interest
+                  </a>
+                </CardFooter>
+              </Card>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

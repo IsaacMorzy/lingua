@@ -1,0 +1,218 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { List } from '@/components/tailgrids/core/list';
+import { Separator } from '@/components/tailgrids/core/separator';
+
+const bursaries = [
+  {
+    title: 'Means-tested bursary',
+    description: 'Partial fee waiver for students from low-income households. Covers 25–75% of tuition based on household income and family circumstances.',
+    eligibility: ['KCSE mean grade C+ or below', 'Household income below KES 60,000 / month', 'First-time IJLAPS bursary applicant'],
+    coverage: '25% to 75%',
+  },
+  {
+    title: 'Merit scholarship',
+    description: 'Awarded to top-performing applicants with strong academic records or exceptional extracurricular distinction.',
+    eligibility: ['KCSE mean grade A or A-', 'Strong reference from a teacher', 'Successful interview with panel'],
+    coverage: 'Up to 50%',
+  },
+  {
+    title: 'County partnership bursary',
+    description: 'A joint programme with participating county governments to widen access to specific cohorts annually.',
+    eligibility: ['Resident of participating county', 'Application through county education office'],
+    coverage: 'Up to 100%',
+  },
+  {
+    title: 'Technology Diversity Scholarship',
+    description: 'Tech bootcamp scholarships prioritising women, persons with disabilities, and self-taught developers.',
+    eligibility: ['Admission to a tech bootcamp', 'Application essay (500 words)', 'One technical assessment'],
+    coverage: 'Up to 75%',
+  },
+];
+
+const process = [
+  'Apply for admission to your chosen programme.',
+  'Complete the financial-aid application form (download below or use the portal form).',
+  'Submit supporting documents: KCSE certificate, household-income evidence (e.g. payslip, affidavit), and reference letter.',
+  'Wait for review, panel assessment within 14 working days.',
+  'Accept award within 7 days of offer, failure means the bursary rolls to the next candidate.',
+];
+
+const timelines = [
+  { stage: 'Application window opens', due: '60 days before cohort start' },
+  { stage: 'Deadline to submit financial-aid form', due: '30 days before cohort start' },
+  { stage: 'Decisions communicated', due: '14 days after deadline' },
+  { stage: 'Acceptance deadline', due: '7 days after offer' },
+];
+
+const docs = [
+  'Latest KCSE/equivalent certificate (scanned PDF)',
+  'Household-income evidence (payslips, affidavit, business records)',
+  'Reference letter (teacher, employer, or community leader)',
+  'Personal statement (500 words, optional for bursaries, required for technical scholarship)',
+];
+---
+
+<Layout
+  title="Financial Aid | IJLAPS"
+  description="Financial aid, bursaries, and scholarships for IJLAPS programmes. Means-tested bursaries, merit scholarships, county partnerships, and tech diversity scholarships."
+  canonicalPath="/financial-aid"
+  keywords={['IJLAPS financial aid', 'IJLAPS bursary', 'IJLAPS scholarship', 'Kenya education bursary', 'tech scholarship Kenya']}
+>
+  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/admissions', label: 'Admissions' }, { href: '', label: 'Financial Aid' }]} dividerType="chevron" />
+
+  <PageHero
+    eyebrow="Admissions"
+    title="Cost should not decide who learns."
+    subtitle="Roughly 40% of our students receive IJLAPS financial aid. We offer bursaries, scholarships, and partnership programmes across language, technology, business, and TVETA tracks."
+  />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <Alert status="warning" className="mb-2">
+        <AlertIndicator />
+        <AlertContent>
+          <AlertTitle>Bursary window closes 30 days before cohort start.</AlertTitle>
+          <AlertDescription>
+            Submit the financial-aid application form within 30 days of your cohort's start date. After that we roll applications forward to the next intake, unless you re-apply.
+          </AlertDescription>
+        </AlertContent>
+      </Alert>
+    </div>
+  </section>
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Bursaries & Scholarships</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Four pathways to reduce your fees</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          Each programme below is awarded alongside standard admission. Bursaries can be stacked with merit awards
+          but not with full scholarships. Decisions are made by an independent panel.
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        {bursaries.map((b) => (
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div class="flex items-baseline justify-between gap-3">
+                <CardTitle className="text-xl">{b.title}</CardTitle>
+                <Badge color="success" size="sm">{b.coverage} fee waiver</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p class="text-sm text-body-secondary">{b.description}</p>
+            </CardContent>
+            <CardFooter>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-body-secondary">Eligibility</h4>
+              <List class="mt-2 max-w-none border-0" hideDividers>
+                {b.eligibility.map((e) => (
+                  <li class="flex items-start gap-2"><span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>{e}</li>
+                ))}
+              </List>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">How it works</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">The financial-aid process</h2>
+      </div>
+
+      <ol class="mx-auto max-w-3xl space-y-4">
+        {process.map((step, i) => (
+          <li class="flex gap-4 rounded-xl bg-surface p-4 ring-1 ring-border">
+            <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary text-base font-bold text-white">{i + 1}</span>
+            <span class="text-base text-body-secondary">{step}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Documents</Badge>
+          <h2 class="text-3xl font-bold text-body">What you'll need to submit</h2>
+          <p class="mt-4 text-body-secondary">
+            Submit alongside the financial-aid application form. Incomplete submissions are not considered.
+          </p>
+          <List class="mt-6 max-w-none" hideDividers>
+            {docs.map((d) => (
+              <li class="flex items-start gap-3 text-sm text-body-secondary">
+                <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{d}</span>
+              </li>
+            ))}
+          </List>
+        </div>
+        <div>
+          <Badge color="primary" size="md" className="mb-4">Timelines</Badge>
+          <h2 class="text-3xl font-bold text-body">Application timeline</h2>
+          <ul class="mt-6 space-y-4">
+            {timelines.map((t, i) => (
+              <li class="block">
+                <Card className="p-4">
+                  <CardContent className="px-0 py-0 flex items-start gap-4">
+                    <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary">{i + 1}</span>
+                    <div>
+                      <div class="font-semibold text-body">{t.stage}</div>
+                      <div class="mt-1 text-sm text-body-secondary">{t.due}</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="py-12 md:py-16 bg-primary">
+    <div class="container-main text-center">
+      <h2 class="text-3xl font-bold text-white md:text-4xl">Our commitment</h2>
+      <p class="mx-auto mt-4 max-w-3xl text-lg text-white/85">
+        40% of IJLAPS students benefit from some form of financial aid. We commit to publishing yearly numbers,         including the percentage of applications received vs awarded, so prospective students can plan.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
+          Talk to financial-aid office
+        </a>
+        <a href="/tuition-fees" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>
+          See tuition & fees
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    title="Ready to apply for aid?"
+    description="You can apply for financial aid at the same time as admission, or after you've received your admission letter."
+    primaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
+    secondaryCta={{ href: '/dates-deadlines', label: 'Key dates' }}
+  />
+</Layout>

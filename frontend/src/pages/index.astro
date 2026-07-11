@@ -1,0 +1,164 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
+import Courses from '../components/Courses.astro';
+import { buttonStyles } from '@/components/tailgrids/core/button';
+import { Badge } from '@/components/tailgrids/core/badge';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { Separator } from '@/components/tailgrids/core/separator';
+import { LANGUAGES } from '@/lib/data';
+
+const popularLanguages = LANGUAGES.slice(0, 6);
+
+const whyChoose = [
+  {
+    title: 'TVETA Certified',
+    description: 'Recognized by the Technical and Vocational Education and Training Authority.',
+    icon: '🏆',
+  },
+  {
+    title: 'Global Languages',
+    description: 'Learn languages that open doors to international opportunities.',
+    icon: '🌍',
+  },
+  {
+    title: 'Career Ready',
+    description: 'Hands-on tech and business programs aligned with market demand.',
+    icon: '🚀',
+  },
+] as const;
+
+const featuredPrograms = [
+  { title: 'Languages', description: 'English, French, Arabic, Chinese, Swahili', icon: '🗣️' },
+  { title: 'Technology', description: 'ICT, Software Development, Digital Skills', icon: '💻' },
+  { title: 'Business', description: 'Entrepreneurship, Accounting, Marketing', icon: '📊' },
+  { title: 'TVETA', description: 'Technical and Vocational Certifications', icon: '🎓' },
+] as const;
+---
+
+<Layout
+  title="IJLAPS | TVETA Certified Languages, Technology & Business"
+  description="IJLAPS, TVETA-certified institution in Kenya. 10 foreign languages (English, French, Arabic, Mandarin, German, Kiswahili, Spanish, Japanese, Portuguese, Italian) from A1 to C2. Tech bootcamps in software engineering, data, cybersecurity, AI. Business and TVETA programmes apply now."
+  keywords={['IJLAPS', 'TVETA', 'language school Nairobi', 'tech bootcamp Kenya', 'A1 C2', 'CEFR Kenya', 'business programmes Nairobi']}
+>
+  <Hero />
+  <Stats />
+  <Courses />
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Why Choose Us</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Why Choose IJLAPS?</h2>
+        <p class="mt-4 text-lg text-body-secondary">
+          We combine TVETA-accredited standards with practical, industry-relevant training to ensure every
+          graduate is ready for the workforce.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {
+          whyChoose.map((item) => (
+            <Card className="text-center shadow-sm">
+              <CardHeader>
+                <div class="mb-4 text-4xl">{item.icon}</div>
+                <CardTitle>{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p class="text-sm text-body-secondary">{item.description}</p>
+              </CardContent>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-canvas">
+    <div class="container-main">
+      <div class="mb-12 text-center">
+        <Badge color="primary" size="md" className="mb-4">Programs</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Explore Our Departments</h2>
+        <p class="mt-4 text-lg text-body-secondary">Find the right program for your career goals.</p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {
+          featuredPrograms.map((program) => (
+            <a
+              href="/departments"
+              class="block transition-shadow hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              <Card className="text-center shadow-sm">
+                <CardHeader>
+                  <div class="mb-4 text-4xl">{program.icon}</div>
+                  <CardTitle>{program.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p class="text-sm text-body-secondary">{program.description}</p>
+                </CardContent>
+              </Card>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Separator class="my-8" />
+
+  <section class="section bg-surface">
+    <div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Languages</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Pick a language. Start at A1. Reach C2.</h2>
+        <p class="mt-4 text-lg text-body-secondary">Ten languages, all CEFR-aligned, with internationally-recognised exam preparation. Pick yours.</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {popularLanguages.map((lang) => (
+          <a href={`/languages/${lang.slug}`} class="group block transition-shadow hover:shadow-lg">
+            <Card className="flex flex-col shadow-sm">
+              <CardHeader>
+                <div class="flex items-center gap-3">
+                  <span class="text-3xl">{lang.flagEmoji}</span>
+                  <CardTitle>{lang.name}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p class="flex-1 text-sm text-body-secondary">{lang.shortDescription}</p>
+              </CardContent>
+              <CardFooter>
+                <span class="inline-flex items-center gap-1 text-sm font-semibold text-primary">View {lang.name} programme →</span>
+              </CardFooter>
+            </Card>
+          </a>
+        ))}
+      </div>
+      <div class="mt-8 text-center">
+        <a href="/languages" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'md' })}>
+          See all 10 languages
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16 bg-primary">
+    <div class="container-main text-center">
+      <h2 class="text-3xl font-bold text-white md:text-4xl">Ready to apply?</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
+        Join thousands of students who have built their careers through IJLAPS.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="/admissions" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
+          Apply Today
+        </a>
+        <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
