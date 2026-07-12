@@ -4,7 +4,7 @@
 
 ## Current focus
 
-Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business, 5 TVETA, 4 professional, 3 vocational programmes. 84 static pages. Full opendesign audit completed — 41 violations fixed. Remaining work: swap ui-avatars/Unsplash for real imagery, add Frappe CMS backend for dynamic content.
+Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business, 5 TVETA, 4 professional, 3 vocational programmes (33 programmes total). 84 static pages. Ninth audit sweep (Jul 2026): vitest 2.1.9 added to devDependencies with `test:unit` (single run) and `test:unit:watch` scripts. `frontend/vitest.config.ts` with @ alias. `frontend/tests/unit/button.test.ts` with 8 focused CVA factory tests passing in 514ms. Override test went through 3 iterations to settle on a single honest assertion (substring quirk in the CSS variable names + twMerge not stripping the on-dark class + stylesheet source order being the real cascade mechanism). Eighth-sweep work (test:mobile:debug local runner) retained. Seventh-sweep work (test:mobile local runner, dead API removal, Contact intro) retained. Sixth-sweep work (CVA mirror consolidation, mobile.yml CI workflow, mobile spec expansion to 20 tests across 4 viewports, data-testid on CTABand title) retained. Fifth-sweep work (megamenu differentiation, genericism removal, mobile spec creation, footer programGroups expansion to 6 categories) retained. Fourth sweep (genericism removal) + third sweep (opendesign + AI-writing + accessibility) both retained. Zero design violations confirmed across all files. Remaining work: swap ui-avatars/Unsplash for real imagery, add Frappe CMS backend for dynamic content.
 
 ## Active issues
 
@@ -88,6 +88,15 @@ _None._
 - **#13 (Frappe API)** — `ready-for-human`. `api.ts` exists with GET/POST helpers. Needs: CSRF token handling, auth session management, error responses.
 
 All other issues closed as already-implemented (7 total).
+
+## Previous sweep (Jul 2026)
+
+- **DESIGN.md violation fix**: Hero.astro rewritten — decorative blur circles and gradient orbs removed, cleaner typography with `tracking-tight`, properly sourced from brand tokens.
+- **CTABand.astro redesigned**: decorative blur orbs removed, white-on-primary CTA buttons with `bg-white/10` eyebrow badge for contrast.
+- **index.astro overhauled**: removed `outcomes.map()` pattern in favor of static markup, fixed card border spec (border-0 bg-canvas for why-choose cards, border border-border for outcome cards), fixed React prop `class`→`className` on 3 Card components.
+- **Icons extended**: added ChevronDown, Sun, Moon, FileText, HelpCircle icons to icon library.
+- **Unused import removal**: Header.astro — cleaned up 4 imported but unused icon references (Code, ChartBar, Users, HelpCircle).
+- Build: 84 pages, 0 errors.
 
 ## Active work
 

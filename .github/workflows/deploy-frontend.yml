@@ -1,0 +1,91 @@
+name: Deploy Astro Frontend
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - 'deployment/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Astro frontend
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lingua-www
+          path: |
+            lingua/www
+            lingua/public/frontend
+          if-no-files-found: error
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lingua-www
+          path: .
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          log-public-key: false
+
+      - name: Add host to known hosts
+        env:
+          DEPLOY_HOST_KEY: ${{ secrets.DEPLOY_HOST_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          if [ -z "$DEPLOY_HOST_KEY" ]; then
+            echo "Error: DEPLOY_HOST_KEY secret is not set" >&2
+            exit 1
+          fi
+          printf '%s\n' "$DEPLOY_HOST_KEY" >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          rsync -avz --delete ./lingua/www/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/www/"
+          rsync -avz --delete ./lingua/public/frontend/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/public/frontend/"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench build && sudo nginx -t && sudo systemctl reload nginx'
+
+      - name: Run Frappe migrate (manual schema changes only)
+        # Uncomment and run only when Frappe schema changes; not needed for pure frontend deploys.
+        if: false
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate'
