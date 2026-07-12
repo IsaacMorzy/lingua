@@ -20,3 +20,6 @@ lingua/public/frontend/images
 
 # Local env (never committed)
 frontend/.env
+
+# Lockfiles for non-authoritative package managers (NPM is authoritative; see apps/lingua/frontend/package-lock.json).
+yarn.lock
