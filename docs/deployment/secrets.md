@@ -44,10 +44,12 @@ The deploy workflow (`.github/workflows/deploy-frontend.yml`) reads four secrets
 4. **Run `ssh-keyscan` to capture the host fingerprint for `DEPLOY_HOST_KEY`**:
 
    ```bash
-   ssh-keyscan -t ed25519,ecdsa,rsa ijlaps.ac.ke
+   ssh-keyscan -p 4122 -t ed25519,ecdsa,rsa ijlaps.ac.ke
    ```
 
    Copy the matching line(s) verbatim. If the server advertises multiple key types, include one line per type — the runner will accept any of them.
+
+   **Note:** The production server's SSH daemon listens on **port 4122**, not the default 22. The `-p 4122` flag is required; without it, `ssh-keyscan` will silently time out and the resulting `DEPLOY_HOST_KEY` will be empty, breaking the workflow's strict host-key check. `ssh-keyscan` will write the known_hosts entry in `[hostname]:port` bracket form, which is the format the SSH client expects when connecting via a non-default port.
 
 5. **Configure passwordless sudo for the deploy user** so the workflow's `sudo nginx -t && sudo systemctl reload nginx` and `bench build` steps succeed:
 
