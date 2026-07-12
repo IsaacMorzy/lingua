@@ -8,9 +8,9 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 
 ## Main tip
 
-- `main` tip — `chore(rules): loosen push/merge gates for autonomous PR flow` (`267cad6`), on top of PR #30 merge commit (`4891923`).
-- PR: https://github.com/IsaacMorzy/lingua/pull/30 (MERGED 2026-07-12).
-- 84-page build clean; vitest 8/8; bundle: ~194KB JS / ~75KB CSS.
+- `main` tip — `Merge pull request #35 from IsaacMorzy/chore/state-close-stale-ready-for-agent-queue` (`54054fa`), with feature commit `950b566 chore(state): close-out verified ready-for-agent queue (#31, #32, #34)`.
+- PR: https://github.com/IsaacMorzy/lingua/pull/35 (MERGED 2026-07-13). Feature branch deleted via `--delete-branch`.
+- 84-page build clean; vitest 8/8; `playwright test tests/visual/mobile-responsive.spec.ts --list` reports 21 tests across 4 viewports; bundle: ~194KB JS / ~75KB CSS.
 
 ## Active issues
 
