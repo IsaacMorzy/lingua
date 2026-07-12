@@ -77,9 +77,10 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
-          rsync -avz --delete ./lingua/www/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/www/"
-          rsync -avz --delete ./lingua/public/frontend/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/public/frontend/"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench build && sudo nginx -t && sudo systemctl reload nginx'
+          # Server SSH daemon listens on port 4122 (not 22). Pass -p 4122 to rsync and ssh.
+          rsync -avz --delete -e "ssh -p 4122" ./lingua/www/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/www/"
+          rsync -avz --delete -e "ssh -p 4122" ./lingua/public/frontend/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/public/frontend/"
+          ssh -p 4122 "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench build && sudo nginx -t && sudo systemctl reload nginx'
 
       - name: Run Frappe migrate (manual schema changes only)
         # Uncomment and run only when Frappe schema changes; not needed for pure frontend deploys.
@@ -88,4 +89,5 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate'
+          # Server SSH daemon listens on port 4122 (not 22). Match the deploy step above.
+          ssh -p 4122 "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate'
