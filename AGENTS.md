@@ -60,4 +60,4 @@ Before executing a human task:
 2. Record the action in `loop-run-log.md`.
 3. Update `STATE.md` if the task changes project state.
 
-For destructive or irreversible actions (e.g., deleting DocTypes, merging to `main`, pushing to remote, changing production data), obtain explicit user approval first.
+For destructive or irreversible actions beyond a single reviewed PR merge (deleting DocTypes, removing tests, schema migrations, production data changes, force-pushes), obtain explicit user approval first. Push to feature branches and merge to `main` via a PR are allowed when the `code-reviewer-minimax-m3` sub-agent returns a **safe to merge** verdict on the PR (see `loop-constraints.md` Push / merge rules).

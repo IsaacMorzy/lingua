@@ -68,9 +68,18 @@ At the start of each run, read `STATE.md` and the latest `loop-run-log.md` entry
 
 ## Push / merge rules
 
-- Do **not** auto-merge to `main`.
-- Require human approval before pushing to remote.
+- Agents may push to feature branches and merge to `main` via `gh pr merge` when the PR is bounded to a single intended change AND the `code-reviewer-minimax-m3` sub-agent returns a **safe to merge** verdict (no HARD findings) on the PR diff.
+- For actions beyond a single PR merge (deleting DocTypes, removing tests, schema migrations, production data changes, force-pushes) agents must still obtain explicit user approval per change.
 - Escalate after three failed fix attempts.
+- Never fast-forward or push directly to `main` — always go via a PR (preserve traceability, allow rollback via PR-revert).
+- After a successful merge, delete the feature branch (for example via `gh pr merge --delete-branch`) so stale branches do not accumulate.
+
+## Secret hygiene
+
+- Never store credentials in shell RC files (`~/.bashrc`, `~/.zshrc`, `/etc/environment`), in `.env` files that are tracked, or in any tracked source file.
+- Use `gh auth login --with-token` for credential rotation — it stores tokens in `~/.config/gh/hosts.yml` with 0700 permissions instead of leaking via process listings, `/proc/*/environ`, or Docker mounts.
+- Any token that has appeared in a chat transcript, screen share, or pastebin is treated as compromised. Recommend revocation at https://github.com/settings/tokens; mint a fresh token and rotate via `gh auth login --with-token` from a local terminal, never from a chat.
+- Repo-wide secret scan is a recommended pre-commit gate (grep for `ghp_*`, `AKIA*`, `AIza*`, `xox*`, `sk-*`, `-----BEGIN *PRIVATE KEY-----`, `password = '...'`).
 
 ## Safety defaults
 
