@@ -90,6 +90,8 @@ To enable automatic deployment to the server:
 
 2. The workflow already uses `rsync`/`ssh`; no further changes are required.
 
+For complete provisioning steps (SSH keypair generation, `ssh-keyscan` capture, `/etc/sudoers.d/lingua-deploy` config, security model, PAT hygiene, disaster recovery), see [`docs/deployment/secrets.md`](../../docs/deployment/secrets.md).
+
 ## Health Check & Status
 
 Nginx exposes two health endpoints and a status page:
