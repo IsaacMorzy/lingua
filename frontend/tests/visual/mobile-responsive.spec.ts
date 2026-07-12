@@ -158,8 +158,6 @@ test.describe('tablet (768x1024)', () => {
     expect(overflow).toBeLessThanOrEqual(1);
   });
 
-  test('/footer width is at least viewport width', async ({ page }) => {
-
   test('/header is sticky', async ({ page }) => {
     await page.goto('/');
     const header = page.locator('header').first();

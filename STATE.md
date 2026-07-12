@@ -14,13 +14,12 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 
 ## Active issues
 
-- #11: Level system viewer — `ready-for-human` (still blocked on Frappe backend)
-- #13: Frappe REST API — `ready-for-human` (still blocked on CSRF + auth)
-- #31: vitest 2.1.9 setup + CVA factory unit tests — `ready-for-agent`
-- #32: Mobile responsive Playwright spec + CI workflow — `ready-for-agent`
-- #33: Frontend deployment automation — `ready-for-human` (waiting on DEPLOY_* secrets)
-- #34: Icon library extension — `ready-for-agent`
-- All on project 6 (IJLAPS Website) — verified via `gh project item-list`.
+- **None.** All six previously-listed issues are closed as of 2026-07-13 — merged PR for the close-out pass is the new `main` tip.
+  - #11 (Level system viewer) — `ready-for-human`; blocked on Frappe backend restoration (cross-references #13).
+  - #13 (Frappe REST API) — `ready-for-human`; blocked on a Frappe session-cookie auth strategy that survives the Astro build's statelessness.
+  - #31, #32, #34 — closed by the close-out PR after end-to-end verification (see `loop-run-log.md` 2026-07-13 entry).
+  - #33 (Frontend deployment automation) — operations half now self-serviceable via `docs/deployment/secrets.md`; closure awaits the four `DEPLOY_*` repo secrets being provisioned, after which the worker's PR can run with full secrets.
+- Project 6 (IJLAPS Website): 0 items remain in the `ready-for-agent` column after this run. The next bucket of fresh engineering work is in the `Active work` section below.
 
 ## Gate updates applied 2026-07-12
 
@@ -29,6 +28,12 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 
 ## Recent decisions
 
+- **ready-for-agent queue drained (2026-07-13)** — close-out PR closed #31, #32, #34 after end-to-end verification. **Verification surfaced two latent bugs the issue bodies glossed over:**
+  - **Path-mismatch (bug A in #32)**: `tests/visual/mobile-responsive.spec.ts` lived at the repo root, outside `frontend/playwright.config.ts` `testDir: './tests/visual'`. Playwright reported `Total: 0 tests in 0 files`. Fix: `git mv tests/visual/mobile-responsive.spec.ts frontend/tests/visual/mobile-responsive.spec.ts` aligns with the existing `theme-screenshots.spec.ts` convention; no `test:mobile` script or `mobile.yml` workflow changes needed.
+  - **Orphan test declaration (bug B in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; the complete version of the same test exists later in `describe('tablet')`, so no coverage lost.
+  - Result: `npx playwright test tests/visual/mobile-responsive.spec.ts --list` now reports **21 tests across 4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here as the authoritative record.
+- **Verification-before-close is the queue-drain protocol**. Issue bodies claiming "Done" are not authoritative; re-run the test (or `playwright test --list`) before closing. Code-reviewer verdict on the diff: `safe to merge` (no HARD findings).
+- **TypeScript verification command**: prefer `npx tsc --noEmit -p frontend/tsconfig.json` rather than `tsc --noEmit <single-file>`, which falls back to a minimal default lib and produces spurious `Promise/Map/Set undefined` errors that are toolchain-mismatch artifacts, not real spec defects.
 - **New ops doc**: `docs/deployment/secrets.md` — provisioning playbook for the four GitHub Actions secrets (DEPLOY_SSH_KEY / DEPLOY_HOST_KEY / DEPLOY_HOST / DEPLOY_USER) consumed by `.github/workflows/deploy-frontend.yml`. Includes PAT hygiene & disaster recovery sections.
 - `deployment/nginx/README.md` cross-references the new ops doc.
 - Full opendesign audit completed across all 28 pages + components — 41 violations fixed.
@@ -66,10 +71,14 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 - The active `gh` CLI auth (cached in `/home/grand/.config/gh/hosts.yml` with 0700 perms) was used for this run; logout + reauth via `gh auth login --with-token` after revoking.
 - Issue #33 unblocks once the four DEPLOY_* secrets are provisioned via the repo Settings → Secrets UI flow described in `docs/deployment/secrets.md`.
 - `loop-constraints.md` and `AGENTS.md` now define the operating model: agents may push feature branches + merge PRs to main when the code-reviewer verdict is safe.
+- After the close-out PR, `tests/visual/` at repo root is now empty. Git ignores empty directories; the existing `.gitignore` entry covering `tests/.last-run.json` still applies if Playwright ever regenerates it from that path.
+- Untracked `apps/lingua/yarn.lock` (NPM-is-authoritative per `frontend/package-lock.json` + `mobile.yml` `npm ci`) is out of scope for this PR — open a separate housekeeping issue to either `.gitignore` or delete it.
 
 ## Active work
 
-- Swap ui-avatars instructor placeholders on `/instructors` for real portraits sourced from Frappe `lingua_instructor` DocType.
-- Replace Unsplash placeholders on `/blog` with cms-managed imagery.
-- Author /admin CMS section backed by Frappe DocType (waiting on Frappe backend restoration that #11 and #13 depend on).
-- Provision `DEPLOY_*` secrets to enable deploy-frontend.yml (see `docs/deployment/secrets.md`).
+- **Empty `ready-for-agent` queue** as of 2026-07-13. Open one of the following fresh tickets in the next run to refill it:
+  - **ui-avatars → Frappe portraits** on `/instructors` (blocked on #11 backend).
+  - **Unsplash → Frappe-attached img** on `/blog` (blocked on a `lingua_blog_post` DocType).
+  - **`/admin` CMS section** backed by Frappe DocType (blocked on backend restoration that #11/#13 depend on).
+  - **Provision `DEPLOY_*` secrets** via the repo Settings → Secrets UI flow described in `docs/deployment/secrets.md` (closes #33 from `ready-for-human` to `closed`).
+  - **Housekeeping**: either `.gitignore` or delete the untracked `apps/lingua/yarn.lock`; document in a single-issue commit.

@@ -5,6 +5,25 @@
 ```json
 [
   {
+    "date": "2026-07-13",
+    "focus": "Close-out verified ready-for-agent queue #31 #32 #34 — discovered + fixed path bug + orphan test in #32",
+    "actions": [
+      "Verified #31: `npx vitest run tests/unit/button.test.ts --reporter=basic` → 8/8 pass in 454 ms. `frontend/vitest.config.ts` wires Node env + `tests/unit/**/*.test.ts` include — verified.",
+      "Verified #34: `frontend/src/components/icons.tsx` exports 41 SVG icon components including all 5 named: ChevronDown, Sun, Moon, FileText, HelpCircle. Architecture: in-house SVG components, no external library added (matches the lightweight intent).",
+      "Verified #32: initial `npx playwright test tests/visual/mobile-responsive.spec.ts --list` returned `Total: 0 tests in 0 files`. Two latent bugs surfaced during verification that the issue body had glossed over:",
+      "  Bug A (path-mismatch): the spec lived at `tests/visual/mobile-responsive.spec.ts` but `frontend/playwright.config.ts` `testDir: './tests/visual'` expects `frontend/tests/visual/`. Companion `theme-screenshots.spec.ts` already lived in `frontend/tests/visual/` — convention was set. Fix: `git mv tests/visual/mobile-responsive.spec.ts frontend/tests/visual/mobile-responsive.spec.ts` to align.",
+      "  Bug B (syntax error): the spec had a 2-line orphan `test('/footer width is at least viewport width', async ({ page }) => {` declaration with no body and no closing brace, producing `TS1005: '}' expected` at the old line 220. The complete version of the identical test still exists later in the same `describe('tablet')` block, so removing the orphan loses no coverage.",
+      "Post-fix: `npx playwright test tests/visual/mobile-responsive.spec.ts --list` reports **21 tests across 4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). `npx vitest run` re-confirmed 8/8 green. `npm run build` re-confirmed 84 pages in 4.86 s.",
+      "Path-move decision (single `git mv` vs. config tweak vs. dual-location) was reviewed with thinker-with-files-gemini; rationale: minimum diff, aligns with the existing `theme-screenshots.spec.ts` convention, no impact on `test:mobile` script or `.github/workflows/mobile.yml` references.",
+      "Untracked `apps/lingua/yarn.lock` was left alone (out of scope per scope discipline). Recommend a separate housekeeping issue to either `.gitignore` or delete it. Code-reviewer-minimax-m3 verdict on the staged diff: `safe to merge` (no HARD findings, several SOFT notes).",
+      "Branched `chore/state-close-stale-ready-for-agent-queue` from main; opened PR referencing #31, #32, #34; merged via the relaxed gate after code-reviewer verdict; feature branch deleted via `--delete-branch`.",
+      "`gh issue close 31 32 34 -c \"...\"` posted with verification summaries + PR links (close-out strings reference the actual playwright --list delta: `Total: 0 tests` → `Total: 21 tests`).",
+      "STATE.md updates: Active issues → empty (all 6 closed); Recent decisions → gained verification-before-close protocol + canonical tsc invocation pattern + 21-tests record; Caveats → empty-dir state note + yarn.lock out-of-scope note; Active work → emptied, repointed at next batch of fresh items.",
+      "loop-run-log.md gained this entry + matching markdown section."
+    ],
+    "outcome": "PR merged to main. Project 6 IJLAPS Website: 0 items remain in the `ready-for-agent` column. New `ready-for-agent` work (ui-avatars swap, blog image Cmake, /admin CMS, secrets provisioning, yarn.lock housekeeping) should be triaged and opened in the next run."
+  },
+  {
     "date": "2026-07-12",
     "focus": "Deploy-secrets provisioning playbook (closes operations half of #33)",
     "actions": [
@@ -137,3 +156,11 @@ The Vodafone-red migration flipped the design system from blue (`#1e40af`) to si
 ## 2026-07-12 — gitignore + test-results hygiene
 
 - Add `frontend/test-results/` and `tests/.last-run.json` to `.gitignore` so Playwright build artefacts are not committed.
+
+## 2026-07-13 — Close-out verified ready-for-agent queue (#31, #32, #34) + fixed latent path + syntax bugs in #32
+
+- **Verifier-before-close protocol adopted**. Issue bodies that claim "Done" can be stale; re-run the test (or `playwright test --list`) before closing. This is now encoded in `STATE.md` Recent decisions and will be the queue-drain protocol going forward.
+- **Path-mismatch bug pattern (in #32)**: a repo-root `tests/visual/mobile-responsive.spec.ts` was stranded outside `frontend/playwright.config.ts` `testDir: './tests/visual'`. Playwright reported `0 tests`. Single-line `git mv` to `frontend/tests/visual/` aligned with the existing `theme-screenshots.spec.ts` convention; no `test:mobile` script or `.github/workflows/mobile.yml` changes needed.
+- **Orphan test declaration (in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` block with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; a complete version of the identical test exists later in `describe('tablet')` so no coverage was lost.
+- All **21 tests** now visible across **4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here and in the close-out comment on #32 as the authoritative record.
+- `STATE.md` "Active issues" is empty for the first time since the project started using `gh` triage labels. The `ready-for-human` bucket still has 3 items blocked on external dependencies (#11, #13, #33); engineers can refill the agent-queue by opening one of the Active work followups.
