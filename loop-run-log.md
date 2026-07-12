@@ -6,6 +6,21 @@
 [
   {
     "date": "2026-07-13",
+    "focus": "yarn.lock housekeeping + deploy verification (#37 closed; #33 blockers surfaced)",
+    "actions": [
+      "Verified #33 deploy state via `gh secret list`: 3 of 4 secrets provisioned (DEPLOY_HOST / DEPLOY_HOST_KEY / DEPLOY_USER, all 2026-07-12) but DEPLOY_SSH_KEY is missing. This contradicts the operator’s belief that all secrets were provisioned; the operator had assumed completeness from the 3 recent secret updates.",
+      "Pulled the run log for the most recent failed deploy (`gh run view 29211987871 --log-failed`): the actual failure point is `Node.js v20.20.2 is not supported by Astro! Please upgrade Node.js to a supported version: \">=22.12.0\"`. The workflow file at `.github/workflows/deploy-frontend.yml` line 18 sets `node-version: '20'`, which is below the requirement. Three consecutive deploys on `main` (#29207072106 / #29207621844 / #29211987871) failed at this step.",
+      "Per user direction (verify-only, no trigger, no fix), did not run the workflow or modify the workflow file. Recorded both blockers (DEPLOY_SSH_KEY + Node 20→22 bump) in STATE.md Caveats and Active work so the next run can pick them up.",
+      "Opened issue #37 (`chore: gitignore untracked yarn.lock + delete existing yarn.lock`) with acceptance criteria + out-of-scope notes (no yarn support added; NPM remains authoritative).",
+      "Implemented the housekeeping: appended `yarn.lock` to `.gitignore` with a comment that NPM is authoritative (references `frontend/package-lock.json`), and deleted the untracked `apps/lingua/yarn.lock` from the working tree. 3-line diff.",
+      "Verification on `chore/yarn-lock-housekeeping`: `npx vitest run tests/unit/button.test.ts --reporter=basic` → 8/8 pass; `npx playwright test tests/visual/mobile-responsive.spec.ts --list` → 21 tests; `npm run build` → 84 pages in 4.93s; `ls -la yarn.lock` → file absent. Code-reviewer-minimax-m3 verdict: `safe to merge` (no HARD findings; SOFT notes on .gitignore path style and untracked-file-deletion visibility).",
+      "Opened PR #38 → merged via `gh pr merge 38 --merge --delete-branch`. New `main` tip: `11537b8`. Issue #37 auto-closed via `Closes #37` in the commit message.",
+      "STATE.md + loop-run-log.md updated to point Main tip at `11537b8` + record the two deploy blockers as the highest-priority Active work for the next run."
+    ],
+    "outcome": "PR #38 merged. `yarn.lock` is gitignored and absent from the working tree. The deploy-frontend.yml workflow is still broken (Node 20 vs Astro 22.12.0+, plus missing DEPLOY_SSH_KEY); both blockers are recorded in STATE.md for the next run. Project 6 IJLAPS Website: 0 items in `ready-for-agent`."
+  },
+  {
+    "date": "2026-07-13",
     "focus": "Close-out verified ready-for-agent queue #31 #32 #34 — discovered + fixed path bug + orphan test in #32",
     "actions": [
       "Verified #31: `npx vitest run tests/unit/button.test.ts --reporter=basic` → 8/8 pass in 454 ms. `frontend/vitest.config.ts` wires Node env + `tests/unit/**/*.test.ts` include — verified.",
@@ -164,3 +179,12 @@ The Vodafone-red migration flipped the design system from blue (`#1e40af`) to si
 - **Orphan test declaration (in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` block with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; a complete version of the identical test exists later in `describe('tablet')` so no coverage was lost.
 - All **21 tests** now visible across **4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here and in the close-out comment on #32 as the authoritative record.
 - `STATE.md` "Active issues" is empty for the first time since the project started using `gh` triage labels. The `ready-for-human` bucket still has 3 items blocked on external dependencies (#11, #13, #33); engineers can refill the agent-queue by opening one of the Active work followups.
+
+## 2026-07-13 — yarn.lock housekeeping (#37) + deploy verification (#33 blockers surfaced)
+
+- **yarn.lock housekeeping landed** via PR #38 (`11537b8`). `.gitignore` now lists `yarn.lock` with an explanatory comment; the untracked `apps/lingua/yarn.lock` is deleted. NPM is authoritative; no yarn support added.
+- **Deploy verification surfaced two real blockers for #33** that the user had assumed were already resolved:
+  1. **`DEPLOY_SSH_KEY` is missing** — only 3 of 4 secrets are provisioned (`DEPLOY_HOST` / `DEPLOY_HOST_KEY` / `DEPLOY_USER`, all 2026-07-12). The `webfactory/ssh-agent@v0.9.0` step cannot authenticate without it.
+  2. **`.github/workflows/deploy-frontend.yml` pins `node-version: '20'`** but Astro requires `>=22.12.0`. The first three deploys on `main` failed at the build step with `Node.js v20.20.2 is not supported by Astro!`. Bump to `'22'` to unblock.
+- Per user direction (verify-only, no trigger), the workflow file was not modified. Both blockers are recorded in `STATE.md` Caveats and Active work for the next run to pick up.
+- Issue #37 auto-closed via the `Closes #37` line in the PR #38 commit message.
