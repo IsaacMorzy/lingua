@@ -81,10 +81,11 @@ const techCohorts = [
     eyebrow="Admissions"
     title="Plan your application around these dates."
     subtitle="Three calendar intakes a year, ten exam-board sittings we routinely register students for, and a few deadlines that surprise people if they miss them."
+    variant="centered"
+    bgImage={true}
   />
 
-  <section class="bg-surface border-b border-border py-6">
-    <div class="container-main space-y-3">
+  <section class="border-b border-border bg-surface"><div class="container-main space-y-3">
       <Alert status="warning">
         <AlertIndicator />
         <AlertContent>
@@ -97,11 +98,11 @@ const techCohorts = [
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Intakes</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Three intakes per year</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           Most programmes begin in January, May, or September. Bootcamps and short courses may run additional
           cohorts, see the programme page for specifics.
@@ -110,7 +111,7 @@ const techCohorts = [
 
       <div class="grid gap-8 md:grid-cols-3">
         {intakes.map((i) => (
-          <Card className="shadow-sm">
+          <Card className="shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <Badge color="primary" size="sm">{i.month}</Badge>
               <CardTitle className="mt-3">{i.label}</CardTitle>
@@ -128,11 +129,11 @@ const techCohorts = [
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-primary-subtle"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Exams</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Exam sitting dates we register for</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           IJLAPS handles registration for the sitting dates below. Exam fees are paid directly to the examining body.
         </p>
@@ -140,7 +141,7 @@ const techCohorts = [
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {examDates.map((e) => (
-          <Card className="shadow-sm">
+          <Card className="shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <CardTitle>{e.exam}</CardTitle>
               <p class="mt-1 text-xs uppercase tracking-wider text-body-secondary">{e.body}</p>
@@ -164,11 +165,11 @@ const techCohorts = [
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Technology programmes</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Next tech bootcamp cohorts</h2>
+        <div class="divider-accent mt-3" />
       </div>
 
       <TableRoot>
@@ -193,18 +194,18 @@ const techCohorts = [
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="warning" size="md" className="mb-4">Key Deadlines</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Admissions milestones you should not miss</h2>
+        <div class="divider-accent mt-3" />
       </div>
 
       <ol class="relative mx-auto max-w-3xl border-l border-border pl-8">
         {keyDeadlines.map((d, i) => (
           <li class="relative pb-10 last:pb-0">
             <span class="absolute -left-[42px] flex h-8 w-8 items-center justify-center rounded-full bg-warning text-xs font-bold text-white ring-4 ring-white">{i + 1}</span>
-            <Card className="p-5 shadow-sm">
+            <Card className="p-5 shadow-sm border-2 border-transparent transition-all duration-300 hover:border-primary/20 hover:shadow-md">
               <CardContent className="px-0 py-0">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
                   <div class="text-sm font-bold text-warning">{d.date}</div>

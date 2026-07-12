@@ -16,3 +16,8 @@ export default defineConfig({
     reuseExistingServer: true,
   },
 });
+
+// Mobile responsive viewports are configured per-test via `test.use({ viewport: ... })`
+// in a dedicated `tests/visual/mobile-responsive.spec.ts`. Keeping them out of
+// `projects` avoids invalidating the existing theme-screenshots snapshots by
+// running every desktop screenshot test under every mobile breakpoint.

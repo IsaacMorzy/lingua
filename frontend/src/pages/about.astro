@@ -5,29 +5,28 @@ import CTABand from '../components/CTABand.astro';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { Trophy, HeartHandshake, ShieldCheck, Target, ChevronRight } from '@/components/icons';
 
 const values = [
   {
     title: 'Excellence',
     description: 'We hold every course, instructor, and student to high standards of quality and rigor.',
-    icon: '🏆',
+    icon: Trophy,
   },
   {
     title: 'Inclusivity',
     description: 'Education should be accessible to all. We welcome learners from every background.',
-    icon: '🤝',
+    icon: HeartHandshake,
   },
   {
     title: 'Integrity',
     description: 'We operate with transparency, honesty, and respect for every learner.',
-    icon: '✅',
+    icon: ShieldCheck,
   },
   {
     title: 'Accessibility',
     description: 'Our programs and facilities are designed to remove barriers to learning.',
-    icon: '♿',
+    icon: Target,
   },
 ] as const;
 
@@ -45,16 +44,17 @@ const stats = [
 
   <PageHero
     eyebrow="University Overview"
-    title="Building Futures Through Education"
-    subtitle="IJLAPS is a TVETA-certified institution in Kenya dedicated to empowering students with languages, technology, business, and professional skills. Four schools, one academic-quality framework, 5,000+ learners."
+    title="Building Kenya's Workforce"
+    subtitle="IJLAPS is a TVETA-certified institution in Kenya. Four schools covering languages, technology, business, and TVETA trades. Four schools, one academic-quality framework, 5,000+ learners."
+    variant="decorative"
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface py-16"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-2">
-        <div class="rounded-2xl bg-slate-100 dark:bg-ink-soft p-8">
+        <div class="rounded-2xl bg-canvas p-8 dark:bg-ink-soft">
           <Badge color="primary" size="md" className="mb-4">Our Mission</Badge>
-          <h2 class="text-3xl font-bold text-body">Empowering Kenya's Workforce</h2>
+          <h2 class="text-3xl font-bold text-body">Building Kenya's Workforce</h2>
+          <div class="divider-accent my-4" />
           <p class="mt-4 text-lg text-body-secondary">
             To provide high-quality, TVETA-certified education that equips the Kenyan workforce with globally
             competitive skills in languages, technology, and business.
@@ -62,32 +62,33 @@ const stats = [
         </div>
         <div class="rounded-2xl bg-primary p-8 text-white">
           <Badge color="primary" size="md" className="mb-4 bg-white/20 text-white border-0">Our Vision</Badge>
-          <h2 class="text-3xl font-bold">A Leading Center for Education</h2>
+          <h2 class="text-3xl font-bold">TVETA-certified education in East Africa</h2>
+          <div class="divider-accent my-4 bg-white/40" />
           <p class="mt-4 text-lg text-white/85">
-            To become a leading center for technical and vocational education in East Africa, recognized for
-            excellence, innovation, and student success.
+            To become a recognised center for technical and vocational education in East Africa, with
+            published outcomes, transparent pricing, and a learner-first operating model.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-primary-subtle py-16"><div class="container-main">
       <div class="mb-12 text-center">
         <Badge color="primary" size="md" className="mb-4">Our Values</Badge>
-        <h2 class="text-3xl font-bold text-body md:text-4xl">What We Stand For</h2>
-        <p class="mt-4 text-lg text-body-secondary">The principles that guide everything we do.</p>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Our four values</h2>
+        <div class="divider-accent mt-3" />
+        <p class="mt-4 text-lg text-body-secondary">The four values the institution is measured against.</p>
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {
           values.map((value) => (
-            <Card className="text-center shadow-sm">
+            <Card className="text-center shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
               <CardHeader>
-                <div class="mb-4 text-4xl">{value.icon}</div>
+                <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-subtle text-primary">
+                  <value.icon size={28} />
+                </div>
                 <CardTitle>{value.title}</CardTitle>
               </CardHeader>
               <CardContent>
@@ -100,12 +101,11 @@ const stats = [
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="bg-surface py-16"><div class="container-main">
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         {
           stats.map((stat) => (
-            <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+            <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
               <div class="text-3xl font-extrabold text-primary">{stat.value}</div>
               <div class="mt-1 text-sm font-medium text-body-secondary">{stat.label}</div>
             </div>
@@ -116,7 +116,7 @@ const stats = [
   </section>
 
   <CTABand
-    title="Explore the institution"
+    title="Learn about IJLAPS"
     description="Read about our mission, leadership, history, and the campus we built."
     primaryCta={{ href: '/mission-values', label: 'Mission & Values' }}
     secondaryCta={{ href: '/leadership', label: 'Meet our leadership' }}

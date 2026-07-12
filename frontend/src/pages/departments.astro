@@ -5,51 +5,50 @@ import StatRow from '../components/StatRow.astro';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
+import { Book, Code, ChartBar, GraduationCap, Sparkles } from '@/components/icons';
 
 const departments = [
   {
     title: 'School of Languages',
-    description: 'Master English, French, Arabic, Chinese, and more. Our language programs prepare students for global communication and international opportunities.',
-    icon: '🗣️',
+    description: 'English, French, Arabic, Chinese, and more. CEFR-aligned with international exam preparation.',
+    icon: Book,
     courses: ['English', 'French', 'Arabic', 'Chinese', 'Swahili'],
-    iconColor: 'bg-primary-subtle text-primary',
-    borderAccent: 'border-l-primary',
+    accent: 'border-l-primary',
   },
   {
     title: 'School of Technology',
-    description: 'Build skills in ICT, software development, digital literacy, and emerging technologies that power the modern economy.',
-    icon: '💻',
+    description: 'ICT, software development, digital literacy, and emerging technologies for the Kenyan tech sector.',
+    icon: Code,
     courses: ['ICT', 'Software Development', 'Digital Skills', 'Cybersecurity Basics'],
-    iconColor: 'bg-primary text-white',
-    borderAccent: 'border-l-primary-focus',
+    accent: 'border-l-primary-focus',
   },
   {
     title: 'School of Business',
-    description: 'Develop practical business skills in entrepreneurship, accounting, marketing, and management.',
-    icon: '📊',
+    description: 'Entrepreneurship, accounting, marketing, and management. Practice-led, with client projects.',
+    icon: ChartBar,
     courses: ['Entrepreneurship', 'Accounting', 'Marketing', 'Management'],
-    iconColor: 'bg-primary-subtle text-primary',
-    borderAccent: 'border-l-primary',
+    accent: 'border-l-primary',
   },
   {
     title: 'TVETA Courses',
-    description: 'Competency-based technical and vocational programs recognized by TVETA for quality and workforce relevance.',
-    icon: '🎓',
+    description: 'Competency-based technical and vocational programmes recognised by TVETA.',
+    icon: GraduationCap,
     courses: ['Technical Skills', 'Vocational Training', 'Trade Certifications'],
-    iconColor: 'bg-primary-subtle text-primary',
-    borderAccent: 'border-l-primary-focus',
+    accent: 'border-l-primary-focus',
   },
 ] as const;
 ---
 
-<Layout title="Departments | IJLAPS" description="Explore academic departments at IJLAPS." canonicalPath="/departments">
+<Layout title="Departments | IJLAPS" description="Academic departments at IJLAPS." canonicalPath="/departments">
   <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Departments' }]} dividerType="chevron" />
 
   <PageHero
+    variant="centered"
+    bgImage={true}
     eyebrow="Departments"
     title="Academic Departments"
-    subtitle="Discover programs designed to equip you with in-demand skills across languages, technology, business, and vocational training."
+    subtitle="TVETA-certified programmes across languages, technology, business, and trades."
   />
 
   <StatRow
@@ -62,40 +61,51 @@ const departments = [
     ]}
   />
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">Our departments</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Choose a department</h2>
+        <div class="divider-accent mt-4" />
+        <p class="mt-4 text-lg text-body-secondary">
+          Each department offers programmes specific to its field. Select a school to see its courses.
+        </p>
+      </div>
+
       <div class="grid gap-8 md:grid-cols-2">
         {
-          departments.map((dept) => (
-            <Card className={dept.borderAccent + ' transition-shadow hover:shadow-lg'}>
-              <CardHeader>
-                <div class:list={['mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl text-3xl', dept.iconColor]}>
-                  {dept.icon}
-                </div>
-                <CardTitle className="mb-2 text-2xl">{dept.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p class="mb-4 text-body-secondary">{dept.description}</p>
-                <div class="flex flex-wrap gap-2">
-                  {dept.courses.map((course) => (
-                    <Badge key={course} color="primary" size="sm">
-                      {course}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))
+          departments.map((dept) => {
+            const Icon = dept.icon;
+            return (
+              <Card className={dept.accent + ' border-2 border-transparent transition-shadow hover:border-primary/20 hover:shadow-md'}>
+                <CardHeader>
+                  <div class="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-subtle text-primary">
+                    <Icon size={28} />
+                  </div>
+                  <CardTitle className="mb-2 text-2xl">{dept.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p class="mb-4 text-body-secondary">{dept.description}</p>
+                  <div class="flex flex-wrap gap-2">
+                    {dept.courses.map((course) => (
+                      <Badge key={course} color="primary" size="sm">
+                        {course}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })
         }
       </div>
     </div>
   </section>
 
-  <section class="py-12 md:py-16 bg-primary">
-    <div class="container-main text-center">
-      <h2 class="text-3xl font-bold text-white md:text-4xl">Not sure where to start?</h2>
+  <section class="py-12 md:py-16 bg-primary"><div class="container-main text-center">
+      <Sparkles size={40} className="mx-auto mb-4 text-white/60" />
+      <h2 class="text-3xl font-bold text-white md:text-4xl">Talk to admissions</h2>
       <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
-        Our admissions team can help you choose the right program for your goals.
+        Not sure which school? Admissions reviews intake-eligible programmes by cohort, fees, and prior study in fifteen minutes.
       </p>
       <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
         <a href="/admissions" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>

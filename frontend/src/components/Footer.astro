@@ -1,64 +1,86 @@
 ---
-import { buttonStyles } from '@/components/tailgrids/core/button';
-import { LANGUAGES, TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS } from '@/lib/data';
+import { buttonStyles } from '@/styles/button';
+import { LANGUAGES, LANGUAGES_COUNT, PROGRAMS_COUNT, TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS, PROFESSIONAL_PROGRAMS, VOCATIONAL_PROGRAMS } from '@/lib/data';
+import { Globe, Code, ChartBar, GraduationCap, Building, Wrench, MapPin, Mail, Phone, ArrowRight, Facebook, Twitter, Linkedin, Youtube } from '@/components/icons';
 
 const currentYear = new Date().getFullYear();
 
-// Trim very long lists to show only the most important ones in the footer
 const topLanguages = LANGUAGES.slice(0, 10);
 const topTech = TECH_PROGRAMS.slice(0, 4);
 const topBusiness = BUSINESS_PROGRAMS.slice(0, 4);
 const topTveta = TVETA_PROGRAMS.slice(0, 4);
+const topProfessional = [...PROFESSIONAL_PROGRAMS];
+const topVocational = [...VOCATIONAL_PROGRAMS];
+const programSummary = `${PROGRAMS_COUNT} programmes · ${LANGUAGES_COUNT} languages`;
 
-const aboutLinks = [
-  { label: 'University Overview', href: '/about' },
-  { label: 'Our Campus', href: '/campus' },
-  { label: 'Mission & Values', href: '/mission-values' },
-  { label: 'History', href: '/history' },
-  { label: 'Our Leadership', href: '/leadership' },
+const columns = [
+  {
+    title: 'About',
+    links: [
+      { label: 'Overview', href: '/about' },
+      { label: 'Campus', href: '/campus' },
+      { label: 'Mission & Values', href: '/mission-values' },
+      { label: 'History', href: '/history' },
+      { label: 'Leadership', href: '/leadership' },
+    ],
+  },
+  {
+    title: 'Admissions',
+    links: [
+      { label: 'Overview', href: '/admissions' },
+      { label: 'How to Apply', href: '/how-to-apply' },
+      { label: 'Tuition & Fees', href: '/tuition-fees' },
+      { label: 'Financial Aid', href: '/financial-aid' },
+      { label: 'Dates & Deadlines', href: '/dates-deadlines' },
+    ],
+  },
+  {
+    title: 'Academics',
+    links: [
+      { label: 'Overview', href: '/academics' },
+      { label: 'Undergraduate', href: '/undergraduate' },
+      { label: 'Graduate', href: '/graduate' },
+      { label: 'Schools', href: '/schools' },
+      { label: 'Online Education', href: '/online-education' },
+      { label: 'Off-Campus Learning', href: '/off-campus-learning' },
+      { label: 'Faculty', href: '/faculty' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Events', href: '/events' },
+      { label: 'Instructors', href: '/instructors' },
+      { label: 'Blog & News', href: '/blog' },
+      { label: 'FAQ', href: '/faq' },
+    ],
+  },
 ];
 
-const admissionsLinks = [
-  { label: 'Admissions Overview', href: '/admissions' },
-  { label: 'How to Apply', href: '/how-to-apply' },
-  { label: 'Tuition & Fees', href: '/tuition-fees' },
-  { label: 'Financial Aid', href: '/financial-aid' },
-  { label: 'Dates & Deadlines', href: '/dates-deadlines' },
+const programGroups = [
+  { title: 'Tech', icon: Code, programs: [...topTech.map((p) => ({ label: p.title, href: `/programs/tech/${p.slug}` })), { label: 'All Tech →', href: '/programs/tech', highlight: true }] },
+  { title: 'Business', icon: ChartBar, programs: [...topBusiness.map((p) => ({ label: p.title, href: `/programs/business/${p.slug}` })), { label: 'All Business →', href: '/programs/business', highlight: true }] },
+  { title: 'TVETA', icon: GraduationCap, programs: [...topTveta.map((p) => ({ label: p.title, href: `/programs/tveta/${p.slug}` })), { label: 'All TVETA →', href: '/programs/tveta', highlight: true }] },
+  { title: 'Professional', icon: Building, programs: [...topProfessional.map((p) => ({ label: p.title, href: `/programs/professional/${p.slug}` })), { label: 'All Professional →', href: '/programs/professional', highlight: true }] },
+  { title: 'Vocational', icon: Wrench, programs: [...topVocational.map((p) => ({ label: p.title, href: `/programs/vocational/${p.slug}` })), { label: 'All Vocational →', href: '/programs/vocational', highlight: true }] },
+  { title: 'Languages', icon: Globe, programs: [...topLanguages.map((l) => ({ label: l.name, href: `/languages/${l.slug}` })), { label: 'All Languages →', href: '/languages', highlight: true }] },
 ];
 
-const academicsLinks = [
-  { label: 'Overview', href: '/academics' },
-  { label: 'Undergraduate', href: '/undergraduate' },
-  { label: 'Graduate Programs', href: '/graduate' },
-  { label: 'Schools', href: '/schools' },
-  { label: 'Online Education', href: '/online-education' },
-  { label: 'Off-Campus Learning', href: '/off-campus-learning' },
-  { label: 'Faculty', href: '/faculty' },
-];
-
-const resourcesLinks = [
-  { label: 'Events', href: '/events' },
-  { label: 'Instructors', href: '/instructors' },
-  { label: 'Blog & News', href: '/blog' },
-  { label: 'FAQ', href: '/faq' },
-];
-
-const social = [
-  { label: 'Facebook', href: 'https://facebook.com/ijlaps', icon: 'M13 22v-8h3l1-4h-4V7c0-1.1.9-2 2-2h2V1h-3a5 5 0 00-5 5v4H7v4h2v8h4z' },
-  { label: 'Twitter', href: 'https://twitter.com/ijlaps', icon: 'M22 5.8c-.7.3-1.5.5-2.4.6.9-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1A4.1 4.1 0 0011.7 9c0 .3 0 .6.1.9C8.3 9.7 5.1 7.9 3 5.1c-.4.6-.6 1.4-.6 2.2 0 1.4.7 2.7 1.8 3.4-.7 0-1.3-.2-1.9-.5v.1c0 2 1.4 3.7 3.3 4.1-.4.1-.7.1-1.1.1-.3 0-.5 0-.8-.1.5 1.6 2 2.8 3.8 2.8a8.2 8.2 0 01-5.1 1.8c-.3 0-.7 0-1-.1A11.6 11.6 0 008 19c7.5 0 11.7-6.3 11.7-11.7v-.5c.8-.6 1.5-1.3 2-2.1z' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/school/ijlaps', icon: 'M4 4h4v16H4V4zm6 0h3.8v2.2h.1c.5-.9 1.8-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6V20h-4v-7.6c0-1.8 0-4.2-2.6-4.2s-3 2-3 4.1V20h-4V4zM6 2.5A2.5 2.5 0 113.5 5 2.5 2.5 0 016 2.5z' },
-  { label: 'YouTube', href: 'https://youtube.com/ijlaps', icon: 'M22 8.1c0-4.4-3.6-8-8-8H10C5.6.1 2 3.7 2 8.1v7.8c0 4.4 3.6 8 8 8h4c4.4 0 8-3.6 8-8V8.1zM10 16V8l5 4-5 4z' },
+const socialLinks = [
+  { label: 'Facebook', href: 'https://facebook.com/ijlaps', Icon: Facebook },
+  { label: 'Twitter', href: 'https://twitter.com/ijlaps', Icon: Twitter },
+  { label: 'LinkedIn', href: 'https://linkedin.com/school/ijlaps', Icon: Linkedin },
+  { label: 'YouTube', href: 'https://youtube.com/ijlaps', Icon: Youtube },
 ];
 ---
 
-<footer class="bg-ink text-slate-300">
-  <!-- Newsletter band -->
-  <section class="border-b border-slate-800">
+<footer class="bg-ink">
+  <section class="border-b border-white/10">
     <div class="container-main py-10">
       <div class="grid gap-6 lg:grid-cols-2 lg:items-center">
         <div>
-          <h2 class="text-2xl font-bold text-white md:text-3xl">Stay informed.</h2>
-          <p class="mt-2 text-slate-400">Get admissions news, intake dates, scholarships, and student stories straight to your inbox. No spam.</p>
+          <h2 class="text-2xl font-bold text-white md:text-3xl">Intake dates, bursaries, and programme news.</h2>
+          <p class="mt-2 text-body-secondary">Sent before each intake window. No spam, unsubscribe any time.</p>
         </div>
         <form id="newsletter-form" class="flex flex-col gap-2 sm:flex-row" aria-label="Newsletter signup">
           <label for="newsletter-email" class="sr-only">Email address</label>
@@ -69,7 +91,8 @@ const social = [
             placeholder="you@example.com"
             required
             autocomplete="email"
-            class="flex-1 rounded-md border border-white/20 bg-ink-soft px-4 py-3 text-white placeholder:text-slate-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-describedby="newsletter-status"
+            class="flex-1 rounded-lg border border-white/10 bg-ink-soft px-4 py-3 text-white placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <button type="submit" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'md' })}>
             Subscribe
@@ -84,179 +107,89 @@ const social = [
     </div>
   </section>
 
-  <!-- Main footer columns -->
   <div class="container-main py-16">
-    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-6">
-      <!-- Brand -->
-      <div class="lg:col-span-2 space-y-4">
-        <a href="/" class="flex items-center gap-2 text-xl font-extrabold text-white">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded bg-primary text-white font-black">I</span>
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-6">
+      <div class="space-y-5 lg:col-span-2">
+        <a href="/" class="flex items-center gap-2.5 text-xl font-extrabold text-white">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-black">I</span>
           IJLAPS
         </a>
-        <p class="text-sm leading-relaxed text-slate-400">
-          TVETA-certified institution. Languages, technology, business, and vocational programmes for Kenya's
-          workforce. Located in Nairobi with online and off-campus learning pathways nationwide.
+        <p class="text-sm leading-relaxed text-body-secondary">
+          TVETA-certified institution running {programSummary} across four schools. Nairobi campus with online and off-campus learning pathways nationwide.
         </p>
-        <div class="flex items-center gap-3">
-          {social.map((item) => (
+        <div class="flex items-center gap-2">
+          {socialLinks.map((item) => (
             <a
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={item.label}
-              class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-slate-800 text-slate-400 transition-colors hover:bg-primary hover:text-white"
+              class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-ink-soft text-muted transition-colors hover:bg-primary hover:text-white"
             >
-              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d={item.icon} />
-              </svg>
+              <item.Icon size={16} />
             </a>
           ))}
         </div>
+        <address class="not-italic space-y-2 text-sm text-body-secondary">
+          <p class="flex items-center gap-2"><MapPin size={14} /> IJLAPS House, Westlands, Nairobi</p>
+          <p class="flex items-center gap-2"><Mail size={14} /> <a href="mailto:info@ijlaps.ac.ke" class="text-body-secondary hover:text-white transition-colors">info@ijlaps.ac.ke</a></p>
+          <p class="flex items-center gap-2"><Phone size={14} /> <a href="tel:+254700000000" class="text-body-secondary hover:text-white transition-colors">+254 (0) 700 000 000</a></p>
+        </address>
       </div>
 
-      <!-- About -->
-      <div>
-        <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-white">About</h3>
-        <ul class="space-y-2 text-sm">
-          {aboutLinks.map((link) => (
-            <li>
-              <a href={link.href} class="text-slate-400 transition-colors hover:text-white">{link.label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Admissions -->
-      <div>
-        <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-white">Admissions</h3>
-        <ul class="space-y-2 text-sm">
-          {admissionsLinks.map((link) => (
-            <li>
-              <a href={link.href} class="text-slate-400 transition-colors hover:text-white">{link.label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Academics -->
-      <div>
-        <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-white">Academics</h3>
-        <ul class="space-y-2 text-sm">
-          {academicsLinks.map((link) => (
-            <li>
-              <a href={link.href} class="text-slate-400 transition-colors hover:text-white">{link.label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Resources -->
-      <div>
-        <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-white">Resources</h3>
-        <ul class="space-y-2 text-sm">
-          {resourcesLinks.map((link) => (
-            <li>
-              <a href={link.href} class="text-slate-400 transition-colors hover:text-white">{link.label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Programs & Languages mini-grid -->
-      <div class="md:col-span-2 lg:col-span-2">
-        <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-white">Programs & Languages</h3>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <h4 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Tech</h4>
-            <ul class="space-y-1.5 text-xs">
-              {topTech.map((p) => (
-                <li>
-                  <a href={`/programs/tech/${p.slug}`} class="text-slate-400 transition-colors hover:text-white">{p.title}</a>
-                </li>
-              ))}
+      {columns.map((col) => (
+        <div>
+          <h3 class="mb-4 text-xs font-bold uppercase tracking-widest text-white">{col.title}</h3>
+          <ul class="space-y-2 text-sm">
+            {col.links.map((link) => (
               <li>
-                <a href="/programs/tech" class="font-semibold text-primary hover:text-white">All Tech →</a>
+                <a href={link.href} class="text-body-secondary transition-colors hover:text-white">{link.label}</a>
               </li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Business</h4>
-            <ul class="space-y-1.5 text-xs">
-              {topBusiness.map((p) => (
-                <li>
-                  <a href={`/programs/business/${p.slug}`} class="text-slate-400 transition-colors hover:text-white">{p.title}</a>
-                </li>
-              ))}
-              <li>
-                <a href="/programs/business" class="font-semibold text-primary hover:text-white">All Business →</a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">TVETA</h4>
-            <ul class="space-y-1.5 text-xs">
-              {topTveta.map((p) => (
-                <li>
-                  <a href={`/programs/tveta/${p.slug}`} class="text-slate-400 transition-colors hover:text-white">{p.title}</a>
-                </li>
-              ))}
-              <li>
-                <a href="/programs/tveta" class="font-semibold text-primary hover:text-white">All TVETA →</a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Languages</h4>
-            <ul class="space-y-1.5 text-xs">
-              {topLanguages.map((lang) => (
-                <li>
-                  <a href={`/languages/${lang.slug}`} class="text-slate-400 transition-colors hover:text-white">{lang.name}</a>
-                </li>
-              ))}
-              <li>
-                <a href="/languages" class="font-semibold text-primary hover:text-white">All Languages →</a>
-              </li>
-            </ul>
-          </div>
+            ))}
+          </ul>
         </div>
-      </div>
+      ))}
 
-      <!-- Contact -->
       <div class="md:col-span-2 lg:col-span-6">
-        <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-white">Contact</h3>
-        <div class="grid gap-4 md:grid-cols-3">
-          <address class="not-italic text-sm text-slate-400 leading-relaxed">
-            <strong class="block text-white">Main Campus</strong>
-            IJLAPS House, Westlands<br />
-            Nairobi, Kenya<br />
-            Mon–Fri · 8am–5pm
-          </address>
-          <address class="not-italic text-sm text-slate-400 leading-relaxed">
-            <strong class="block text-white">Admissions</strong>
-            <a href="mailto:admissions@ijlaps.ac.ke" class="text-slate-400 transition-colors hover:text-white">admissions@ijlaps.ac.ke</a><br />
-            <a href="tel:+254700000000" class="text-slate-400 transition-colors hover:text-white">+254 (0) 700 000 000</a><br />
-            Mon–Fri · 9am–4pm
-          </address>
-          <address class="not-italic text-sm text-slate-400 leading-relaxed">
-            <strong class="block text-white">General Enquiries</strong>
-            <a href="mailto:info@ijlaps.ac.ke" class="text-slate-400 transition-colors hover:text-white">info@ijlaps.ac.ke</a><br />
-            <a href="/contact" class="text-slate-400 transition-colors hover:text-white">Contact form</a>
-          </address>
+        <h3 class="mb-4 text-xs font-bold uppercase tracking-widest text-white">Programmes & Languages</h3>
+        <div class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
+          {programGroups.map((group) => (
+            <div>
+              <h4 class="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
+                <group.icon size={12} />
+                {group.title}
+              </h4>
+              <ul class="space-y-1.5 text-xs">
+                {group.programs.map((p) => (
+                  <li>
+                    <a
+                      href={p.href}
+                      class:list={[
+                        'transition-colors',
+                        p.highlight ? 'font-semibold text-primary hover:text-white' : 'text-body-secondary hover:text-white',
+                      ]}
+                    >
+                      {p.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Legal -->
-  <div class="border-t border-slate-800">
-    <div class="container-main flex flex-col items-start justify-between gap-4 py-6 text-sm text-slate-500 md:flex-row md:items-center">
-      <p>&copy; {currentYear} International Joint Languages and Professional Studies. All rights reserved.</p>
-      <ul class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
-        <li><a href="/contact" class="transition-colors hover:text-white">Contact</a></li>
-        <li><a href="/faq" class="transition-colors hover:text-white">FAQ</a></li>
-        <li><a href="/admissions" class="transition-colors hover:text-white">Apply</a></li>
-        <li>TVETA Registered</li>
-      </ul>
+  <div class="border-t border-white/10">
+    <div class="container-main flex flex-col items-start justify-between gap-4 py-6 text-sm text-muted md:flex-row md:items-center">
+      <p>&copy; {currentYear} IJLAPS. TVETA-registered institution, Nairobi, Kenya.</p>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
+        <a href="/contact" class="transition-colors hover:text-white">Contact</a>
+        <a href="/faq" class="transition-colors hover:text-white">FAQ</a>
+        <a href="/admissions" class="transition-colors hover:text-white">Apply</a>
+        <span class="text-muted">TVETA Registered</span>
+      </div>
     </div>
   </div>
 </footer>

@@ -1,6 +1,6 @@
 ---
 import { Badge } from '@/components/tailgrids/core/badge';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 
 export interface Props {
   title?: string;
@@ -13,22 +13,18 @@ const {
   title = 'Education That Builds Futures',
   subtitle = 'IJLAPS is a TVETA-certified institution in Kenya offering languages, technology, business, and professional courses that prepare students for the modern workforce.',
   primaryCta = { href: '/admissions', label: 'Apply Now' },
-  secondaryCta = { href: '/departments', label: 'Explore Courses' },
+  secondaryCta = { href: '/courses', label: 'Browse programmes' },
 } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-ink py-20 md:py-32">
-  <div class="absolute inset-0 opacity-30">
-    <div class="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-primary blur-3xl"></div>
-  </div>
-
-  <div class="container-main relative z-10">
-    <div class="mx-auto max-w-3xl text-center">
-      <Badge color="primary" size="md" className="mb-4 bg-white/15 text-white border-0">TVETA Certified Institution</Badge>
-      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+<section class="bg-ink py-24 md:py-40">
+  <div class="container-main">
+    <div class="mx-auto max-w-4xl text-center">
+      <Badge color="primary" size="md" className="mb-6 bg-white/10 text-white border-0">TVETA Certified Institution</Badge>
+      <h1 class="text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl">
         {title}
       </h1>
-      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 md:text-xl">
+      <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-300 md:text-xl">
         {subtitle}
       </p>
       <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

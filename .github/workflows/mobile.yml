@@ -1,0 +1,74 @@
+name: Mobile Responsive Tests
+
+on:
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/mobile.yml'
+      - 'tests/visual/mobile-responsive.spec.ts'
+  push:
+    branches:
+      - develop
+    paths:
+      - 'frontend/**'
+      - 'tests/visual/mobile-responsive.spec.ts'
+
+concurrency:
+  group: mobile-lingua-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  mobile-tests:
+    runs-on: ubuntu-latest
+    name: Playwright viewports
+
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          check-latest: true
+
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-mobile-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-mobile-
+
+      - name: Install
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+      - name: Serve static build for Playwright
+        working-directory: .
+        run: |
+          rm -rf /tmp/lingua-test
+          mkdir -p /tmp/lingua-test
+          cp -r lingua/www/. /tmp/lingua-test/
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Run mobile responsive tests
+        working-directory: frontend
+        run: npx playwright test tests/visual/mobile-responsive.spec.ts --reporter=line
+        env:
+          CI: 'true'

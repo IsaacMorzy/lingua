@@ -5,40 +5,40 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import CTABand from '../components/CTABand.astro';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { Book, Monitor, Headphones, Wrench, Coffee, Puzzle } from '@/components/icons';
 
 const facilities = [
   {
     title: 'Main Library & Quiet Study Hall',
     description: 'A 12,000-volume reference library with multilingual sections (English, French, Arabic, Kiswahili), free Wi-Fi, and a silent-study area.',
-    icon: '📚',
+    icon: Book,
   },
   {
     title: 'Multimedia Language Labs',
     description: 'Twelve booths per lab, equipped with headsets, speech-recording software, and curated listening tracks for A1 → C2 learners.',
-    icon: '🎧',
+    icon: Headphones,
   },
   {
     title: 'Computer Labs & Cyber Range',
     description: 'Two general-purpose computer labs plus a dedicated cyber range for our Cybersecurity Bootcamp cohorts.',
-    icon: '💻',
+    icon: Monitor,
   },
   {
     title: 'Maker Workshop',
     description: 'TVETA virtual workshops for plumbing, electrical installation, and welding practice under instructor supervision.',
-    icon: '🛠️',
+    icon: Wrench,
   },
   {
     title: 'Cultural Café',
     description: 'A conversational space for weekly language exchanges, French table, Mandarin corner, Arabic circle, and Swahili storytelling.',
-    icon: '☕',
+    icon: Coffee,
   },
   {
     title: 'Student Hub',
     description: 'Common area with snacks, lockers, and student-led clubs, debate, journalism, coding, and entrepreneurship.',
-    icon: '🧩',
+    icon: Puzzle,
   },
 ];
 
@@ -61,16 +61,17 @@ const atAGlance = [
   <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about' }, { label: 'Our Campus' }]} />
 
   <PageHero
+    variant="decorative"
     eyebrow="Campus"
     title="A campus designed for how you actually learn."
     subtitle="Our Westlands campus blends calm study spaces with maker workshops, cyber ranges, and dedicated language laboratories, purpose-built for the way our students learn today."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">At a glance</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">The space, in numbers</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Our campus was rebuilt for the IJLAPS mission in 2019: a calm environment where language, technology, and
           business students can learn side-by-side without compromise.
@@ -79,7 +80,7 @@ const atAGlance = [
 
       <div class="mt-12 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {atAGlance.map((item) => (
-          <div class="rounded-xl border border-border bg-surface p-6 text-center">
+          <div class="rounded-xl border-2 border-transparent border-border bg-surface p-6 text-center transition-shadow hover:border-primary/20 hover:shadow-md">
             <div class="text-3xl font-extrabold text-primary">{item.value}</div>
             <div class="mt-1 text-sm font-medium text-body-secondary">{item.label}</div>
           </div>
@@ -88,11 +89,11 @@ const atAGlance = [
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-primary-subtle"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Facilities</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Spaces built for our programmes</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           From a multilingual library to a working cyber range, every facility is curated to support specific learning
           outcomes in our language, technology, and TVETA tracks.
@@ -101,9 +102,11 @@ const atAGlance = [
 
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {facilities.map((f) => (
-          <Card className="shadow-sm">
+          <Card className="border-2 border-transparent transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
-              <div class="mb-4 text-4xl">{f.icon}</div>
+              <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-subtle text-primary">
+                <f.icon size={24} />
+              </div>
               <CardTitle>{f.title}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -115,14 +118,12 @@ const atAGlance = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
         <div>
           <Badge color="primary" size="md" className="mb-4">Visit us</Badge>
           <h2 class="text-3xl font-bold text-body">Open days, every intake</h2>
+          <div class="divider-accent mt-4" />
           <p class="mt-4 text-lg text-body-secondary">
             We host open days every intake (January, May, and September), and prospective students are welcome to
             schedule a tour of any language lab, technology bay, or workshop at any time of year. Tours typically run

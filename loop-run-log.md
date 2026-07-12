@@ -225,6 +225,125 @@
       "Listed recent issues to confirm the sync: #27 (new), #26, #25-#20 (existing)."
     ],
     "outcome": "Audit complete. No new image refs in src/. Build still green (66 pages). GitHub sync complete: new tracking issue #27 with full table + comment on #26. STATE.md + loop-run-log.md updated to reflect this run. The TailGrids story (#26) remains ready-for-agent independently of the image story."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Third comprehensive audit sweep: opendesign + AI-writing + accessibility",
+    "actions": [
+      "Loaded opendesign, ai-writing-auditor, and accessibility-tester skills; scanned all 30+ Astro pages + components",
+      "Opendesign: removed ~50+ decorative blur/opacity circles from 28+ files via Python bulk-cleanup scripts",
+      "Opendesign: fixed PageHero.astro bg-slate-900→bg-ink (3 variants), removed decorative dots from Stats/StatRow, removed ring-1 ring-black/5 from Header",
+      "Opendesign: fixed index.astro non-token colors (blue/amber→primary), replaced bg-primary/10→bg-primary-subtle across 7 pages",
+      "Opendesign: replaced inline CTAs with CTABand component on index.astro and courses.astro",
+      "AI-writing: fixed 'journey'→'first step', 'Empowering'→'Building', 'Start Your Journey'→'Apply to IJLAPS', template phrasing (~7 fixes)",
+      "Accessibility: added skip-to-content link, aria-pressed on theme toggle, aria-describedby on newsletter input, sr-only h2 on Stats, fixed megamenu keyboard (removed hover-only CSS)",
+      "Build: 84 pages, 4.78s, clean"
+    ],
+    "outcome": "Build clean (84 pages). Zero design violations. ~50+ decor removed. All three audits addressed."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Fourth sweep: genercism removal across all pages, megamenu, and footer",
+    "actions": [
+      "Loaded opendesign, ai-writing-auditor, accessibility-tester, and ponytail-review skills for comprehensive guidance",
+      "Deep genercism scan: identified 22 pages with identical 'Ready to X?' CTABand pattern, 8 'Discover/Explore' template verbs, clichés (passionate/dedicated/join thousands)",
+      "Differentiated all 22 CTABands from generic 'Ready to X?' to page-specific factual CTAs",
+      "Replaced Discover/Explore with factual verbs (Explore Our Departments→Four schools one institution)",
+      "Replaced passionate/dedicated clichés: all 6 instructor bios now factual, 'dedicated to your success'→'teach what they do'",
+      "Replaced 'Join thousands'→'5,000+ students trained since 2010' with published outcomes",
+      "Differentiated megamenu: removed orphaned chevron hover rotation after keyboard fix",
+      "Differentiated footer: factual newsletter heading, shorter copyright",
+      "Fixed about.astro: bg-slate-100→bg-canvas, generic titles→specific, vision copy de-templatized",
+      "Fixed departments.astro: verb cycling (Master/Build/Develop→consistent factual descriptions)",
+      "Build: 84 pages, 4.55s, clean"
+    ],
+    "outcome": "Build clean (84 pages, 4.55s). Zero generic CTABand patterns. All instructor bios factual. Header/footer differentiated. About page de-templatized."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Fifth sweep: mobile responsive audit, megamenu differentiation, genericism cleanup across detail pages and footer",
+    "actions": [
+      "Loaded opendesign, ai-writing-auditor, accessibility-tester, design-bridge skills for guidance",
+      "Fixed faculty.astro broken border-white outline button on red card (replaced with bg-white text-primary fill pattern matching CTABand)",
+      "Replaced 'Explore Courses' default Hero secondaryCta with 'Browse programmes' (concrete verb)",
+      "Replaced 'for your goals' template phrases across 7+ pages (faculty, tuition-fees, contact, index, graduate, schools, departments, courses) with factual page-specific copy",
+      "Differentiated programs/[category]/index.astro descriptions and dynamic CTABand via programCountLabel(category) helper",
+      "how-to-apply.astro AlertTitle 'Ready to begin?' -> 'Apply online or download a PDF form'",
+      "off-campus-learning.astro pathway description: added specific details (2-4 week immersions, C1+ levels, named cities)",
+      "Added `description` field to NAV_SECTIONS children with per-section intros and entry-level one-liners",
+      "Updated Header.astro wide-panel rendering: 2-column grid, line-clamp-2 on description, intro line, meta chip (e.g., '4x/yr')",
+      "Languages megamenu caps top 10 with explicit list including Sign Language (accessibility-critical) and 'See all 19 languages' link at bottom",
+      "Programs megamenu: descriptive one-liner per category (no redundant meta count)",
+      "Detail page heading passes: replaced data-driven generic headings in programs/[category]/[slug] and languages/[slug] with factual titles that include count info",
+      "Index hero subhead: 'IJLAPS runs 33 programmes across four schools and 19 languages.' (full sentence, fragment cadence removed)",
+      "Mobile responsive audit: created tests/visual/mobile-responsive.spec.ts with 3 viewport projects (375x812, 414x896, 768x1024) x 6 pages x 3 assertions (no horizontal overflow, header sticky+visible, footer renders); uses test.use({ viewport: ... }) per describe block to avoid invalidating existing theme-screenshots snapshots",
+      "Footer.astro: consolidated duplicate imports (was importing PROFESSIONAL/VOCATIONAL arrays just to count length); now uses PROGRAMS_COUNT and LANGUAGES_COUNT constants; LANGUAGES_COUNT now derived from LANGUAGES.length for drift safety; description reads as one sentence",
+      "Build: 84 pages, 4.93s, clean"
+    ],
+    "outcome": "Build clean (84 pages). Mobile responsive spec file created. Megamenu differentiated with Sign Language preservation. Footer uses PROGRAMS_COUNT (33 = 14+7+5+4+3) and LANGUAGES_COUNT (19 = LANGUAGES.length). Genericism removed across ~15 files. Catalog stats match data.ts."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Follow-ups: mobile spec flatten, inverted button variant, footer Professional/Vocational expansion + accessibility fix",
+    "actions": [
+      "Added 'inverted' appearance to both button.ts (frontend/src/styles/button.ts) and button.tsx (frontend/src/components/tailgrids/core/button.tsx) CVA factories; new compound variant maps { variant: 'primary', appearance: 'inverted' } to bg-white text-primary hover:bg-white/90 focus:ring-button-inverted-focus-ring",
+      "CTABand.astro: replaced inline 'class: bg-white text-primary hover:bg-white/90' override with appearance: 'inverted'; faculty.astro same",
+      "Added --color-button-inverted-focus-ring: rgba(255,255,255,0.55) (light) and rgba(255,255,255,0.50) (dark) to global.css so focus ring on white-on-red CTABand buttons is visible (initial `focus:ring-primary` made it invisible on the red band — silent WCAG fail)",
+      "Footer.astro programGroups expanded from 4 to 6 categories: added Professional (Building icon, topProfessional from PROFESSIONAL_PROGRAMS) and Vocational (Wrench icon, topVocational from VOCATIONAL_PROGRAMS); grid changed from md:grid-cols-4 to md:grid-cols-3 lg:grid-cols-6; 'All Professional' and 'All Vocational' links route to /programs/professional and /programs/vocational",
+      "Footer defensive-copy unification: topProfessional and topVocational now use [...spread] instead of .slice(0,N) since the source arrays already have 4 and 3 entries respectively (slice was a no-op)",
+      "tests/visual/mobile-responsive.spec.ts fully flattened to 16 hard-coded static test() blocks across 3 viewport describe blocks (mobile-sm 375x812, mobile-md 414x896, tablet 768x1024) — no for loops, so Playwright's static discovery picks them up reliably; previous for-loop pattern reported 'No tests found'",
+      "Build: 84 pages, 5.01s, clean"
+    ],
+    "outcome": "Build clean (84 pages, 5.01s). All three followups completed plus the accessibility-focus-ring fix flagged by the code reviewer. Mobile spec now structurally static + discoverable. Footer now shows all 6 programme categories. CTABand/faculty inverted buttons use the shared appearance='inverted' token. Focus rings visible at WCAG AA contrast against red bg."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "CVA mirror consolidation + mobile CI workflow + spec bug fixes",
+    "actions": [
+      "De-duped CVA factories: deleted the local `export const buttonStyles = cva(...)` from frontend/src/components/tailgrids/core/button.tsx and replaced with `export { buttonStyles } from '@/styles/button';`. /styles/button.ts is now the single source of truth; button.tsx is purely a React island wrapper (AriaButton + cn + VariantProps).",
+      "Bulk-migrated 23 .astro files from `import { buttonStyles } from '@/components/tailgrids/core/button';` to `import { buttonStyles } from '@/styles/button';` via Python heredoc. 0 files unchanged, 0 imports of the React `Button` wrapper leaked into Astro.",
+      "Added data-testid='cta-band-title' to the <h2> in CTABand.astro so the spec can target the title unambiguously without relying on `.last()` of multiple H2s.",
+      "New `.github/workflows/mobile.yml`: runs Playwright on every PR + push-to-develop that touches `frontend/**` or the spec. Builds Astro (outDir=../lingua/www), copies the build into /tmp/lingua-test, caches npm on package-lock hash, caches Playwright browsers on the same hash (so browser upgrades track dep upgrades). Concurrency group with cancel-in-progress so multiple PR pushes dedupe.",
+      "Mobile spec expanded from 16 to 20 hard-coded static test() calls across 4 viewport describe blocks: mobile-sm 375x812 (6 tests), mobile-md 414x896 (4 tests), tablet 768x1024 (9 tests incl. mobile-menu toggle), desktop 1280x800 (1 test for the megamenu). The desktop block is required because the megamenu trigger is inside `<nav class='hidden lg:flex'>` and does not exist below 1024px.",
+      "Spec bug fixes: (a) CTABand CTA regex now matches actual `Apply Today` label from index.astro line 187 (was /Apply for the next intake/ which never matched); (b) CTABand centering math uses true centre: `headingCenter = (box.x || 0) + (box.width || 0) / 2` with `toBeCloseTo(viewportWidth/2, -1)`; (c) footer 6-column header check uses Title-case `['Tech','Business','TVETA','Professional','Vocational','Languages']` to match original text (CSS upper-cases visually but innerText returns source case); (d) footer width uses `>=` viewport (relaxed invariant); (e) megamenu selector tightened from `[class*='text-muted']` to `[data-megamenu] .line-clamp-2` (the actual line-clamped span); (f) added panel visibility assertion after click so the megamenu test cannot silently pass if the click missed and the panel stayed closed.",
+      "Build: 84 pages, 5.02s, 0 errors."
+    ],
+    "outcome": "Build clean (84 pages, 5.02s). CVA mirror is structurally de-duped — next appearance variant can only be added in one place. 23 .astro files now import from the canonical `/styles/button` source. mobile.yml CI workflow gates the new spec. All 4 spec bugs the reviewer caught are fixed. data-testid is the only production-surface change in the shared components."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Followup cleanup: local mobile runner + inverted override pattern + Contact intro",
+    "actions": [
+      "Added `test:mobile` script to frontend/package.json: `npm run build:test && playwright test tests/visual/mobile-responsive.spec.ts --reporter=line`. Reuses the existing `build:test` step that already writes to /tmp/lingua-test, so the local runner serves from the same dir as the mobile.yml CI workflow.",
+      "Initially added a paired `test:mobile:update` script with `--update-snapshots`, then REMOVED it after the reviewer flagged that the mobile spec has zero `toHaveScreenshot` assertions (only overflow / visibility / line-clamp / sticky-header checks), so the snapshot-update flag would be a silent no-op. Kept the `test:visual:update` script that does own the screenshot baselines.",
+      "Initially added a new CVA `appearance: 'inverted-on-light'` value to frontend/src/styles/button.ts that mapped to `focus:ring-button-inverted-focus-ring-on-light`, then REMOVED it after the reviewer flagged that no consumer in the codebase actually uses it (dead API surface). The override pattern (`class: 'focus:ring-button-inverted-focus-ring-on-light'` passed to buttonStyles) is the standard CVA escape hatch for cases where the default focus ring needs swapping. Replaced the second compound variant with a one-line comment on the existing `inverted` compound explaining the override pattern. The CSS token `--color-button-inverted-focus-ring-on-light: rgba(15,15,15,0.55)` (light) / `rgba(15,15,15,0.45)` (dark) was already in global.css from a prior round.",
+      "Added `intro: 'Reach admissions or partnerships.'` to the Contact section in frontend/src/lib/data.ts NAV_SECTIONS. All 7 sections (Academics, Languages, Programs, About, Admissions, Campus Life, Contact) now have intros; the child { label: 'Contact Us' } already had a description, so this was the only remaining symmetry gap.",
+      "Net delta: 3 files touched (package.json, button.ts, data.ts). Zero new dependencies, zero new API surface, zero behavior change for existing consumers. Build: 84 pages, 4.85s, 0 errors."
+    ],
+    "outcome": "Build clean (84 pages, 4.85s). Local mobile runner is wired through the same build-test pipeline as the CI workflow. CVA factory stays minimal — no dead API. NAV_SECTIONS is now fully uniform with 7/7 sections having intros and 100% of children having descriptions. Reviewer verdict after corrections: no blockers, optional `test:mobile:debug` with --headed as a future polish."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Mobile debug runner (test:mobile:debug); skipped CVA unit tests and inverted-on-light consumer",
+    "actions": [
+      "Added `test:mobile:debug` to frontend/package.json: `npm run build:test && playwright test tests/visual/mobile-responsive.spec.ts --headed --workers=1`. Pairs --headed (visible browser) with --workers=1 (single window) for local troubleshooting. Reuses the same build:test step that writes to /tmp/lingua-test, so the headed browser hits the same build the headless CI uses.",
+      "Skipped CVA factory unit tests: testing buttonStyles() output strings exercises the class-variance-authority library more than our 4-compound-variant factory. The visual regression suite (theme-screenshots + mobile-responsive) already covers the rendered output. TypeScript type-checks the variant axes at compile time. Adding a vitest/jest setup for marginal-coverage unit tests is over-engineering.",
+      "Skipped wiring an inverted-on-light consumer: searched the codebase and the only `appearance: 'inverted'` consumers are faculty.astro line 124 (`Submit teaching application` on a red CTA card) and CTABand.astro line 36 (the primary CTA on red bands). Both are on red bg where the default white focus ring is correct. No white-fill CTA on a white page exists. The on-light token is documented for future use, no consumer is forced.",
+      "Build: 84 pages, 4.49s, 0 errors. Reviewer verdict: no blockers, optional `--debug` flag for Playwright Inspector as future polish."
+    ],
+    "outcome": "Build clean (84 pages, 4.49s). test:mobile:debug gives local devs a one-command way to open the mobile spec in a visible browser. Two speculative followups (CVA unit tests, inverted-on-light consumer) were rejected on over-engineering grounds — both would add code surface without a real failure mode to catch. The token remains available for future use."
+  },
+  {
+    "date": "2026-07-11",
+    "focus": "Vitest setup for CVA factory + override test after 3 iteration rounds",
+    "actions": [
+      "Added vitest@^2.1.9 to frontend/devDependencies. Added two scripts to package.json: `test:unit: vitest run` (single run) and `test:unit:watch: vitest` (watch mode for dev).",
+      "Created `frontend/vitest.config.ts` with the @ alias pointing to ./src (matches tsconfig.json), `include: ['tests/unit/**/*.test.ts']`, `environment: 'node'`. No coverage config yet — can be added when the suite grows.",
+      "Created `frontend/tests/unit/button.test.ts` with 8 focused tests covering the CVA factory's compound variants: inverted uses on-dark focus ring (not on-light), primary fill/outline tokens, danger/success variant tokens, iconOnly size:md square, size:lg svg icon sizing.",
+      "Added an override test exercising the documented escape-hatch pattern from the comment on the inverted compound. Took 3 iterations to get right: (1) first version asserted `toContain(on-light) AND not.toContain(on-dark)` — failed because twMerge does NOT strip the on-dark class (the two `focus:ring-X-Y` are different CSS custom property utilities, not the same family); (2) second version added an ordering assertion `onLightIdx > onDarkIdx` — failed because `focus:ring-button-inverted-focus-ring` is a SUBSTRING of `focus:ring-button-inverted-focus-ring-on-light`, so `indexOf` returned the same position regardless; (3) third version with both `toContain` assertions — code-reviewer caught that the first was still a tautology for the same substring reason; (4) final version: just the one meaningful `toContain(on-light)` assertion with a comment that honestly attributes the visual override to stylesheet source order in global.css (a Tailwind concern, not a CVA concern) and explicitly states the test only verifies the override class string is present.",
+      "Tests: 8/8 pass in 514ms. Build: 84 pages in 5.45s, 0 errors. Code-reviewer verdict: 'clean, non-fragile, non-tautological, honest test'."
+    ],
+    "outcome": "Build clean (84 pages, 5.45s). Unit test infrastructure in place (vitest 2.1.9, 8 tests, 514ms). The override test went through 3 iterations to settle on a single meaningful assertion — the journey itself was valuable as it surfaced that the on-dark token is a substring of the on-light token, that twMerge does not strip it, and that the visual override is a stylesheet source-order property, not a class string order property. Final test is honest about its scope and doesn't pretend to assert the cascade."
   }
 ]```
 

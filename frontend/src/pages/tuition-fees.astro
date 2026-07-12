@@ -10,7 +10,6 @@ import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } fro
 import { programsByCategory } from '@/lib/data';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
 
 const langLevels = [
   { code: 'A1', fees: 'KES 18,000', duration: '8 weeks', schedule: 'Twice weekly' },
@@ -68,16 +67,17 @@ const refunds = [
   <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/admissions', label: 'Admissions' }, { href: '', label: 'Tuition & Fees' }]} dividerType="chevron" />
 
   <PageHero
+    variant="decorative"
     eyebrow="Admissions"
     title="Transparent fees, no surprises."
-    subtitle="We publish our prices in full and explain what is included. If you can't find the fee for your programme here, contact admissions."
+    subtitle="We publish fees upfront and explain what is included. If a programme is not listed, contact admissions for the current cohort rate."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Languages</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Language level fees</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Base fees for CEFR-aligned language levels. Specific cohorts may include elective modules at additional
           cost, those are clearly itemised on each language page.
@@ -108,13 +108,11 @@ const refunds = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Technology</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Tech programme fees</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Bootcamp and short-course fees. We list the most popular mode; alternatives appear in the programme detail page.
         </p>
@@ -122,7 +120,7 @@ const refunds = [
 
       <div class="grid gap-6 md:grid-cols-2">
         {techPrograms.map((p) => (
-          <Card className="shadow-sm">
+          <Card className="border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="flex items-center justify-between">
                 <CardTitle className="text-lg">{p.title}</CardTitle>
@@ -146,18 +144,16 @@ const refunds = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Business & TVETA</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Business programmes</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {businessPrograms.map((p) => (
-          <Card className="shadow-sm">
+          <Card className="border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <CardTitle className="text-lg">{p.title}</CardTitle>
             </CardHeader>
@@ -179,13 +175,11 @@ const refunds = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="grid gap-8 md:grid-cols-2">
         <div class="rounded-2xl bg-surface p-8 ring-1 ring-border">
           <h2 class="text-2xl font-bold text-body">What's included</h2>
+          <div class="divider-accent mt-3" />
           <p class="mt-3 text-body-secondary">Every IJLAPS programme includes these baseline services.</p>
           <List class="mt-6 max-w-none" hideDividers>
             {included.map((item) => (
@@ -200,6 +194,7 @@ const refunds = [
         </div>
         <div class="rounded-2xl bg-surface p-8 ring-1 ring-border">
           <h2 class="text-2xl font-bold text-body">What's not included</h2>
+          <div class="divider-accent mt-3" />
           <p class="mt-3 text-body-secondary">Costs outside tuition that you should plan for.</p>
           <List class="mt-6 max-w-none" hideDividers>
             {notIncluded.map((item) => (
@@ -216,11 +211,11 @@ const refunds = [
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Payment schedule</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">When you pay, and how much</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <TableRoot>
@@ -252,13 +247,11 @@ const refunds = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Refund policy</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">If you need to withdraw</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           We keep our refund policy simple and published. Application and confirmation fees are non-refundable
           except where the institution cancels an intake.
@@ -267,7 +260,7 @@ const refunds = [
 
       <ul class="grid gap-4 md:grid-cols-2">
         {refunds.map((r) => (
-          <li class="rounded-lg border border-border bg-surface p-4 text-sm text-body-secondary">{r}</li>
+          <li class="rounded-lg border-2 border-transparent bg-surface p-4 text-sm text-body-secondary transition-shadow hover:border-primary/20 hover:shadow-md">{r}</li>
         ))}
       </ul>
 

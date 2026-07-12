@@ -11,6 +11,8 @@ build/
 frontend/node_modules/
 frontend/dist/
 frontend/.astro/
+frontend/test-results/
+tests/.last-run.json
 lingua/www/*
 lingua/public/frontend/assets
 lingua/public/frontend/images

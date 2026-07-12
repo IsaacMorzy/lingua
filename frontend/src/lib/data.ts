@@ -1731,100 +1731,110 @@ export interface NavItem {
   label: string;
   href?: string;
   description?: string;
+  meta?: string;
   children?: NavItem[];
 }
 
 export interface NavSection {
   label: string;
   wide?: boolean;
+  intro?: string;
   children: NavItem[];
+}
+
+export const LANGUAGES_COUNT = LANGUAGES.length;
+export const PROGRAMS_COUNT = TECH_PROGRAMS.length + BUSINESS_PROGRAMS.length + TVETA_PROGRAMS.length + PROFESSIONAL_PROGRAMS.length + VOCATIONAL_PROGRAMS.length;
+
+export function programCountLabel(category: Program['category']): string {
+  const map: Record<Program['category'], { value: string; noun: string }> = {
+    Tech: { value: String(TECH_PROGRAMS.length), noun: TECH_PROGRAMS.length === 1 ? 'tech programme' : 'tech programmes' },
+    Business: { value: String(BUSINESS_PROGRAMS.length), noun: 'business programmes' },
+    TVETA: { value: String(TVETA_PROGRAMS.length), noun: 'TVETA programmes' },
+    Professional: { value: String(PROFESSIONAL_PROGRAMS.length), noun: 'professional courses' },
+    Vocational: { value: String(VOCATIONAL_PROGRAMS.length), noun: 'vocational courses' },
+  };
+  return `${map[category].value} ${map[category].noun}`;
 }
 
 export const NAV_SECTIONS: NavSection[] = [
   {
     label: 'Academics',
+    intro: 'Pathways, schools, and faculty.',
     children: [
-      { label: 'Overview', href: '/academics' },
-      { label: 'Undergraduate', href: '/undergraduate' },
-      { label: 'Graduate Programs', href: '/graduate' },
-      { label: 'Schools', href: '/schools' },
-      { label: 'Online Education', href: '/online-education' },
-      { label: 'Off-Campus Learning', href: '/off-campus-learning' },
-      { label: 'Faculty', href: '/faculty' },
+      { label: 'Overview', href: '/academics', description: 'Academic model, calendar, and policies.' },
+      { label: 'Undergraduate', href: '/undergraduate', description: 'Diploma and certificate pathways.' },
+      { label: 'Graduate Programs', href: '/graduate', description: 'Bootcamps and short courses.' },
+      { label: 'Schools', href: '/schools', description: 'Languages, Tech, Business, TVETA.' },
+      { label: 'Online Education', href: '/online-education', description: 'Live online cohorts.' },
+      { label: 'Off-Campus Learning', href: '/off-campus-learning', description: 'Satellite centres and employer embed.' },
+      { label: 'Faculty', href: '/faculty', description: `${FACULTY.length}+ lead instructors.` },
     ],
   },
   {
     label: 'Languages',
     wide: true,
+    intro: `${LANGUAGES_COUNT} languages. CEFR A1–C2.`,
     children: [
-      { label: 'All Languages', href: '/languages' },
-      { label: 'English', href: '/languages/english' },
-      { label: 'French', href: '/languages/french' },
-      { label: 'Arabic', href: '/languages/arabic' },
-      { label: 'Mandarin Chinese', href: '/languages/chinese-mandarin' },
-      { label: 'German', href: '/languages/german' },
-      { label: 'Kiswahili', href: '/languages/swahili' },
-      { label: 'Spanish', href: '/languages/spanish' },
-      { label: 'Japanese', href: '/languages/japanese' },
-      { label: 'Portuguese', href: '/languages/portuguese' },
-      { label: 'Italian', href: '/languages/italian' },
-      { label: 'Dutch', href: '/languages/dutch' },
-      { label: 'Polish', href: '/languages/polish' },
-      { label: 'Korean', href: '/languages/korean' },
-      { label: 'Turkish', href: '/languages/turkish' },
-      { label: 'Norwegian', href: '/languages/norwegian' },
-      { label: 'Latin', href: '/languages/latin' },
-      { label: 'Greek', href: '/languages/greek' },
-      { label: 'Sign Language', href: '/languages/sign-language' },
-      { label: 'Local Languages', href: '/languages/local-languages' },
+      ...LANGUAGES.filter((l) => ['english', 'french', 'swahili', 'arabic', 'chinese-mandarin', 'spanish', 'german', 'japanese', 'sign-language', 'italian'].includes(l.slug)).map((l) => ({
+        label: l.name,
+        href: `/languages/${l.slug}`,
+        meta: `${l.cohortsPerYear}×/yr`,
+        description: l.shortDescription,
+      })),
+      { label: 'See all 19 languages', href: '/languages', description: 'Including Portuguese, Dutch, Korean, Turkish, Latin, Greek, and 4 more.' },
     ],
   },
   {
     label: 'Programs',
     wide: true,
+    intro: `${PROGRAMS_COUNT} programmes across 5 schools.`,
     children: [
-      { label: 'All Programs', href: '/courses' },
-      { label: 'Tech Bootcamps', href: '/programs/tech' },
-      { label: 'Business Programs', href: '/programs/business' },
-      { label: 'Professional Courses', href: '/programs/professional' },
-      { label: 'Vocational Training', href: '/programs/vocational' },
-      { label: 'TVETA Programs', href: '/programs/tveta' },
-      { label: 'Departments', href: '/departments' },
+      { label: 'All Programs', href: '/courses', description: 'Filter by school, level, mode.' },
+      { label: 'Tech Bootcamps', href: '/programs/tech', description: 'Career-launch 16–35 week bootcamps' },
+      { label: 'Business Programs', href: '/programs/business', description: 'Practice-led certificates' },
+      { label: 'Professional Courses', href: '/programs/professional', description: 'Diani tourism economy focus' },
+      { label: 'Vocational Training', href: '/programs/vocational', description: 'Hands-on trade skills' },
+      { label: 'TVETA Programs', href: '/programs/tveta', description: 'TVETA-certified tracks' },
+      { label: 'Departments', href: '/departments', description: 'Browse by academic department.' },
     ],
   },
   {
     label: 'About',
+    intro: 'The institution, mission, and leadership.',
     children: [
-      { label: 'University Overview', href: '/about' },
-      { label: 'Our Campus', href: '/campus' },
-      { label: 'Mission & Values', href: '/mission-values' },
-      { label: 'History', href: '/history' },
-      { label: 'Our Leadership', href: '/leadership' },
+      { label: 'University Overview', href: '/about', description: 'TVETA-certified, Nairobi campus.' },
+      { label: 'Our Campus', href: '/campus', description: 'Westlands facilities and labs.' },
+      { label: 'Mission & Values', href: '/mission-values', description: 'Learner-first principles.' },
+      { label: 'History', href: '/history', description: 'From a language house to four schools.' },
+      { label: 'Our Leadership', href: '/leadership', description: 'Directors and heads of school.' },
     ],
   },
   {
     label: 'Admissions',
+    intro: 'Apply, fees, aid, and intake dates.',
     children: [
-      { label: 'Admissions Overview', href: '/admissions' },
-      { label: 'How to Apply', href: '/how-to-apply' },
-      { label: 'Tuition & Fees', href: '/tuition-fees' },
-      { label: 'Financial Aid', href: '/financial-aid' },
-      { label: 'Dates & Deadlines', href: '/dates-deadlines' },
+      { label: 'Admissions Overview', href: '/admissions', description: 'What we look for.' },
+      { label: 'How to Apply', href: '/how-to-apply', description: '4 steps, 5–10 working days.' },
+      { label: 'Tuition & Fees', href: '/tuition-fees', description: 'Per-programme fee schedule.' },
+      { label: 'Financial Aid', href: '/financial-aid', description: 'Bursaries and payment plans.' },
+      { label: 'Dates & Deadlines', href: '/dates-deadlines', description: '6 intakes per year.' },
     ],
   },
   {
     label: 'Campus Life',
+    intro: 'Events, instructors, and news.',
     children: [
-      { label: 'Events', href: '/events' },
-      { label: 'Instructors', href: '/instructors' },
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Blog & News', href: '/blog' },
+      { label: 'Events', href: '/events', description: 'Open days, workshops, career fairs.' },
+      { label: 'Instructors', href: '/instructors', description: 'Faculty and visiting practitioners.' },
+      { label: 'FAQ', href: '/faq', description: 'Common questions from applicants.' },
+      { label: 'Blog & News', href: '/blog', description: 'Programme news and student stories.' },
     ],
   },
   {
     label: 'Contact',
+    intro: 'Reach admissions or partnerships.',
     children: [
-      { label: 'Contact Us', href: '/contact' },
+      { label: 'Contact Us', href: '/contact', description: 'Reach admissions and partnerships.' },
     ],
   },
 ];

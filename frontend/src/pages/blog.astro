@@ -2,11 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import StatRow from '../components/StatRow.astro';
-import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { AspectRatio } from '@/components/tailgrids/core/aspect-ratio';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 
 // TODO: Replace Unsplash placeholder images with real blog post images from Frappe or local assets.
 const posts = [
@@ -42,9 +42,11 @@ const posts = [
 ---
 
 <Layout title="Blog | IJLAPS" description="News, stories, and updates from IJLAPS." canonicalPath="/blog">
-  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Blog' }]} dividerType="chevron" />
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
 
   <PageHero
+    variant="centered"
+    bgImage={true}
     eyebrow="Blog"
     title="News & Stories"
     subtitle="Stay updated with the latest from IJLAPS, education insights, student stories, and events."
@@ -60,13 +62,17 @@ const posts = [
     ]}
   />
 
-  <section class="section bg-canvas">
-    <div class="container-main">
-      <h2 class="sr-only">Topics</h2>
+  <section class="section bg-canvas"><div class="container-main">
+      <div class="mb-10 text-center">
+        <Badge color="primary" size="md" className="mb-4">Articles</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Latest posts</h2>
+        <div class="divider-accent mt-4" />
+      </div>
+
       <div class="mb-8 flex flex-wrap items-center justify-center gap-2" aria-label="Topics">
         <span class="mr-2 text-sm font-semibold uppercase tracking-wider text-body-secondary">Topics</span>
         {['Education', 'Languages', 'Stories', 'Events', 'Admissions'].map((topic) => (
-          <a href={`#${topic.toLowerCase()}`} class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">{topic}</a>
+          <a href={`#${topic.toLowerCase()}`} class="rounded-full bg-primary-subtle px-3 py-1 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">{topic}</a>
         ))}
       </div>
 
@@ -74,7 +80,7 @@ const posts = [
         {
           posts.map((post) => (
             <article>
-              <Card className="overflow-hidden rounded-xl border border-border transition-shadow hover:shadow-lg">
+              <Card className="border-2 border-transparent overflow-hidden rounded-xl border-border transition-shadow hover:border-primary/20 hover:shadow-md">
                 <AspectRatio ratio="video" className="overflow-hidden">
                   <img
                     src={post.image}

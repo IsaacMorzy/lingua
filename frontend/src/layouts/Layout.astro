@@ -85,6 +85,7 @@ const allJsonLd = [orgJsonLd, ...jsonLdArray.map((j) => JSON.parse(JSON.stringif
     ))}
   </head>
   <body class="flex min-h-screen flex-col">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white focus:shadow-lg">Skip to main content</a>
     <script is:inline>
       (function() {
         const stored = localStorage.getItem('theme');
@@ -95,7 +96,7 @@ const allJsonLd = [orgJsonLd, ...jsonLdArray.map((j) => JSON.parse(JSON.stringif
       })();
     </script>
     <Header />
-    <main class="flex-1">
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
     <Footer />

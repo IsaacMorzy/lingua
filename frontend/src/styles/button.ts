@@ -13,6 +13,7 @@ export const buttonStyles = cva(
       appearance: {
         fill: "",
         outline: "",
+        inverted: "",
       },
       iconOnly: {
         true: "",
@@ -49,6 +50,16 @@ export const buttonStyles = cva(
         appearance: "outline",
         className:
           "border-button-outline-border bg-button-outline-background text-button-outline-text hover:bg-button-outline-hover-background hover:text-button-outline-hover-text focus:ring-button-outline-focus-ring",
+      },
+      {
+        variant: "primary",
+        appearance: "inverted",
+        className:
+          "bg-white text-primary hover:bg-white/90 focus:ring-button-inverted-focus-ring",
+        // For an inverted button on a light background, pass
+        // `class: 'focus:ring-button-inverted-focus-ring-on-light'` to swap
+        // to the dark focus ring (WCAG AA on white). The token is defined
+        // in global.css; the override pattern is the standard CVA escape hatch.
       },
       {
         variant: "danger",

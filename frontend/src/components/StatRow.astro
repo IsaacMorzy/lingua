@@ -12,14 +12,14 @@ export interface Props {
 const { stats, heading } = Astro.props;
 ---
 
-<section class="bg-surface border-b border-border py-10">
+<section class="border-b border-border bg-surface py-10">
   <div class="container-main">
     <h2 class="sr-only">{heading}</h2>
     <div class="grid gap-4 text-center sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <div>
-          <div class="text-3xl font-extrabold text-primary">{stat.value}</div>
-          <div class="mt-1 text-sm font-medium text-body-secondary">{stat.label}</div>
+        <div class="rounded-xl border border-border bg-surface p-6 shadow-sm">
+          <div class="stat-value">{stat.value}</div>
+          <div class="stat-label">{stat.label}</div>
         </div>
       ))}
     </div>

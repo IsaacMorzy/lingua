@@ -1,10 +1,11 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import PageHero from '../../../components/PageHero.astro';
 import CTABand from '../../../components/CTABand.astro';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Badge } from '@/components/tailgrids/core/badge';
-import { buttonStyles } from '@/components/tailgrids/core/button';
-import { programsByCategory, type Program } from '../../../lib/data';
+import { buttonStyles } from '@/styles/button';
+import { programsByCategory, programCountLabel, type Program } from '../../../lib/data';
 import { Link } from '@/components/tailgrids/core/link';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
 
@@ -19,7 +20,7 @@ export async function getStaticPaths() {
       props: {
         category,
         title: `IJLAPS ${category} Programmes`,
-        description: `Explore IJLAPS ${category} programmes, bootcamps, certificates, diplomas, and TVETA-accredited tracks.`,
+        description: `IJLAPS ${category} programmes, bootcamps, certificates, diplomas, and TVETA-accredited tracks. Fees, duration, and intake dates published per programme.`,
         programs: programsByCategory(category),
       },
     };
@@ -96,19 +97,17 @@ const stats: Record<Category, { value: string; label: string }[]> = {
 >
   <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/courses', label: 'Programs' }, { href: '', label: pageTitle.replace('IJLAPS ', '') }]} dividerType="chevron" />
 
-  <section class="bg-slate-900 py-20 md:py-32">
-    <div class="container-main text-center">
-      <Badge color="primary" size="md" className="mb-4">{eyebrow[category]}</Badge>
-      <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{pageTitle}</h1>
-      <p class="mx-auto mt-6 max-w-3xl text-lg text-slate-300 md:text-xl">{introBlurb[category]}</p>
-    </div>
-  </section>
+  <PageHero
+    eyebrow={eyebrow[category]}
+    title={pageTitle}
+    subtitle={introBlurb[category]}
+    variant="decorative"
+  />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats[category].map((s) => (
-          <div class="rounded-xl border border-border bg-surface p-6 text-center">
+          <div class="rounded-xl border-2 border-transparent border-border bg-surface p-6 text-center transition hover:border-primary/20 hover:shadow-md">
             <div class="text-3xl font-extrabold text-primary">{s.value}</div>
             <div class="mt-1 text-sm font-medium text-body-secondary">{s.label}</div>
           </div>
@@ -117,16 +116,16 @@ const stats: Record<Category, { value: string; label: string }[]> = {
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Programmes</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">All {category} programmes</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {programs.map((p) => (
-          <Card className="flex flex-col shadow-sm">
+          <Card className="flex flex-col border-2 border-transparent shadow-sm transition hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="flex items-baseline justify-between gap-3">
                 <CardTitle className="text-lg">{p.title}</CardTitle>
@@ -135,7 +134,7 @@ const stats: Record<Category, { value: string; label: string }[]> = {
             </CardHeader>
             <CardContent>
               <p class="text-sm text-body-secondary">{p.tagline}</p>
-              <div class="mt-4 rounded-md border border-border bg-surface p-3 text-sm">
+              <div class="mt-4 rounded-md border-2 border-transparent border-border bg-surface p-3 text-sm transition hover:border-primary/20">
                 <div class="flex justify-between">
                   <span class="text-body-secondary">From</span>
                   <span class="font-bold text-primary">{p.modes[0].fee}</span>
@@ -164,8 +163,8 @@ const stats: Record<Category, { value: string; label: string }[]> = {
   </section>
 
   <CTABand
-    title={`Ready to begin a ${category} programme?`}
-    description="3 intakes per year · flexible payment plans · financial aid available"
+    title={`Apply for the ${category.toLowerCase()} intake`}
+    description={`${programCountLabel(category)} · 3 intakes per year · flexible payment plans · financial aid available`}
     primaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
     secondaryCta={{ href: '/tuition-fees', label: 'Tuition & fees' }}
   />

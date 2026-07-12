@@ -1,11 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS, LANGUAGES } from '@/lib/data';
+import { Code, ChartBar, GraduationCap, Book, ArrowRight } from '@/components/icons';
 
 interface Course {
   title: string;
@@ -69,12 +71,13 @@ const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
 
 ---
 
-<Layout title="Courses | IJLAPS" description="Explore TVETA-certified courses at IJLAPS: language programmes A1→C2 in 10 languages, technology bootcamps, business programmes, and vocational training." canonicalPath="/courses" keywords={['IJLAPS courses', 'TVETA courses Kenya', 'language programmes Nairobi', 'tech bootcamp']}>
+<Layout title="Courses | IJLAPS" description="TVETA-certified courses at IJLAPS: language programmes A1→C2 in 10 languages, technology bootcamps, business programmes, and vocational training." canonicalPath="/courses" keywords={['IJLAPS courses', 'TVETA courses Kenya', 'language programmes Nairobi', 'tech bootcamp']}>
   <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '', label: 'Courses' }]} dividerType="chevron" />
 
   <PageHero
+    variant="decorative"
     eyebrow="All Programmes"
-    title="Explore Our Courses"
+    title="All programmes"
     subtitle="Browse TVETA-certified programmes across languages, technology, business, and vocational training. Filter by category to find your match."
   />
 
@@ -82,16 +85,22 @@ const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
     <div class="container-main">
       <div class="flex flex-wrap items-center gap-3 text-sm">
         <span class="font-semibold uppercase tracking-wider text-body-secondary">Jump to:</span>
-        <a href="/languages" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Languages (10)</a>
-        <a href="/programs/tech" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Tech Programmes</a>
-        <a href="/programs/business" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Business Programmes</a>
-        <a href="/programs/tveta" class="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">TVETA Programmes</a>
+        <a href="/languages" class="rounded-full bg-primary-subtle px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Languages (10)</a>
+        <a href="/programs/tech" class="rounded-full bg-primary-subtle px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Tech Programmes</a>
+        <a href="/programs/business" class="rounded-full bg-primary-subtle px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">Business Programmes</a>
+        <a href="/programs/tveta" class="rounded-full bg-primary-subtle px-3 py-1 font-medium text-primary hover:bg-primary hover:text-white transition-colors">TVETA Programmes</a>
       </div>
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
+      <div class="mx-auto mb-12 max-w-3xl text-center">
+        <Badge color="primary" size="md" className="mb-4">All programmes</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Find your programme</h2>
+        <div class="divider-accent mt-4" />
+        <p class="mt-4 text-lg text-body-secondary">Filter by school, level, or mode. Compare duration, fee, and intake dates side by side.</p>
+      </div>
+
       <div class="mb-8 flex flex-wrap items-center justify-center gap-2" aria-label="Course categories" id="category-filters">
         {
           categories.map((category, index) => (
@@ -102,7 +111,7 @@ const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
                 'rounded-full px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 index === 0
                   ? 'bg-primary text-white'
-                  : 'bg-surface text-body-secondary hover:bg-slate-100 dark:hover:bg-ink-soft',
+                  : 'bg-surface text-body-secondary hover:bg-canvas dark:hover:bg-ink-soft',
               ]}
               aria-pressed={index === 0 ? 'true' : 'false'}
             >
@@ -119,7 +128,7 @@ const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
               class="course-card"
               data-course-category={course.categoryKey}
             >
-              <Card className="h-full rounded-xl border border-border transition-shadow hover:shadow-lg">
+              <Card className="h-full rounded-xl border-2 border-transparent transition-shadow hover:border-primary/20 hover:shadow-md">
                 <CardHeader>
                   <div class="flex items-center justify-between">
                     <Badge color="secondary" size="sm">
@@ -156,22 +165,13 @@ const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
     </div>
   </section>
 
-  <section class="py-12 md:py-16 bg-primary">
-    <div class="container-main text-center">
-      <h2 class="text-3xl font-bold text-white md:text-4xl">Need help choosing a course?</h2>
-      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
-        Our admissions team is ready to guide you toward the right program.
-      </p>
-      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a href="/admissions" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
-          Apply Now
-        </a>
-        <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>
-          Contact Admissions
-        </a>
-      </div>
-    </div>
-  </section>
+  <CTABand
+    variant="primary"
+    title="Talk to admissions about which programme fits."
+    description="Talk to admissions. We send programme outlines, fee schedules, and intake dates by email within one business day."
+    primaryCta={{ href: '/admissions', label: 'Apply Now' }}
+    secondaryCta={{ href: '/contact', label: 'Contact Admissions' }}
+  />
 
   <script type="module">
     function initCourseFilters() {
@@ -213,11 +213,11 @@ const categories = ['All', 'Tech', 'Business', 'TVETA', 'Languages'];
           buttons.forEach((btn) => {
             btn.setAttribute('aria-pressed', 'false');
             btn.classList.remove('bg-primary', 'text-white');
-            btn.classList.add('bg-surface', 'text-body-secondary', 'hover:bg-slate-100');
+            btn.classList.add('bg-surface', 'text-body-secondary', 'hover:bg-canvas', 'dark:hover:bg-ink-soft');
           });
 
           button.setAttribute('aria-pressed', 'true');
-          button.classList.remove('bg-white', 'text-slate-700', 'hover:bg-slate-100');
+          button.classList.remove('bg-white', 'text-slate-700', 'hover:bg-canvas');
           button.classList.add('bg-primary', 'text-white');
 
           filterCourses(category);

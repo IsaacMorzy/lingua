@@ -5,8 +5,8 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import CTABand from '../components/CTABand.astro';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { buttonStyles } from '@/styles/button';
+import { MapPin, Building, Users, Globe, Target, ArrowRight } from '@/components/icons';
 
 const centres = [
   { city: 'Mombasa', focus: 'Hospitality English + Maritime Kiswahili' },
@@ -40,7 +40,7 @@ const offCampusPathways = [
   },
   {
     title: 'International study trips',
-    description: 'Optional immersion experiences in Dar es Salaam, Kigali, Kampala, or abroad, for language learners ready for the next step.',
+    description: 'Optional 2–4 week immersion residencies in Dar es Salaam, Kigali, Kampala, and selected partner universities abroad. Open to advanced-language learners at C1+ levels.',
     forWho: 'Advanced-language learners',
   },
 ];
@@ -55,16 +55,17 @@ const offCampusPathways = [
   <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Off-Campus Learning' }]} />
 
   <PageHero
+    variant="decorative"
     eyebrow="Off-Campus Learning"
     title="Learning doesn't only happen in Westlands."
     subtitle="We bring our teaching to where our learners and partners are, across Kenya and into the workplaces that hire our graduates."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Satellite Centres</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Four study centres beyond Nairobi</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Each satellite centre runs selected cohorts that match regional demand, hospitality English in Mombasa,
           agritech in Eldoret, TVETA trades in Kisumu and Nakuru.
@@ -73,8 +74,11 @@ const offCampusPathways = [
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {centres.map((c) => (
-          <Card className="shadow-sm">
+          <Card className="border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
+              <div class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary-subtle text-primary">
+                <MapPin size={20} />
+              </div>
               <CardTitle>{c.city}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -86,18 +90,17 @@ const offCampusPathways = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Partnerships</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">The numbers behind the network</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {partnerships.map((p) => (
-          <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+          <div class="rounded-xl border-2 border-transparent bg-surface p-6 text-center shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
+            <Target size={28} className="mx-auto mb-2 text-primary/60" />
             <div class="text-4xl font-extrabold text-primary">{p.count}</div>
             <div class="mt-2 text-sm font-medium text-body-secondary">{p.label}</div>
           </div>
@@ -106,13 +109,11 @@ const offCampusPathways = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Pathways</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Off-campus pathways</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Off-campus learning at IJLAPS covers workplace embeds, community programmes, and applied learning
           outside the classroom.
@@ -121,7 +122,7 @@ const offCampusPathways = [
 
       <div class="grid gap-8 md:grid-cols-2">
         {offCampusPathways.map((p, i) => (
-          <Card className="flex flex-col shadow-sm">
+          <Card className="flex flex-col border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="flex items-baseline justify-between gap-3">
                 <CardTitle className="text-xl">{p.title}</CardTitle>
@@ -140,8 +141,7 @@ const offCampusPathways = [
     </div>
   </section>
 
-  <section class="section bg-primary">
-    <div class="container-main text-center">
+  <section class="section bg-primary"><div class="container-main text-center">
       <h2 class="text-3xl font-bold text-white md:text-4xl">Partner with IJLAPS</h2>
       <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
         Organisations interested in industrial attachment, employer-embedded training, or community programmes

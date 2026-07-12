@@ -5,21 +5,56 @@ export interface Props {
   eyebrow?: string;
   title: string;
   subtitle?: string;
+  variant?: 'centered' | 'split' | 'decorative' | 'minimal';
 }
 
-const { eyebrow, title, subtitle } = Astro.props;
+const { eyebrow, title, subtitle, variant = 'centered' } = Astro.props;
 ---
 
-<section class="bg-slate-900 py-20 md:py-32">
-  <div class="container-main text-center">
-    {eyebrow && <Badge color="primary" size="md" className="mb-4">{eyebrow}</Badge>}
-    <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
-      {title}
-    </h1>
-    {subtitle && (
-      <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-300 md:text-xl">
-        {subtitle}
-      </p>
-    )}
-  </div>
-</section>
+{
+  variant === 'minimal' ? (
+    <section class="border-b border-border bg-surface py-16 md:py-20">
+      <div class="container-main">
+        <div class="mx-auto max-w-3xl">
+          {eyebrow && <Badge color="primary" size="md" className="mb-4">{eyebrow}</Badge>}
+          <h1 class="text-4xl font-extrabold tracking-tight text-body sm:text-5xl">{title}</h1>
+          {subtitle && <p class="mt-4 text-lg text-body-secondary">{subtitle}</p>}
+        </div>
+      </div>
+    </section>
+  ) : variant === 'split' ? (
+    <section class="bg-ink py-20 md:py-32">
+      <div class="container-main">
+        <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            {eyebrow && <Badge color="primary" size="md" className="mb-4">{eyebrow}</Badge>}
+            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{title}</h1>
+            {subtitle && <p class="mt-6 max-w-xl text-lg text-slate-300 md:text-xl">{subtitle}</p>}
+          </div>
+          <div class="hidden lg:block">
+            <div class="border-l border-white/10 pl-10">
+              <p class="text-7xl font-black text-white/5">{eyebrow || 'IJLAPS'}</p>
+              <p class="mt-4 text-sm uppercase tracking-widest text-white/20">TVETA Certified · Since 2010</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ) : variant === 'decorative' ? (
+    <section class="bg-ink py-20 md:py-32">
+      <div class="container-main text-center">
+        {eyebrow && <Badge color="primary" size="md" className="mb-4">{eyebrow}</Badge>}
+        <h1 class="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{title}</h1>
+        {subtitle && <p class="mx-auto mt-6 max-w-3xl text-lg text-slate-300 md:text-xl">{subtitle}</p>}
+      </div>
+    </section>
+  ) : (
+    <section class="bg-ink py-20 md:py-32">
+      <div class="container-main text-center">
+        {eyebrow && <Badge color="primary" size="md" className="mb-4">{eyebrow}</Badge>}
+        <h1 class="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{title}</h1>
+        {subtitle && <p class="mx-auto mt-6 max-w-3xl text-lg text-slate-300 md:text-xl">{subtitle}</p>}
+      </div>
+    </section>
+  )
+}
