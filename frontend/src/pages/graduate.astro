@@ -7,7 +7,7 @@ import { Link } from '@/components/tailgrids/core/link';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { CheckCircle } from '@/components/icons';
 
 const gradBootcamps = [
   {
@@ -68,21 +68,22 @@ const certifications = [
   <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Graduate Programs' }]} />
 
   <PageHero
+    variant="decorative"
     eyebrow="Academics"
     title="Career-launching programmes."
     subtitle="IJLAPS graduate-level programmes run as intensive bootcamps and short courses, anchored to portfolio outcomes and industry-recognised certifications."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Bootcamps</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Technology bootcamps</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <div class="grid gap-8 md:grid-cols-2">
         {gradBootcamps.map((b) => (
-          <Card className="shadow-sm">
+          <Card className="border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="flex items-baseline justify-between gap-3">
                 <CardTitle className="text-xl">{b.title}</CardTitle>
@@ -94,7 +95,10 @@ const certifications = [
               <h4 class="mt-4 text-xs font-bold uppercase tracking-wider text-body-secondary">Career outcomes</h4>
               <List class="mt-2 max-w-none" hideDividers>
                 {b.outcomes.map((o) => (
-                  <li class="flex items-start gap-2 text-sm text-body-secondary"><span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>{o}</li>
+                  <li class="flex items-start gap-2 text-sm text-body-secondary">
+                    <CheckCircle size={14} className="mt-0.5 flex-shrink-0 text-primary" />
+                    {o}
+                  </li>
                 ))}
               </List>
             </CardContent>
@@ -109,13 +113,11 @@ const certifications = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Short Courses</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Focused short courses</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Specialised programmes ranging from 2 to 10 weeks, designed for working professionals who want
           to upskill in a specific area.
@@ -125,7 +127,7 @@ const certifications = [
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {shortCourses.map((c) => (
           <a href={c.href} class="group block transition-shadow hover:shadow-md">
-            <Card className="flex flex-col gap-2 shadow-sm">
+            <Card className="flex flex-col gap-2 border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
               <CardHeader>
                 <div class="flex items-baseline justify-between gap-3">
                   <CardTitle className="text-lg">{c.title}</CardTitle>
@@ -142,13 +144,11 @@ const certifications = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Certifications</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Certifications our programmes prepare you for</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">External and IJLAPS-issued certifications align with international standards where possible.</p>
       </div>
 
@@ -166,8 +166,8 @@ const certifications = [
   </section>
 
   <CTABand
-    title="Ready to launch your career?"
-    description="Speak with our admissions team about the right bootcamp or short course for your goals."
+    title="Choose a bootcamp"
+    description="Six to thirty-five week bootcamps in software engineering, data, and product. 12-month career-services support included with full bootcamps."
     primaryCta={{ href: '/programs/tech', label: 'See Tech Programs' }}
     secondaryCta={{ href: '/contact', label: 'Talk to admissions' }}
   />

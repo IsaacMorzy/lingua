@@ -1,55 +1,40 @@
 ---
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { Book, Code, ChartBar, GraduationCap } from '@/components/icons';
 
 const courses = [
-  {
-    title: 'Languages',
-    description: 'English, French, Arabic, Chinese, and more for global communication.',
-    icon: '🗣️',
-  },
-  {
-    title: 'Technology',
-    description: 'ICT, software development, digital skills, and emerging tech.',
-    icon: '💻',
-  },
-  {
-    title: 'Business',
-    description: 'Entrepreneurship, accounting, marketing, and management.',
-    icon: '📊',
-  },
-  {
-    title: 'TVETA Courses',
-    description: 'Competency-based technical and vocational programs.',
-    icon: '🎓',
-  },
+  { title: 'Languages', description: 'English, French, Arabic, Chinese, and more for global communication.', icon: Book, href: '/languages' },
+  { title: 'Technology', description: 'ICT, software development, digital skills, and emerging tech.', icon: Code, href: '/programs/tech' },
+  { title: 'Business', description: 'Entrepreneurship, accounting, marketing, and management.', icon: ChartBar, href: '/programs/business' },
+  { title: 'TVETA Courses', description: 'Competency-based technical and vocational programs.', icon: GraduationCap, href: '/programs/tveta' },
 ] as const;
 ---
 
-<section class="section bg-canvas">
+<section class="bg-canvas py-16 md:py-20">
   <div class="container-main">
     <div class="mb-12 text-center">
-      <Badge color="primary" size="md" className="mb-4">Departments</Badge>
-      <h2 class="text-3xl font-bold text-body md:text-4xl">Our Academic Departments</h2>
-      <p class="mt-4 text-lg text-body-secondary">
-        Discover programs designed to equip you with in-demand skills.
-      </p>
+      <Badge color="primary" size="md" className="mb-4">Our Schools</Badge>
+      <h2 class="text-3xl font-bold text-body md:text-4xl">Academic Departments</h2>
+      <p class="mt-4 text-lg text-body-secondary">Programmes across four schools: languages, technology, business, and TVETA trades.</p>
     </div>
 
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {
-        courses.map((course) => (
-          <Card className="shadow-sm">
-            <CardHeader>
-              <div class="mb-4 text-4xl">{course.icon}</div>
+      {courses.map((course) => (
+        <a href={course.href} class="group block">
+          <Card className="border-2 border-transparent bg-surface p-6 text-center shadow-sm transition-all duration-200 hover:border-primary/20 hover:shadow-md">
+            <div class="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-subtle text-primary transition-transform group-hover:scale-110">
+              <course.icon size={28} />
+            </div>
+            <CardHeader className="px-0 pt-0">
               <CardTitle>{course.title}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-0">
               <p class="text-body-secondary">{course.description}</p>
             </CardContent>
           </Card>
-        ))
-      }
+        </a>
+      ))}
     </div>
   </div>
 </section>

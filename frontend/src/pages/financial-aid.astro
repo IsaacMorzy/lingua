@@ -4,11 +4,11 @@ import PageHero from '../components/PageHero.astro';
 import CTABand from '../components/CTABand.astro';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Badge } from '@/components/tailgrids/core/badge';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { CheckCircle } from '@/components/icons';
 
 const bursaries = [
   {
@@ -19,7 +19,7 @@ const bursaries = [
   },
   {
     title: 'Merit scholarship',
-    description: 'Awarded to top-performing applicants with strong academic records or exceptional extracurricular distinction.',
+    description: 'Awarded to top-performing applicants with strong academic records or demonstrated extracurricular achievement.',
     eligibility: ['KCSE mean grade A or A-', 'Strong reference from a teacher', 'Successful interview with panel'],
     coverage: 'Up to 50%',
   },
@@ -72,10 +72,10 @@ const docs = [
     eyebrow="Admissions"
     title="Cost should not decide who learns."
     subtitle="Roughly 40% of our students receive IJLAPS financial aid. We offer bursaries, scholarships, and partnership programmes across language, technology, business, and TVETA tracks."
+    variant="decorative"
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <Alert status="warning" className="mb-2">
         <AlertIndicator />
         <AlertContent>
@@ -88,11 +88,11 @@ const docs = [
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Bursaries & Scholarships</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Four pathways to reduce your fees</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           Each programme below is awarded alongside standard admission. Bursaries can be stacked with merit awards
           but not with full scholarships. Decisions are made by an independent panel.
@@ -101,7 +101,7 @@ const docs = [
 
       <div class="grid gap-8 md:grid-cols-2">
         {bursaries.map((b) => (
-          <Card className="shadow-sm">
+          <Card className="shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="flex items-baseline justify-between gap-3">
                 <CardTitle className="text-xl">{b.title}</CardTitle>
@@ -115,7 +115,12 @@ const docs = [
               <h4 class="text-xs font-bold uppercase tracking-wider text-body-secondary">Eligibility</h4>
               <List class="mt-2 max-w-none border-0" hideDividers>
                 {b.eligibility.map((e) => (
-                  <li class="flex items-start gap-2"><span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary"></span>{e}</li>
+                  <li class="flex items-start gap-2">
+                    <span class="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-primary">
+                      <CheckCircle size={16} />
+                    </span>
+                    {e}
+                  </li>
                 ))}
               </List>
             </CardFooter>
@@ -125,18 +130,16 @@ const docs = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-primary-subtle"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">How it works</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">The financial-aid process</h2>
+        <div class="divider-accent mt-3" />
       </div>
 
       <ol class="mx-auto max-w-3xl space-y-4">
         {process.map((step, i) => (
-          <li class="flex gap-4 rounded-xl bg-surface p-4 ring-1 ring-border">
+          <li class="flex gap-4 rounded-xl bg-surface p-4 shadow-sm ring-1 ring-border transition-all duration-300 hover:ring-primary/20">
             <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary text-base font-bold text-white">{i + 1}</span>
             <span class="text-base text-body-secondary">{step}</span>
           </li>
@@ -145,14 +148,12 @@ const docs = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-2">
         <div>
           <Badge color="primary" size="md" className="mb-4">Documents</Badge>
           <h2 class="text-3xl font-bold text-body">What you'll need to submit</h2>
+          <div class="divider-accent mt-3" />
           <p class="mt-4 text-body-secondary">
             Submit alongside the financial-aid application form. Incomplete submissions are not considered.
           </p>
@@ -170,12 +171,13 @@ const docs = [
         <div>
           <Badge color="primary" size="md" className="mb-4">Timelines</Badge>
           <h2 class="text-3xl font-bold text-body">Application timeline</h2>
+          <div class="divider-accent mt-3" />
           <ul class="mt-6 space-y-4">
             {timelines.map((t, i) => (
               <li class="block">
-                <Card className="p-4">
+                <Card className="p-4 shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
                   <CardContent className="px-0 py-0 flex items-start gap-4">
-                    <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary">{i + 1}</span>
+                    <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-subtle text-base font-bold text-primary">{i + 1}</span>
                     <div>
                       <div class="font-semibold text-body">{t.stage}</div>
                       <div class="mt-1 text-sm text-body-secondary">{t.due}</div>
@@ -189,8 +191,6 @@ const docs = [
       </div>
     </div>
   </section>
-
-  <Separator class="my-8" />
 
   <section class="py-12 md:py-16 bg-primary">
     <div class="container-main text-center">
@@ -210,7 +210,7 @@ const docs = [
   </section>
 
   <CTABand
-    title="Ready to apply for aid?"
+    title="Apply for financial aid"
     description="You can apply for financial aid at the same time as admission, or after you've received your admission letter."
     primaryCta={{ href: '/how-to-apply', label: 'How to apply' }}
     secondaryCta={{ href: '/dates-deadlines', label: 'Key dates' }}

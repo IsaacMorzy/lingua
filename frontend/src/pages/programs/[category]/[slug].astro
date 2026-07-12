@@ -1,13 +1,13 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import PageHero from '../../../components/PageHero.astro';
 import CTABand from '../../../components/CTABand.astro';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Badge } from '@/components/tailgrids/core/badge';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { TECH_PROGRAMS, BUSINESS_PROGRAMS, TVETA_PROGRAMS, PROFESSIONAL_PROGRAMS, VOCATIONAL_PROGRAMS, type Program } from '../../../lib/data';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
 
 export async function getStaticPaths() {
   const all: Program[] = [...TECH_PROGRAMS, ...BUSINESS_PROGRAMS, ...TVETA_PROGRAMS, ...PROFESSIONAL_PROGRAMS, ...VOCATIONAL_PROGRAMS];
@@ -53,14 +53,17 @@ const courseJsonLd = {
     { href: '', label: program.title },
   ]} dividerType="chevron" />
 
-  <section class="bg-slate-900 py-20 md:py-32">
-    <div class="container-main">
-      <div class="mx-auto max-w-4xl text-center">
-        <Badge color="primary" size="md" className="mb-4">{program.category} · {program.mode}</Badge>
-        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">{program.title}</h1>
-        <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-300 md:text-xl">{program.tagline}</p>
+  <PageHero
+    eyebrow={`${program.category} · ${program.mode}`}
+    title={program.title}
+    subtitle={program.tagline}
+    variant="decorative"
+  />
 
-        <div class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+  <section class="bg-ink pb-16 md:pb-24">
+    <div class="container-main">
+      <div class="mx-auto max-w-3xl text-center">
+        <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {program.outcomes.map((o) => (
             <div class="rounded-md bg-white/10 p-3">
               <div class="text-base font-bold text-white">{o.value}</div>
@@ -68,8 +71,7 @@ const courseJsonLd = {
             </div>
           ))}
         </div>
-
-        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a href="/how-to-apply" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>Apply now</a>
           <a href="#modes" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>See modes of study</a>
         </div>
@@ -77,19 +79,19 @@ const courseJsonLd = {
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-[1fr_2fr]">
         <div>
           <Badge color="primary" size="md" className="mb-4">About this programme</Badge>
           <h2 class="text-3xl font-bold text-body md:text-4xl">Programme overview</h2>
+          <div class="divider-accent mt-4" />
         </div>
         <div class="prose prose-lg max-w-none">
           <p class="text-lg text-body-secondary">{program.description}</p>
 
           <h3 class="mt-8 text-xl font-bold text-body">Tools you'll use</h3>
           <div class="mt-3 flex flex-wrap gap-2">
-            {program.tools.map((t) => <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">{t}</span>)}
+            {program.tools.map((t) => <span class="rounded-full bg-primary-subtle px-3 py-1 text-sm font-medium text-primary">{t}</span>)}
           </div>
 
           <h3 class="mt-8 text-xl font-bold text-body">Prerequisites</h3>
@@ -103,18 +105,16 @@ const courseJsonLd = {
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section id="modes" class="section bg-canvas">
-    <div class="container-main">
+  <section id="modes" class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Modes of study</Badge>
-        <h2 class="text-3xl font-bold text-body md:text-4xl">Choose the path that fits your life</h2>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Modes, schedules, and fees for {program.title}</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <div class="grid gap-6 md:grid-cols-3">
         {program.modes.map((m) => (
-          <Card className={['relative shadow-sm', m.isPopular ? 'ring-2 ring-primary' : ''].filter(Boolean).join(' ')}>
+          <Card className={['relative border-2 border-transparent shadow-sm transition hover:border-primary/20 hover:shadow-md', m.isPopular ? 'ring-2 ring-primary' : ''].filter(Boolean).join(' ')}>
             {m.isPopular && (
               <span class="absolute -top-3 right-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow">POPULAR</span>
             )}
@@ -134,22 +134,20 @@ const courseJsonLd = {
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Curriculum</Badge>
-        <h2 class="text-3xl font-bold text-body md:text-4xl">What you'll learn</h2>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">{program.curriculum.length}-module curriculum</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">{totalHours}+ contact hours across {program.curriculum.length} modules.</p>
       </div>
 
       <ol class="space-y-4">
         {program.curriculum.map((m, i) => (
           <li>
-            <Card className="shadow-sm">
+            <Card className="border-2 border-transparent shadow-sm transition hover:border-primary/20 hover:shadow-md">
               <CardContent className="grid gap-4 md:grid-cols-[60px_1fr]">
-                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-xl font-extrabold text-primary">{String(i + 1).padStart(2, '0')}</span>
+                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-subtle text-xl font-extrabold text-primary">{String(i + 1).padStart(2, '0')}</span>
                 <div>
                   <div class="flex items-baseline justify-between gap-3">
                     <CardTitle className="text-xl">{m.title}</CardTitle>
@@ -169,18 +167,16 @@ const courseJsonLd = {
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Career outcomes</Badge>
-        <h2 class="text-3xl font-bold text-body md:text-4xl">Where {program.title} takes you</h2>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">{program.careers.length} career paths after {program.title}</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <div class="grid gap-6 md:grid-cols-3">
         {program.careers.map((c) => (
-          <Card className="text-center shadow-sm">
+          <Card className="border-2 border-transparent text-center shadow-sm transition hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <CardTitle className="text-base">{c.role}</CardTitle>
             </CardHeader>

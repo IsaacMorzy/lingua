@@ -30,7 +30,7 @@ const systems = await getResourceList<LinguaLevelSystem>('Lingua Level System', 
           {systems.map((system) => (
             <a
               href={`/level-systems/${system.system_code}`}
-              class="block rounded-xl bg-surface p-6 shadow-sm border border-border hover:shadow-md transition"
+              class="block rounded-xl bg-surface p-6 shadow-sm border-2 border-transparent border-border transition hover:border-primary/20 hover:shadow-md"
             >
               <div class="flex items-center gap-3">
                 <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white font-bold">

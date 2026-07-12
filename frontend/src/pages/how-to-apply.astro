@@ -6,8 +6,7 @@ import CTABand from '../components/CTABand.astro';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
 import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
-import { buttonStyles } from '@/components/tailgrids/core/button';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { buttonStyles } from '@/styles/button';
 
 const steps = [
   {
@@ -66,13 +65,14 @@ const afterAcceptance = [
     eyebrow="Admissions"
     title="Your application, step by step."
     subtitle="Applying to IJLAPS is intentionally straightforward. The four steps below apply to every language, technology, business, and TVETA programme."
+    variant="decorative"
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Process</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">The four steps</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           The full process takes 5–10 working days from submission to decision. We notify you by email when your
           admission letter is ready in the student portal.
@@ -81,8 +81,8 @@ const afterAcceptance = [
 
       <ol class="space-y-6">
         {steps.map((s) => (
-          <li class="grid gap-6 rounded-2xl border border-border bg-surface p-6 shadow-sm md:grid-cols-[80px_1fr] md:items-start md:p-8">
-            <span class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-2xl font-extrabold text-primary">
+          <li class="grid gap-6 rounded-2xl border-2 border-transparent bg-surface p-6 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md md:grid-cols-[80px_1fr] md:items-start md:p-8">
+            <span class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-primary-subtle text-2xl font-extrabold text-primary">
               {s.step}
             </span>
             <div>
@@ -96,14 +96,12 @@ const afterAcceptance = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-primary-subtle"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
         <div>
           <Badge color="primary" size="md" className="mb-4">Documents</Badge>
           <h2 class="text-3xl font-bold text-body">What you'll need to submit</h2>
+          <div class="divider-accent mt-3" />
           <p class="mt-4 text-lg text-body-secondary">
             Have the following ready before you start the application form. You can upload scanned PDFs or sharp
             photos, both are accepted.
@@ -111,7 +109,7 @@ const afterAcceptance = [
         </div>
         <ul class="grid gap-3 sm:grid-cols-2">
           {documents.map((doc, i) => (
-            <li class="flex items-start gap-3 rounded-lg border border-border bg-surface p-3 text-sm text-body-secondary">
+            <li class="flex items-start gap-3 rounded-lg border-2 border-transparent bg-surface p-3 text-sm text-body-secondary shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md">
               <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">{i + 1}</span>
               <span>{doc}</span>
             </li>
@@ -121,13 +119,11 @@ const afterAcceptance = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">After Acceptance</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">What happens next?</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           Once your admission letter is ready, three steps happen before you start classes.
         </p>
@@ -135,7 +131,7 @@ const afterAcceptance = [
 
       <div class="grid gap-6 md:grid-cols-3">
         {afterAcceptance.map((a, i) => (
-          <Card className="shadow-sm">
+          <Card className="shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <Badge color="primary" size="sm">Step {i + 1}</Badge>
               <CardTitle className="mt-3">{a.label}</CardTitle>
@@ -150,9 +146,9 @@ const afterAcceptance = [
       <Alert status="info" className="mt-12">
         <AlertIndicator />
         <AlertContent>
-          <AlertTitle>Ready to begin?</AlertTitle>
+          <AlertTitle>Apply online or download a PDF form</AlertTitle>
           <AlertDescription>
-            <p>You can save and resume your application. The online portal walks you through the same checklist as above, with file-upload guidance.</p>
+            <p>The online portal walks you through the same checklist above, with file-upload guidance. Save and resume at any step.</p>
             <div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
                 Start application

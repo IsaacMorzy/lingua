@@ -2,12 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import CTABand from '../components/CTABand.astro';
-import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { Avatar, AvatarFallback } from '@/components/tailgrids/core/avatar';
 import { Badge } from '@/components/tailgrids/core/badge';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
 import { FACULTY, facultyByDepartment } from '@/lib/data';
+import { CheckCircle, Users } from '@/components/icons';
 
 const groups = [
   { dept: 'Languages', title: 'School of Languages' },
@@ -30,19 +31,20 @@ const recruitment = [
   canonicalPath="/faculty"
   keywords={['IJLAPS faculty', 'IJLAPS instructors', 'Nairobi language teachers', 'tech bootcamp instructors Kenya']}
 >
-  <Breadcrumbs items={[{ href: '/', label: 'Home' }, { href: '/academics', label: 'Academics' }, { href: '', label: 'Faculty' }]} dividerType="chevron" />
+  <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Faculty' }]} />
 
   <PageHero
+    variant="decorative"
     eyebrow="Faculty"
     title="The people who teach you."
     subtitle="Every IJLAPS instructor is selected for subject expertise, industry practice, and a teaching philosophy that matches our learner-first principles."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">At a glance</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">{FACULTY.length}+ lead instructors across four schools</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Our faculty directory lists the lead instructors and heads of department. Programme pages list the full
           cohort team, including teaching assistants and language coaches.
@@ -58,7 +60,7 @@ const recruitment = [
             </div>
             <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {facultyByDepartment(g.dept).map((f) => (
-                <Card className="flex flex-col shadow-sm">
+                <Card className="flex flex-col border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
                   <CardHeader>
                     <div class="mb-4 flex items-center gap-4">
                       <Avatar size="xxl">
@@ -74,7 +76,10 @@ const recruitment = [
                     <p class="text-sm text-body-secondary">{f.bio}</p>
                     <ul class="mt-4 space-y-1">
                       {f.credentials.map((c) => (
-                        <li class="text-xs text-body-secondary">• {c}</li>
+                        <li class="flex items-start gap-2 text-xs text-body-secondary">
+                          <CheckCircle size={12} className="mt-0.5 flex-shrink-0 text-primary" />
+                          {c}
+                        </li>
                       ))}
                     </ul>
                   </CardContent>
@@ -87,20 +92,26 @@ const recruitment = [
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-primary-subtle"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
         <div>
+          <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary-subtle text-primary">
+            <Users size={20} />
+          </div>
           <Badge color="primary" size="md" className="mb-4">Hiring</Badge>
           <h2 class="text-3xl font-bold text-body md:text-4xl">We hire practising experts.</h2>
-<p class="mt-4 text-lg text-body-secondary">
+          <div class="divider-accent mt-4" />
+          <p class="mt-4 text-lg text-body-secondary">
             IJLAPS faculty are practitioners, language teachers with active classroom lives, software engineers
             who still ship production code, business trainers who run real companies. We hire for what you do
             today, not what you did ten years ago.
           </p>
           <ul class="mt-6 space-y-3">
             {recruitment.map((r) => (
-              <li class="flex items-start gap-2 text-sm text-body-secondary"><span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary"></span>{r}</li>
+              <li class="flex items-start gap-2 text-sm text-body-secondary">
+                <CheckCircle size={16} className="mt-0.5 flex-shrink-0 text-primary" />
+                {r}
+              </li>
             ))}
           </ul>
         </div>
@@ -110,7 +121,7 @@ const recruitment = [
             We accept rolling applications for future cohorts. Send a CV and a short note about the programme you'd
             like to teach to the people team.
           </p>
-          <a href="/contact" class={`${buttonStyles({ variant: 'primary', appearance: 'outline', size: 'md' })} border-white text-white hover:bg-white hover:text-primary`}>
+          <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'inverted', size: 'md' })}>
             Submit teaching application
           </a>
         </div>

@@ -3,38 +3,52 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Stats from '../components/Stats.astro';
 import Courses from '../components/Courses.astro';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import CTABand from '../components/CTABand.astro';
+import { buttonStyles } from '@/styles/button';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
-import { Separator } from '@/components/tailgrids/core/separator';
 import { LANGUAGES } from '@/lib/data';
+import { Trophy, Globe, Rocket, GraduationCap, Book, Code, ChartBar, ArrowRight, Target, Sparkles } from '@/components/icons';
 
 const popularLanguages = LANGUAGES.slice(0, 6);
 
 const whyChoose = [
   {
     title: 'TVETA Certified',
-    description: 'Recognized by the Technical and Vocational Education and Training Authority.',
-    icon: '🏆',
+    description: 'Recognized by the Technical and Vocational Education and Training Authority with accredited programmes.',
+    icon: Trophy,
+    color: 'text-primary',
+    bg: 'bg-primary-subtle',
   },
   {
     title: 'Global Languages',
-    description: 'Learn languages that open doors to international opportunities.',
-    icon: '🌍',
+    description: 'Learn languages that open doors to international opportunities across 10 world languages.',
+    icon: Globe,
+    color: 'text-primary',
+    bg: 'bg-primary-subtle',
   },
   {
     title: 'Career Ready',
-    description: 'Hands-on tech and business programs aligned with market demand.',
-    icon: '🚀',
+    description: 'Hands-on tech and business programs aligned with market demand and employer partnerships.',
+    icon: Rocket,
+    color: 'text-primary',
+    bg: 'bg-primary-subtle',
   },
 ] as const;
 
 const featuredPrograms = [
-  { title: 'Languages', description: 'English, French, Arabic, Chinese, Swahili', icon: '🗣️' },
-  { title: 'Technology', description: 'ICT, Software Development, Digital Skills', icon: '💻' },
-  { title: 'Business', description: 'Entrepreneurship, Accounting, Marketing', icon: '📊' },
-  { title: 'TVETA', description: 'Technical and Vocational Certifications', icon: '🎓' },
+  { title: 'Languages', description: 'English, French, Arabic, Chinese, Swahili and more', icon: Book, href: '/languages', count: '10 languages' },
+  { title: 'Technology', description: 'ICT, Software Development, Cybersecurity, AI', icon: Code, href: '/programs/tech', count: '14 programmes' },
+  { title: 'Business', description: 'Entrepreneurship, Accounting, Marketing, HR', icon: ChartBar, href: '/programs/business', count: '7 programmes' },
+  { title: 'TVETA', description: 'Technical and Vocational Certifications', icon: GraduationCap, href: '/programs/tveta', count: '5 certifications' },
 ] as const;
+
+const outcomes = [
+  { value: '94%', label: 'First-sitting exam pass rate' },
+  { value: '78%', label: 'Job placement within 6 months' },
+  { value: '5,000+', label: 'Students trained since 2010' },
+  { value: '40%', label: 'Students on financial aid' },
+];
 ---
 
 <Layout
@@ -44,94 +58,114 @@ const featuredPrograms = [
 >
   <Hero />
   <Stats />
-  <Courses />
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
+  <section class="bg-surface py-16 md:py-24">
     <div class="container-main">
       <div class="mx-auto max-w-3xl text-center">
-        <Badge color="primary" size="md" className="mb-4">Why Choose Us</Badge>
-        <h2 class="text-3xl font-bold text-body md:text-4xl">Why Choose IJLAPS?</h2>
+        <Badge color="primary" size="md" className="mb-4">Why Choose IJLAPS</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Three reasons students pick us</h2>
         <p class="mt-4 text-lg text-body-secondary">
-          We combine TVETA-accredited standards with practical, industry-relevant training to ensure every
-          graduate is ready for the workforce.
+          We combine TVETA-accredited standards with practical, industry-relevant training.
         </p>
       </div>
 
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
-        {
-          whyChoose.map((item) => (
-            <Card className="text-center shadow-sm">
-              <CardHeader>
-                <div class="mb-4 text-4xl">{item.icon}</div>
-                <CardTitle>{item.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p class="text-sm text-body-secondary">{item.description}</p>
-              </CardContent>
-            </Card>
-          ))
-        }
+      <div class="mt-12 grid gap-8 md:grid-cols-3">
+        {whyChoose.map((item) => (
+          <Card className="border-0 bg-canvas p-6 text-center shadow-sm">
+            <div class={item.bg + ' mx-auto mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl'}>
+              <item.icon size={32} className={item.color} />
+            </div>
+            <CardHeader className="px-0 pt-0">
+              <CardTitle>{item.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="px-0">
+              <p class="text-body-secondary">{item.description}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="section bg-canvas">
+  <section class="bg-canvas py-16 md:py-24">
     <div class="container-main">
       <div class="mb-12 text-center">
-        <Badge color="primary" size="md" className="mb-4">Programs</Badge>
-        <h2 class="text-3xl font-bold text-body md:text-4xl">Explore Our Departments</h2>
-        <p class="mt-4 text-lg text-body-secondary">Find the right program for your career goals.</p>
+        <Badge color="primary" size="md" className="mb-4">Outcomes</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Quality outcomes, published openly</h2>
+        <p class="mt-4 text-lg text-body-secondary">Our numbers tell the story.</p>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {outcomes.map((o) => (
+          <div class="rounded-xl border border-border bg-surface p-8 text-center shadow-sm">
+            <div class="text-3xl font-extrabold text-primary md:text-4xl">{o.value}</div>
+            <div class="mt-1 text-sm font-medium text-body-secondary">{o.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface py-16 md:py-24">
+    <div class="container-main">
+      <div class="mb-12 text-center">
+        <Badge color="primary" size="md" className="mb-4">Our Schools</Badge>
+        <h2 class="text-3xl font-bold text-body md:text-4xl">Four schools, one institution</h2>
+        <p class="mt-4 text-lg text-body-secondary">IJLAPS runs 33 programmes across four schools and 19 languages.</p>
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {
-          featuredPrograms.map((program) => (
-            <a
-              href="/departments"
-              class="block transition-shadow hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              <Card className="text-center shadow-sm">
-                <CardHeader>
-                  <div class="mb-4 text-4xl">{program.icon}</div>
-                  <CardTitle>{program.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p class="text-sm text-body-secondary">{program.description}</p>
-                </CardContent>
-              </Card>
-            </a>
-          ))
-        }
+        {featuredPrograms.map((program) => (
+          <a href={program.href} class="group block">
+          <Card className="bg-canvas p-6 text-center shadow-sm transition-shadow hover:shadow-md">
+            <div class="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-subtle text-primary transition-transform group-hover:scale-110">
+              <program.icon size={28} />
+            </div>
+            <CardHeader className="px-0 pt-0">
+              <CardTitle>{program.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="px-0">
+              <p class="mb-3 text-sm text-body-secondary">{program.description}</p>
+              <span class="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-primary">
+                {program.count}
+                <ArrowRight size={14} />
+              </span>
+            </CardContent>
+          </Card>
+          </a>
+        ))}
       </div>
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
+  <section class="bg-canvas py-16 md:py-24">
     <div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Languages</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Pick a language. Start at A1. Reach C2.</h2>
-        <p class="mt-4 text-lg text-body-secondary">Ten languages, all CEFR-aligned, with internationally-recognised exam preparation. Pick yours.</p>
+        <p class="mt-4 text-lg text-body-secondary">Ten languages, all CEFR-aligned, with internationally-recognised exam preparation.</p>
       </div>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {popularLanguages.map((lang) => (
-          <a href={`/languages/${lang.slug}`} class="group block transition-shadow hover:shadow-lg">
-            <Card className="flex flex-col shadow-sm">
+          <a href={`/languages/${lang.slug}`} class="group block">
+            <Card className="flex flex-col bg-surface shadow-sm transition-shadow hover:shadow-md">
               <CardHeader>
                 <div class="flex items-center gap-3">
-                  <span class="text-3xl">{lang.flagEmoji}</span>
-                  <CardTitle>{lang.name}</CardTitle>
+                  <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-subtle text-2xl">{lang.flagEmoji}</span>
+                  <div>
+                    <CardTitle>{lang.name}</CardTitle>
+                    <p class="text-xs uppercase tracking-wider text-body-secondary">{lang.code}</p>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p class="flex-1 text-sm text-body-secondary">{lang.shortDescription}</p>
               </CardContent>
               <CardFooter>
-                <span class="inline-flex items-center gap-1 text-sm font-semibold text-primary">View {lang.name} programme →</span>
+                <span class="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-all group-hover:gap-2">
+                  View programme
+                  <ArrowRight size={16} />
+                </span>
               </CardFooter>
             </Card>
           </a>
@@ -145,20 +179,12 @@ const featuredPrograms = [
     </div>
   </section>
 
-  <section class="py-12 md:py-16 bg-primary">
-    <div class="container-main text-center">
-      <h2 class="text-3xl font-bold text-white md:text-4xl">Ready to apply?</h2>
-      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/85">
-        Join thousands of students who have built their careers through IJLAPS.
-      </p>
-      <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a href="/admissions" class={buttonStyles({ variant: 'primary', appearance: 'fill', size: 'lg' })}>
-          Apply Today
-        </a>
-        <a href="/contact" class={buttonStyles({ variant: 'primary', appearance: 'outline', size: 'lg' })}>
-          Contact Us
-        </a>
-      </div>
-    </div>
-  </section>
+  <CTABand
+    variant="primary"
+    eyebrow="Take the first step"
+    title="Apply for the next intake"
+    description="5,000+ students trained since 2010. TVETA-certified programmes with published outcomes."
+    primaryCta={{ href: '/admissions', label: 'Apply Today' }}
+    secondaryCta={{ href: '/contact', label: 'Contact Us' }}
+  />
 </Layout>

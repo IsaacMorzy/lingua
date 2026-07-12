@@ -1,23 +1,22 @@
 ---
 const stats = [
-  { value: '15+', label: 'Years of Excellence' },
   { value: '5,000+', label: 'Students Trained' },
   { value: '50+', label: 'Expert Instructors' },
+  { value: '10', label: 'Languages Taught' },
   { value: '98%', label: 'Certification Pass Rate' },
 ];
 ---
 
-<section class="bg-surface py-12 border-b border-border">
+<section class="bg-surface border-b border-border py-12">
   <div class="container-main">
+    <h2 class="sr-only">Institution at a glance</h2>
     <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
-      {
-        stats.map((stat) => (
-          <div class="text-center">
-            <div class="text-3xl font-extrabold text-primary md:text-4xl">{stat.value}</div>
-            <div class="mt-1 text-sm font-medium text-body-secondary">{stat.label}</div>
-          </div>
-        ))
-      }
+      {stats.map((stat) => (
+        <div class="relative text-center">
+          <div class="text-3xl font-extrabold text-primary md:text-4xl">{stat.value}</div>
+          <div class="mt-1 text-sm font-medium text-body-secondary">{stat.label}</div>
+        </div>
+      ))}
     </div>
   </div>
 </section>

@@ -5,39 +5,39 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import CTABand from '../components/CTABand.astro';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
+import { Target, ShieldCheck, Globe, Search, CheckCircle, ChevronRight } from '@/components/icons';
 import { facultyByDepartment } from '@/lib/data';
-import { Separator } from '@/components/tailgrids/core/separator';
 
 const principles = [
   {
     title: 'Learner-first',
     description: 'Every decision, curricula, scheduling, support, fees, is reviewed against the question, "Is this the best outcome for our learner?"',
-    icon: '🎯',
+    icon: Target,
   },
   {
     title: 'Quality before quantity',
     description: "We grow the institution carefully. Class caps protect feedback quality and instructor attention. We prefer saying no to wrong-fit programmes.",
-    icon: '⚖️',
+    icon: ShieldCheck,
   },
   {
     title: 'Accessible by design',
     description: 'High-contrast UI, captioned media, mobile-first pages, bursary and financial aid pathways. Accessibility is not an aftersight.',
-    icon: '♿',
+    icon: Globe,
   },
   {
     title: 'African in context, global in standard',
     description: 'Our programmes reflect the realities and opportunities of the Kenyan and East African context, but benchmark against international CEFR and industry standards.',
-    icon: '🌍',
+    icon: Globe,
   },
   {
     title: 'Ethical in every default',
     description: 'No dark patterns in admissions, no hidden fees, no data silos we cannot explain in plain English to a student.',
-    icon: '✅',
+    icon: CheckCircle,
   },
   {
     title: 'Transparent and accountable',
     description: 'We publish pass-rates, employment outcomes, and pricing openly. We publish when we miss and how we plan to improve.',
-    icon: '🔍',
+    icon: Search,
   },
 ];
 
@@ -69,15 +69,16 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
   <PageHero
     eyebrow="Mission & Values"
     title="What we stand for, in plain language."
-    subtitle="Beyond classrooms and certs, IJLAPS operates from a small set of principles. They are public here because we believe they are easier to hold when they are written down."
+    subtitle="Beyond classrooms and certs, IJLAPS operates from a small set of principles. They are public here so prospective students, partners, and the public can hold us to them."
+    variant="decorative"
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="grid gap-8 lg:grid-cols-2">
         <article class="rounded-2xl bg-primary-subtle p-8 md:p-12">
           <Badge color="primary" size="md" className="mb-4">Our Mission</Badge>
-          <h2 class="text-3xl font-bold text-body">Empowering Kenya's workforce with globally competitive skills.</h2>
+          <h2 class="text-3xl font-bold text-body">Building Kenya's workforce with globally competitive skills.</h2>
+          <div class="divider-accent my-4" />
           <p class="mt-6 text-lg text-body-secondary">
             We deliver TVETA-certified education in languages, technology, business, and vocational skills that
             opens real careers, in Nairobi, across the East African Community, and in the global digital
@@ -85,9 +86,10 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
             use it.
           </p>
         </article>
-        <article class="rounded-2xl bg-slate-900 p-8 text-white md:p-12">
+        <article class="rounded-2xl bg-ink p-8 text-white md:p-12">
           <Badge color="primary" size="md" className="mb-4 bg-white/20 text-white border-0">Our Vision</Badge>
           <h2 class="text-3xl font-bold">A leading centre for technical and vocational education in East Africa.</h2>
+          <div class="divider-accent my-4 bg-white/40" />
           <p class="mt-6 text-lg text-slate-300">
             We are building a place of learning where Kenyan and East African students, researchers, and partners
             can engage with the world's languages, technologies, and business practices without leaving the
@@ -98,13 +100,11 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-primary-subtle"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Operating Principles</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">The principles that guide our work</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           Values are easy to print on a wall. Operating principles show up in decisions. These are the pressure
           tests we apply to hiring, partnerships, curriculum review, and student services.
@@ -113,9 +113,11 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {principles.map((p) => (
-          <Card className="shadow-sm">
+          <Card className="shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
-              <div class="mb-4 text-4xl">{p.icon}</div>
+              <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary-subtle text-primary">
+                <p.icon size={24} />
+              </div>
               <CardTitle>{p.title}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -127,18 +129,16 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Core Values</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Four values, kept simple</h2>
+        <div class="divider-accent mt-3" />
       </div>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {values.map((v) => (
-          <Card className="text-center shadow-sm">
+          <Card className="text-center shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary text-2xl font-extrabold text-white">{v.letter}</div>
               <CardTitle>{v.name}</CardTitle>
@@ -152,13 +152,11 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="bg-primary-subtle py-16"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">By the numbers</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Outcome transparency</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           We publish these numbers because they're how prospective students should pick a programme. We update them
           yearly after cohort close-out.
@@ -167,7 +165,7 @@ const facultyCount = facultyByDepartment('Languages').length + facultyByDepartme
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
-          <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm">
+          <div class="rounded-xl border border-border bg-surface p-6 text-center shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <div class="text-4xl font-extrabold text-primary">{s.value}</div>
             <div class="mt-2 text-sm font-medium text-body-secondary">{s.label}</div>
           </div>

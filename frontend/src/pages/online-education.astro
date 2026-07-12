@@ -6,40 +6,40 @@ import CTABand from '../components/CTABand.astro';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/tailgrids/core/card';
 import { Alert, AlertIndicator, AlertContent, AlertTitle, AlertDescription } from '@/components/tailgrids/core/alert';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { Monitor, Computer, Users, ShieldCheck, Coffee, Headphones } from '@/components/icons';
 
 const features = [
   {
     title: 'Live cohort sessions',
     description: 'Real-time classes with IJLAPS faculty, scheduled evenings and Saturdays to fit working professionals.',
-    icon: '🎥',
+    icon: Monitor,
   },
   {
     title: 'On-demand recording library',
     description: 'Every cohort session is recorded and indexed for revision, with transcripts in English and the target language.',
-    icon: '📼',
+    icon: Computer,
   },
   {
     title: 'Mentorship and office hours',
     description: 'Weekly one-to-one office hours with your cohort lead and asynchronous messaging support.',
-    icon: '🤝',
+    icon: Users,
   },
   {
     title: 'Online proctored exams',
     description: 'Remote exam sittings with browser-lockdown, identity verification, and human invigilation.',
-    icon: '🛡️',
+    icon: ShieldCheck,
   },
   {
     title: 'Digital student portal',
     description: 'Single sign-on to your cohort, library, recordings, exam registration, and certifications.',
-    icon: '🔐',
+    icon: Coffee,
   },
   {
     title: 'Cohort WhatsApp community',
     description: 'Optional WhatsApp group moderated by your cohort lead, alongside the formal portal channels.',
-    icon: '💬',
+    icon: Headphones,
   },
 ];
 
@@ -69,16 +69,17 @@ const onlinePrograms = [
   <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Online Education' }]} />
 
   <PageHero
+    variant="decorative"
     eyebrow="Online Education"
     title="Same faculty. Same certification. Anywhere."
     subtitle="Our online programmes combine live cohort sessions with recorded lectures, mentorship, and remote proctored exams, so you can study without relocating or quitting your job."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Features</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">What you get in an online programme</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Online at IJLAPS is not "videos and a forum." It's live classes, accountability, exams, and the same
           certification as the on-campus equivalent.
@@ -86,29 +87,32 @@ const onlinePrograms = [
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {features.map((f) => (
-          <Card className="shadow-sm">
-            <CardHeader>
-              <div class="mb-4 text-4xl">{f.icon}</div>
-              <CardTitle>{f.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p class="text-body-secondary">{f.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {features.map((f) => {
+          const Icon = f.icon;
+          return (
+            <Card className="border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
+              <CardHeader>
+                <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-subtle text-primary">
+                  <Icon size={24} />
+                </div>
+                <CardTitle>{f.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p class="text-body-secondary">{f.description}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-2">
         <div>
           <Badge color="primary" size="md" className="mb-4">Tools</Badge>
           <h2 class="text-3xl font-bold text-body">The IJLAPS online stack</h2>
+          <div class="divider-accent mt-3" />
           <p class="mt-4 text-body-secondary">
             We choose tools that work on a low-bandwidth smartphone through to a high-end developer workstation,             because our learners are everywhere in Kenya.
           </p>
@@ -143,20 +147,18 @@ const onlinePrograms = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Programmes available online</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Most programmes have a remote option</h2>
+        <div class="divider-accent mt-4" />
       </div>
 
       <ul class="grid gap-3 md:grid-cols-2">
         {onlinePrograms.map((p) => (
           <li>
             <a href={p.href} class="block">
-              <Card className="p-5">
+              <Card className="border-2 border-transparent p-5 shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
                 <CardContent className="px-0 py-0">
                   <div class="flex items-center justify-between gap-4">
                     <div>

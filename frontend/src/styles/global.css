@@ -2,13 +2,11 @@
 @import "tailwindcss";
 @import "../../tailgrids.css";
 
-/* Class-based dark mode: toggle via .dark on <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* IJLAPS brand colors (override TailGrids defaults) */
   --color-primary: #E60000;
   --color-primary-focus: #B30000;
   --color-primary-subtle: #FEF2F2;
@@ -17,7 +15,6 @@
   --color-ink: #0F0F0F;
   --color-ink-soft: #1A1A1A;
 
-  /* Abstract surface tokens — auto-switch in .dark */
   --color-surface: #ffffff;
   --color-canvas: #f8fafc;
   --color-body: #0f172a;
@@ -26,7 +23,6 @@
   --color-border: #e2e8f0;
   --color-border-heavy: #cbd5e1;
 
-  /* Light-theme button overrides (Vodafone red) */
   --color-button-primary-background: #E60000;
   --color-button-primary-hover-background: #B30000;
   --color-button-primary-text: #ffffff;
@@ -38,28 +34,25 @@
   --color-button-outline-text: #E60000;
   --color-button-outline-hover-text: #B30000;
   --color-button-outline-focus-ring: rgba(230, 0, 0, 0.20);
+  --color-button-inverted-focus-ring: rgba(255, 255, 255, 0.55);
+  --color-button-inverted-focus-ring-on-light: rgba(15, 15, 15, 0.55);
 
   --color-button-disabled-background: #e2e8f0;
   --color-button-disabled-border: #cbd5e1;
   --color-button-disabled-text: #94a3b8;
 
-  /* Light-theme badge overrides (Vodafone red) */
   --color-badge-primary-background: #FEF2F2;
   --color-badge-primary-text: #B30000;
   --color-badge-primary-icon-color: #B30000;
-
   --color-badge-success-background: rgba(4, 120, 87, 0.10);
   --color-badge-success-text: #047857;
   --color-badge-success-icon-color: #047857;
-
   --color-badge-error-background: rgba(220, 38, 38, 0.10);
   --color-badge-error-text: #dc2626;
   --color-badge-error-icon-color: #dc2626;
-
   --color-badge-warning-background: rgba(180, 83, 9, 0.10);
   --color-badge-warning-text: #b45309;
   --color-badge-warning-icon-color: #b45309;
-
   --color-badge-neutral-background: #f1f5f9;
   --color-badge-neutral-text: #475569;
   --color-badge-neutral-icon-color: #475569;
@@ -69,7 +62,6 @@
   --color-success: #047857;
   --color-success-subtle: #ecfdf5;
 
-  /* Card / Alert / Accordion theme overrides (TailGrids light) */
   --color-card-background-50: #ffffff;
   --color-card-background-100: #ffffff;
   --color-card-background-200: #ffffff;
@@ -80,32 +72,27 @@
   --color-alert-default-icon-background: #475569;
   --color-alert-default-title: #1B1B1B;
   --color-alert-default-description: #475569;
-
   --color-alert-success-background: #ecfdf5;
   --color-alert-success-border: #a7f3d0;
   --color-alert-success-icon-background: #047857;
   --color-alert-success-title: #047857;
   --color-alert-success-description: #047857;
-
   --color-alert-warning-background: #fef3c7;
   --color-alert-warning-border: #fcd34d;
   --color-alert-warning-icon-background: #b45309;
   --color-alert-warning-title: #b45309;
   --color-alert-warning-description: #b45309;
-
   --color-alert-danger-background: #fee2e2;
   --color-alert-danger-border: #fecaca;
   --color-alert-danger-icon-background: #dc2626;
   --color-alert-danger-title: #dc2626;
   --color-alert-danger-description: #dc2626;
-
   --color-alert-info-background: #eff6ff;
   --color-alert-info-border: #bfdbfe;
   --color-alert-info-icon-background: #0369a1;
   --color-alert-info-title: #0369a1;
   --color-alert-info-description: #0369a1;
 
-  /* Accordion tokens (TailGrids style_two, divider-based) */
   --color-background-100: #ffffff;
   --color-background-soft-50: #f8fafc;
   --color-base-50: #e2e8f0;
@@ -117,7 +104,6 @@
   --color-primary-500: #E60000;
 }
 
-/* Dark-mode variable overrides — applied via .dark class on <html> */
 .dark {
   --color-primary: #ff3333;
   --color-primary-focus: #ff5555;
@@ -130,45 +116,35 @@
   --color-muted: #64748b;
   --color-border: #2a2a2a;
   --color-border-heavy: #3a3a3a;
-
-  /* Card backgrounds */
   --color-card-background-50: #1a1a1a;
   --color-card-background-100: #222222;
   --color-card-background-200: #2a2a2a;
   --color-card-background-300: #333333;
-
-  /* Alert dark backgrounds */
   --color-alert-default-background: rgba(255,255,255,0.04);
   --color-alert-default-border: #2a2a2a;
   --color-alert-default-title: #f1f5f9;
   --color-alert-default-description: #94a3b8;
   --color-alert-default-icon-background: #94a3b8;
-
   --color-alert-success-background: rgba(4,120,87,0.15);
   --color-alert-success-border: #14532d;
   --color-alert-success-icon-background: #22c55e;
   --color-alert-success-title: #22c55e;
   --color-alert-success-description: #6ee7b7;
-
   --color-alert-warning-background: rgba(180,83,9,0.15);
   --color-alert-warning-border: #713f12;
   --color-alert-warning-icon-background: #fbbf24;
   --color-alert-warning-title: #fbbf24;
   --color-alert-warning-description: #fde68a;
-
   --color-alert-danger-background: rgba(220,38,38,0.15);
   --color-alert-danger-border: #7f1d1d;
   --color-alert-danger-icon-background: #ef4444;
   --color-alert-danger-title: #ef4444;
   --color-alert-danger-description: #fca5a5;
-
   --color-alert-info-background: rgba(27,111,179,0.15);
   --color-alert-info-border: #0c4a6e;
   --color-alert-info-icon-background: #38bdf8;
   --color-alert-info-title: #38bdf8;
   --color-alert-info-description: #bae6fd;
-
-  /* Badge dark */
   --color-badge-primary-background: rgba(230,0,0,0.20);
   --color-badge-primary-text: #ff3333;
   --color-badge-primary-icon-color: #ff3333;
@@ -184,8 +160,6 @@
   --color-badge-neutral-background: rgba(255,255,255,0.08);
   --color-badge-neutral-text: #94a3b8;
   --color-badge-neutral-icon-color: #94a3b8;
-
-  /* Button dark */
   --color-button-primary-background: #E60000;
   --color-button-primary-hover-background: #ff3333;
   --color-button-primary-text: #ffffff;
@@ -194,13 +168,12 @@
   --color-button-outline-hover-background: rgba(230,0,0,0.15);
   --color-button-outline-border: #E60000;
   --color-button-outline-text: #ff4444;
-  --color-button-outline-hover-text: #ff6666;
-  --color-button-outline-focus-ring: rgba(230,0,0,0.30);
+  --color-button-outline-hover-text: #ff6666;  --color-button-outline-focus-ring: rgba(230, 0, 0, 0.30);
+  --color-button-inverted-focus-ring: rgba(255, 255, 255, 0.50);
+  --color-button-inverted-focus-ring-on-light: rgba(15, 15, 15, 0.45);
   --color-button-disabled-background: #2a2a2a;
   --color-button-disabled-border: #3a3a3a;
   --color-button-disabled-text: #4a4a4a;
-
-  /* Accordion / background */
   --color-background-100: #1a1a1a;
   --color-background-soft-50: #1a1a1a;
   --color-base-50: #2a2a2a;
@@ -209,10 +182,6 @@
   --color-base-300: #555555;
   --color-title-50: #f1f5f9;
   --color-text-100: #94a3b8;
-
-  /* Footer dark — unchanged (already ink) */
-
-  /* Warning / success tokens */
   --color-warning: #fbbf24;
   --color-warning-subtle: rgba(251,191,36,0.15);
   --color-success: #22c55e;
@@ -268,8 +237,48 @@
     @apply py-16 md:py-24;
   }
 
+  .section-sm {
+    @apply py-12 md:py-16;
+  }
+
+  .section-lg {
+    @apply py-20 md:py-32;
+  }
+
   .container-main {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .stat-value {
+    @apply text-3xl font-extrabold text-primary md:text-4xl;
+  }
+
+  .stat-label {
+    @apply mt-1 text-sm font-medium text-body-secondary;
+  }
+
+  .stat-card {
+    @apply rounded-xl border border-border bg-surface p-6 text-center shadow-sm;
+  }
+
+  .stat-card-accent {
+    @apply rounded-xl bg-primary p-6 text-center shadow-sm;
+  }
+
+  .stat-card-accent .stat-value {
+    @apply text-white;
+  }
+
+  .stat-card-accent .stat-label {
+    @apply text-white/80;
+  }
+
+  .decorative-dot {
+    @apply h-2 w-2 rounded-full bg-primary/30;
+  }
+
+  .divider-accent {
+    @apply mx-auto h-1 w-12 rounded-full bg-primary;
   }
 }
 

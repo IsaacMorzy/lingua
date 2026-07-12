@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
 import { Avatar, AvatarFallback } from '@/components/tailgrids/core/avatar';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
+import { ChevronRight } from '@/components/icons';
 
 const leadership = [
   {
@@ -73,6 +74,8 @@ const board = [
     eyebrow="Leadership"
     title="The people accountable for the institution."
     subtitle="IJLAPS is led by people who have spent their careers in classrooms, language labs, boardrooms, and TVETA workshops. Meet the executive team and our Board of Governors."
+    variant="centered"
+    bgImage={true}
   />
 
   <StatRow
@@ -85,11 +88,11 @@ const board = [
     ]}
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="border-b border-border bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Executive Team</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">The team running the institution</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           Executive leaders with direct responsibility for academic quality, financial sustainability, and the
           day-to-day learning of our students.
@@ -98,7 +101,7 @@ const board = [
 
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {leadership.map((leader) => (
-          <Card className="flex flex-col shadow-sm">
+          <Card className="flex flex-col shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <div class="flex items-center gap-4">
                 <Avatar size="xxl">
@@ -114,7 +117,10 @@ const board = [
               <p class="text-sm text-body-secondary">{leader.bio}</p>
               <ul class="mt-4 space-y-1">
                 {leader.credentials.map((c) => (
-                  <li class="text-xs text-body-secondary">• {c}</li>
+                  <li class="flex items-center gap-1.5 text-xs text-body-secondary">
+                    <span class="h-1.5 w-1.5 rounded-full bg-primary/40" />
+                    {c}
+                  </li>
                 ))}
               </ul>
             </CardContent>
@@ -124,11 +130,11 @@ const board = [
     </div>
   </section>
 
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="border-b border-border bg-primary-subtle"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Board of Governors</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Independent oversight</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           The Board of Governors provides external oversight on strategy, financial integrity, and academic quality.
           It includes a student representative elected by the student body.
@@ -137,7 +143,7 @@ const board = [
 
       <div class="grid gap-6 md:grid-cols-2">
         {board.map((member) => (
-          <Card className="shadow-sm">
+          <Card className="shadow-sm transition-all duration-300 border-2 border-transparent hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <CardTitle>{member.name}</CardTitle>
               <p class="mt-1 text-sm font-medium text-primary">{member.role}</p>
@@ -151,19 +157,19 @@ const board = [
     </div>
   </section>
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="bg-surface py-16"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Department Heads</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Programme leadership</h2>
+        <div class="divider-accent mt-3" />
         <p class="mt-4 text-lg text-body-secondary">
           Heads of academic departments own curriculum, instructor development, and outcomes for their schools.
         </p>
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <a href="/schools#languages" class="block transition-shadow hover:shadow-lg">
-          <Card className="text-center shadow-sm">
+        <a href="/schools#languages" class="block transition-all duration-300 hover:shadow-md">
+          <Card className="text-center shadow-sm border-2 border-transparent hover:border-primary/20">
             <CardHeader>
               <CardTitle>School of Languages</CardTitle>
             </CardHeader>
@@ -173,8 +179,8 @@ const board = [
             </CardContent>
           </Card>
         </a>
-        <a href="/schools#technology" class="block transition-shadow hover:shadow-lg">
-          <Card className="text-center shadow-sm">
+        <a href="/schools#technology" class="block transition-all duration-300 hover:shadow-md">
+          <Card className="text-center shadow-sm border-2 border-transparent hover:border-primary/20">
             <CardHeader>
               <CardTitle>School of Technology</CardTitle>
             </CardHeader>
@@ -184,8 +190,8 @@ const board = [
             </CardContent>
           </Card>
         </a>
-        <a href="/schools#business" class="block transition-shadow hover:shadow-lg">
-          <Card className="text-center shadow-sm">
+        <a href="/schools#business" class="block transition-all duration-300 hover:shadow-md">
+          <Card className="text-center shadow-sm border-2 border-transparent hover:border-primary/20">
             <CardHeader>
               <CardTitle>School of Business</CardTitle>
             </CardHeader>
@@ -195,8 +201,8 @@ const board = [
             </CardContent>
           </Card>
         </a>
-        <a href="/schools#tveta" class="block transition-shadow hover:shadow-lg">
-          <Card className="text-center shadow-sm">
+        <a href="/schools#tveta" class="block transition-all duration-300 hover:shadow-md">
+          <Card className="text-center shadow-sm border-2 border-transparent hover:border-primary/20">
             <CardHeader>
               <CardTitle>TVETA Programmes</CardTitle>
             </CardHeader>

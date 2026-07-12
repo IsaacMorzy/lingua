@@ -6,9 +6,9 @@ import CTABand from '../components/CTABand.astro';
 import { Link } from '@/components/tailgrids/core/link';
 import { Badge } from '@/components/tailgrids/core/badge';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/tailgrids/core/card';
-import { buttonStyles } from '@/components/tailgrids/core/button';
+import { buttonStyles } from '@/styles/button';
 import { List } from '@/components/tailgrids/core/list';
-import { Separator } from '@/components/tailgrids/core/separator';
+import { CheckCircle } from '@/components/icons';
 
 const programmes = [
   {
@@ -71,16 +71,17 @@ const entryRequirements = [
   <Breadcrumbs crumbs={[{ label: 'Home', href: '/' }, { label: 'Academics', href: '/academics' }, { label: 'Undergraduate' }]} />
 
   <PageHero
+    variant="decorative"
     eyebrow="Academics"
     title="Diploma and certificate pathways."
     subtitle="IJLAPS treats undergraduate study as a foundation for either direct career entry or further study. Our diploma and certificate programmes are designed for working adults as well as new KCSE graduates."
   />
 
-  <section class="section bg-surface">
-    <div class="container-main">
+  <section class="section bg-surface"><div class="container-main">
       <div class="mx-auto mb-12 max-w-3xl text-center">
         <Badge color="primary" size="md" className="mb-4">Programmes</Badge>
         <h2 class="text-3xl font-bold text-body md:text-4xl">Diploma and certificate pathways</h2>
+        <div class="divider-accent mt-4" />
         <p class="mt-4 text-lg text-body-secondary">
           Most programmes run between 6 months and 2 years. Diplomas include an industrial attachment component
           with a partner employer.
@@ -89,7 +90,7 @@ const entryRequirements = [
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {programmes.map((p) => (
-          <Card className="flex flex-col shadow-sm">
+          <Card className="flex flex-col border-2 border-transparent shadow-sm transition-shadow hover:border-primary/20 hover:shadow-md">
             <CardHeader>
               <CardTitle className="text-xl">{p.title}</CardTitle>
               <p class="mt-2 text-sm font-medium text-primary">{p.duration}</p>
@@ -108,14 +109,12 @@ const entryRequirements = [
     </div>
   </section>
 
-  <Separator class="my-8" />
-
-  <section class="section bg-canvas">
-    <div class="container-main">
+  <section class="section bg-canvas"><div class="container-main">
       <div class="grid gap-12 lg:grid-cols-2">
         <div>
           <Badge color="primary" size="md" className="mb-4">Entry requirements</Badge>
           <h2 class="text-3xl font-bold text-body">What you'll need to apply</h2>
+          <div class="divider-accent mt-3" />
           <p class="mt-4 text-body-secondary">
             The undergraduate-track entry requirements are designed to be transparent and pre-published. Some
             programmes request a placement assessment or interview, see the programme page.
@@ -123,7 +122,9 @@ const entryRequirements = [
           <List class="mt-6 max-w-none" hideDividers>
             {entryRequirements.map((r) => (
               <li class="flex items-start gap-3">
-                <span class="mt-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">✓</span>
+                <span class="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center text-primary">
+                  <CheckCircle size={20} />
+                </span>
                 <span class="text-body-secondary">{r}</span>
               </li>
             ))}
