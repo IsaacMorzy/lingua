@@ -6,6 +6,20 @@
 [
   {
     "date": "2026-07-13",
+    "focus": "Deploy Node 20→22 bump (PR #40) — unblocks build step for #33; DEPLOY_SSH_KEY remains",
+    "actions": [
+      "User ask: 'bump deploy node 20 to 22 then show command to get th essh key and show where to add in ui github'.",
+      "Read `frontend/package.json` (no `engines` field; Astro `^7.0.7` requires Node `>=22.12.0`). Read `mobile.yml` — it already uses `node-version: '22'`. Read `ci.yml` (separate Frappe-bench flow, uses Node 18; out of scope).",
+      "Edit `.github/workflows/deploy-frontend.yml`: `node-version: '20'` → `node-version: '22'`. Verified diff = 1 line. `node --version` local: v22.23.1 (>=22.12.0).",
+      "Branch `fix/deploy-node-22`, commit, push, open PR #40. Code-reviewer-minimax-m3 verdict: `safe to merge` (no HARD; 2 SOFTs noted — adding `check-latest: true` for consistency with `mobile.yml`; pinning to `'22.12.0'` for reproducibility — both deferred as out of scope for the user's minimal ask).",
+      "Merged PR #40 via `gh pr merge 40 --merge --delete-branch`. New main tip: `836b264` (feature `f1b19e8`).",
+      "Display the SSH key command + GitHub UI navigation path to the user (per their ask): `cat ~/.ssh/lingua_deploy_ed25519` for the value, then https://github.com/IsaacMorzy/lingua/settings/secrets/actions → New repository secret → Name: `DEPLOY_SSH_KEY` → paste → Add secret.",
+      "STATE.md + loop-run-log.md updated to record the Node bump + the remaining DEPLOY_SSH_KEY gap."
+    ],
+    "outcome": "PR #40 merged. One of two #33 blockers fixed. The only remaining task is for a human to provision `DEPLOY_SSH_KEY` in the GitHub UI; the workflow will then run end-to-end on the next push to `main`."
+  },
+  {
+    "date": "2026-07-13",
     "focus": "yarn.lock housekeeping + deploy verification (#37 closed; #33 blockers surfaced)",
     "actions": [
       "Verified #33 deploy state via `gh secret list`: 3 of 4 secrets provisioned (DEPLOY_HOST / DEPLOY_HOST_KEY / DEPLOY_USER, all 2026-07-12) but DEPLOY_SSH_KEY is missing. This contradicts the operator’s belief that all secrets were provisioned; the operator had assumed completeness from the 3 recent secret updates.",
@@ -179,6 +193,15 @@ The Vodafone-red migration flipped the design system from blue (`#1e40af`) to si
 - **Orphan test declaration (in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` block with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; a complete version of the identical test exists later in `describe('tablet')` so no coverage was lost.
 - All **21 tests** now visible across **4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here and in the close-out comment on #32 as the authoritative record.
 - `STATE.md` "Active issues" is empty for the first time since the project started using `gh` triage labels. The `ready-for-human` bucket still has 3 items blocked on external dependencies (#11, #13, #33); engineers can refill the agent-queue by opening one of the Active work followups.
+
+## 2026-07-13 — Deploy Node 20→22 bump (PR #40) + DEPLOY_SSH_KEY command + UI navigation
+
+- **Node 20→22 bump landed** in `deploy-frontend.yml` via PR #40 (`836b264`). Single-line specifier change, matches `mobile.yml` convention. Astro 7 requires `>=22.12.0`; local Node is v22.23.1.
+- **DEPLOY_SSH_KEY provisioning path** was displayed to the operator (per their ask):
+  - **Command** (run on the production server, not in this repo): `cat ~/.ssh/lingua_deploy_ed25519` — copy the entire PEM block including the `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----` markers.
+  - **UI path**: `https://github.com/IsaacMorzy/lingua/settings/secrets/actions` → **New repository secret** → Name: `DEPLOY_SSH_KEY` → paste → **Add secret**.
+  - **One-time setup on the production server** (if the keypair doesn't exist yet): `ssh-keygen -t ed25519 -C 'lingua-deploy@ijlaps.ac.ke' -f ~/.ssh/lingua_deploy_ed25519 -N ''`, then `cat ~/.ssh/lingua_deploy_ed25519.pub >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys`, then install the sudoers drop-in (per `docs/deployment/secrets.md` step 5).
+- **The only remaining gate for #33** is the operator provisioning `DEPLOY_SSH_KEY` in the UI. After that, the next `push: branches: [main]` will deploy end-to-end.
 
 ## 2026-07-13 — yarn.lock housekeeping (#37) + deploy verification (#33 blockers surfaced)
 
