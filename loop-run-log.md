@@ -6,6 +6,23 @@
 [
   {
     "date": "2026-07-13",
+    "focus": "Deploy SSH port 4122 fix (PR #42) — third blocker surfaced by smoke test; DEPLOY_HOST_KEY re-capture remains",
+    "actions": [
+      "User ask: 'smoke test deploy now that the key is in github'.",
+      "Verified `gh secret list` — all four DEPLOY_* secrets are now provisioned (DEPLOY_HOST, DEPLOY_HOST_KEY, DEPLOY_SSH_KEY, DEPLOY_USER). Triggered workflow via `gh workflow run deploy-frontend.yml` (run #29213863113).",
+      "Polled run to completion: build job passed in ~38s (Node 22 confirmed working; artifacts uploaded). Deploy job failed at the `Deploy to server` step: `ssh: connect to host *** port 22: Connection timed out`, then `rsync: connection unexpectedly closed (0 bytes received so far)`, then `rsync error: unexplained error (code 255)`.",
+      "Diagnosed the root cause: the production server's SSH daemon listens on port 4122 (verified via `sshd_config` `Port 4122` + `netstat`), not 22. The workflow used bare `ssh user@host` and `rsync user@host:...` invocations with no `-p` flag, so they defaulted to port 22 — which the GitHub Actions runner cannot reach (runner is an ephemeral cloud VM; the server's SSH daemon is on a non-standard port).",
+      "Spawned thinker-with-files-gemini to weigh fix options: A) hardcode `-p 4122` in the workflow, B) introduce a `DEPLOY_PORT` secret + `~/.ssh/config` rule, C) `DEPLOY_PORT` env var with a `22` default, D) reconfigure sshd to also listen on port 22. Recommendation: B (most future-proof) but operator chose A (simpler, smaller diff).",
+      "Applied the hardcoded fix: added `-e \"ssh -p 4122\"` to both `rsync` calls and `-p 4122` to both `ssh` calls in the deploy + Frappe-migrate steps. Also fixed `docs/deployment/secrets.md` Step 4 `ssh-keyscan` to use `-p 4122` and added a note about the bracket-form `[host]:port` known_hosts entry that ssh-keyscan produces for non-default ports.",
+      "Branch `fix/deploy-port-4122`, commit `2d95529`, push, open PR #42. Code-reviewer-minimax-m3 verdict: `safe to merge` (no HARD; 4 SOFT notes — all informational, no action taken). Validation parallel: `npm run build` 84 pages in 5.05s, `npx vitest run` 8/8 in 435ms, workflow YAML parses cleanly.",
+      "Merged PR #42 via `gh pr merge 42 --merge --delete-branch`. New main tip: `3722ebb` (feature commit `2d95529`). Branch deleted.",
+      "STATE.md updated: main tip pointer, Recent decisions gained a port-4122 entry, Active work repointed at the DEPLOY_HOST_KEY re-capture, Caveats gained a smoke-test entry and a note on the bracket-form known_hosts format. loop-run-log.md gained this entry + matching markdown section.",
+      "Operator action: re-capture `DEPLOY_HOST_KEY` against port 4122 (`ssh-keyscan -p 4122 -t ed25519,ecdsa,rsa ijlaps.ac.ke`) and update the GitHub secret, then re-trigger the workflow via `gh workflow run deploy-frontend.yml` to verify end-to-end success."
+    ],
+    "outcome": "PR #42 merged to main as `3722ebb`. Two of three #33 blockers fixed today (Node 20→22 in PR #40, port 4122 hardcode in PR #42). The third blocker (DEPLOY_HOST_KEY captured against port 22) is an operator action — see `STATE.md` Active work. After the re-capture + re-trigger, the deploy pipeline should run end-to-end. Build green (84 pages), vitest 8/8, workflow YAML valid."
+  },
+  {
+    "date": "2026-07-13",
     "focus": "Deploy Node 20→22 bump (PR #40) — unblocks build step for #33; DEPLOY_SSH_KEY remains",
     "actions": [
       "User ask: 'bump deploy node 20 to 22 then show command to get th essh key and show where to add in ui github'.",
@@ -193,6 +210,17 @@ The Vodafone-red migration flipped the design system from blue (`#1e40af`) to si
 - **Orphan test declaration (in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` block with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; a complete version of the identical test exists later in `describe('tablet')` so no coverage was lost.
 - All **21 tests** now visible across **4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here and in the close-out comment on #32 as the authoritative record.
 - `STATE.md` "Active issues" is empty for the first time since the project started using `gh` triage labels. The `ready-for-human` bucket still has 3 items blocked on external dependencies (#11, #13, #33); engineers can refill the agent-queue by opening one of the Active work followups.
+
+## 2026-07-13 — Deploy SSH port 4122 fix (PR #42) + smoke test diagnosis
+
+- **Smoke test of `deploy-frontend.yml` ran on 2026-07-13** (workflow run #29213863113, triggered via `workflow_dispatch` after `DEPLOY_SSH_KEY` was provisioned). Build job passed (Node 22 confirmed working; 84-page build; artifacts uploaded). Deploy job failed at the `Deploy to server` step with `ssh: connect to host port 22: Connection timed out` → `rsync: connection unexpectedly closed (0 bytes received so far)` → `rsync error: unexplained error (code 255)`.
+- **Root cause diagnosed**: the production server's SSH daemon listens on **port 4122** (per `/etc/ssh/sshd_config` and confirmed via `netstat`), not 22. The workflow used bare `ssh` and `rsync` invocations with no `-p` flag, so they defaulted to port 22. The GitHub Actions runner is an ephemeral cloud VM and cannot reach port 22 on the server.
+- **Fix landed via PR #42 (`3722ebb`)** — hardcoded `-p 4122` in all three SSH invocations in the deploy + Frappe-migrate steps. `docs/deployment/secrets.md` Step 4 `ssh-keyscan` was updated to include `-p 4122`; the doc now also notes the bracket-form `[host]:port` known_hosts entry that `ssh-keyscan` produces for non-default ports.
+- **Operator chose Option A (hardcode) over Option B (`DEPLOY_PORT` secret + `~/.ssh/config` rule)** — simpler, smaller diff. Trade-off accepted: future port changes are a code change, not a secret rotation.
+- **The one remaining operator action before the deploy pipeline is green**: re-capture `DEPLOY_HOST_KEY` against port 4122 (`ssh-keyscan -p 4122 -t ed25519,ecdsa,rsa ijlaps.ac.ke`) and update the GitHub secret. The current value was captured against port 22 and is in non-bracket form; the SSH client will look for `[host]:4122` in known_hosts and fail strict host-key checking if the secret isn't re-captured.
+- **Code-reviewer verdict on PR #42**: `safe to merge` (no HARD; 4 SOFT notes — all informational, no action taken).
+- **Validation**: `npm run build` 84 pages in 5.05s, `npx vitest run` 8/8 in 435ms, workflow YAML parses cleanly.
+- **Three of three #33 blockers now have a path to resolution**: (1) Node 20→22 in PR #40 — DONE; (2) `DEPLOY_SSH_KEY` provisioned — DONE today; (3) `DEPLOY_HOST_KEY` against port 4122 — operator action, see Active work.
 
 ## 2026-07-13 — Deploy Node 20→22 bump (PR #40) + DEPLOY_SSH_KEY command + UI navigation
 
