@@ -8,9 +8,9 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 
 ## Main tip
 
-- `main` tip — `Merge pull request #38 from IsaacMorzy/chore/yarn-lock-housekeeping` (`11537b8`), with feature commit `0d012ec chore: gitignore + delete untracked yarn.lock (NPM is authoritative)`.
-- PR: https://github.com/IsaacMorzy/lingua/pull/38 (MERGED 2026-07-13). Feature branch deleted via `--delete-branch`.
-- 84-page build clean; vitest 8/8; `playwright test tests/visual/mobile-responsive.spec.ts --list` reports 21 tests across 4 viewports; `apps/lingua/yarn.lock` is gitignored and absent from the working tree.
+- `main` tip — `Merge pull request #40 from IsaacMorzy/fix/deploy-node-22` (`836b264`), with feature commit `f1b19e8 fix(ci): bump deploy-frontend.yml node-version 20 → 22`.
+- PR: https://github.com/IsaacMorzy/lingua/pull/40 (MERGED 2026-07-13). Feature branch deleted via `--delete-branch`.
+- 84-page build clean; vitest 8/8; `playwright test tests/visual/mobile-responsive.spec.ts --list` reports 21 tests across 4 viewports; `apps/lingua/yarn.lock` is gitignored and absent from the working tree; deploy workflow now uses Node `'22'` (matches `mobile.yml` convention).
 
 ## Active issues
 
@@ -18,7 +18,7 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
   - #11 (Level system viewer) — `ready-for-human`; blocked on Frappe backend restoration (cross-references #13).
   - #13 (Frappe REST API) — `ready-for-human`; blocked on a Frappe session-cookie auth strategy that survives the Astro build's statelessness.
   - #31, #32, #34 — closed by the close-out PR after end-to-end verification (see `loop-run-log.md` 2026-07-13 close-out entry).
-  - #33 (Frontend deployment automation) — operations half now self-serviceable via `docs/deployment/secrets.md`; **three of four secrets are now provisioned** (DEPLOY_HOST / DEPLOY_HOST_KEY / DEPLOY_USER, all 2026-07-12) but `DEPLOY_SSH_KEY` is still missing, and the workflow's `node-version: '20'` is below Astro's `>=22.12.0` requirement — both surface as the three consecutive failed `main` deploys (#29207072106 / #29207621844 / #29211987871). Tracked in `Caveats` below; unblock work belongs in the next run.
+  - #33 (Frontend deployment automation) — **one of two blockers fixed 2026-07-13 via PR #40** (Node 20→22 bump in `deploy-frontend.yml`). The other blocker (`DEPLOY_SSH_KEY` not yet provisioned) is the only remaining gate. See `Caveats` and `Active work` below.
   - #37 (yarn.lock housekeeping) — closed by PR #38 (`11537b8`) after `.gitignore` updated and the untracked file deleted.
 - Project 6 (IJLAPS Website): 0 items remain in the `ready-for-agent` column after this run. The next bucket of fresh engineering work is in the `Active work` section below.
 
@@ -29,6 +29,7 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 
 ## Recent decisions
 
+- **Deploy Node 20→22 bump landed (2026-07-13)** — PR #40 (`836b264`). `.github/workflows/deploy-frontend.yml` now sets `node-version: '22'` (matches `mobile.yml`); Astro 7 requires `>=22.12.0` and the three recent failed deploys on `main` all stopped at the build step with `Node.js v20.20.2 is not supported by Astro!`. The next push to `main` should pass the build step. **`DEPLOY_SSH_KEY` is still the only remaining blocker for #33** — provision in the repo Settings → Secrets and variables → Actions UI per `docs/deployment/secrets.md` step 3 (paste `cat ~/.ssh/lingua_deploy_ed25519` output).
 - **yarn.lock housekeeping landed (2026-07-13)** — PR #38 (`11537b8`). `.gitignore` now lists `yarn.lock` (with explanatory comment that NPM is authoritative and pointing at `frontend/package-lock.json`); the previously untracked `apps/lingua/yarn.lock` was deleted. `gh pr diff 38` shows only `.gitignore` because untracked files are not in the diff; the deletion is documented in the commit body + issue #37.
 - **Deploy verification surfaced two real blockers for #33 (2026-07-13)**: (a) only 3 of 4 `DEPLOY_*` secrets are provisioned — `DEPLOY_SSH_KEY` is missing; (b) `.github/workflows/deploy-frontend.yml` sets `node-version: '20'` but `frontend/package.json` requires `>=22.12.0`. Three consecutive `main` deploys (#29207072106 / #29207621844 / #29211987871) failed at the build step with `Node.js v20.20.2 is not supported by Astro!`. Per user direction this run was verify-only (no trigger, no fix); tracked in `Caveats` and `Active work` for the next run.
 - **ready-for-agent queue drained (2026-07-13)** — close-out PR closed #31, #32, #34 after end-to-end verification. **Verification surfaced two latent bugs the issue bodies glossed over:**
@@ -77,15 +78,14 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 - After the close-out PR, `tests/visual/` at repo root is now empty. Git ignores empty directories; the existing `.gitignore` entry covering `tests/.last-run.json` still applies if Playwright ever regenerates it from that path.
 - Untracked `apps/lingua/yarn.lock` (NPM-is-authoritative per `frontend/package-lock.json` + `mobile.yml` `npm ci`) is out of scope for this PR — open a separate housekeeping issue to either `.gitignore` or delete it.
 - **`DEPLOY_SSH_KEY` is missing from the repo's GitHub Actions secrets.** `gh secret list` reports only `DEPLOY_HOST` / `DEPLOY_HOST_KEY` / `DEPLOY_USER` (all 2026-07-12). Without the SSH private key, `webfactory/ssh-agent@v0.9.0` cannot authenticate the runner. Provision per `docs/deployment/secrets.md` step 3 (cat `~/.ssh/lingua_deploy_ed25519`).
-- **`.github/workflows/deploy-frontend.yml` pins `node-version: '20'`.** Astro requires `>=22.12.0` per `frontend/package.json` engines / peerDependencies. The first three deploys against the workflow failed at the build step with `Node.js v20.20.2 is not supported by Astro!`. Bump to `'22'` in the workflow file.
+- **`.github/workflows/deploy-frontend.yml` pins `node-version: '20'`.** ~~Astro requires `>=22.12.0` per `frontend/package.json` engines / peerDependencies. The first three deploys against the workflow failed at the build step with `Node.js v20.20.2 is not supported by Astro!`. Bump to `'22'` in the workflow file.~~ **FIXED 2026-07-13 via PR #40** — workflow now uses `'22'`.
 - **Three consecutive failed deploys on `main`**: runs #29207072106, #29207621844, #29211987871. All three failed at the build step. Once `DEPLOY_SSH_KEY` is provisioned and `node-version: '22'` is in place, the next push to `main` should succeed end-to-end.
 
 ## Active work
 
-- **Two follow-up tasks surfaced by the deploy verification on 2026-07-13** (the highest-priority unblock for the project):
-  1. **Bump `node-version: '20'` → `'22'` in `.github/workflows/deploy-frontend.yml`** so the build step matches Astro's `>=22.12.0` requirement. The three failed deploys on `main` all stopped at the build step. One-line fix; a small PR with the workflow edit + a re-run of the workflow via `gh workflow run deploy-frontend.yml` will close this.
-  2. **Provision `DEPLOY_SSH_KEY`** in the repo Settings → Secrets and variables → Actions UI per `docs/deployment/secrets.md` step 3. `gh secret list` currently shows only the other three. Without this, the workflow's ssh-agent step cannot authenticate.
-  Both items together unblock #33. The user has explicitly scoped this run to verify-only (no trigger, no fix), so they belong in the next run.
+- **One remaining follow-up for #33 (the highest-priority unblock for the project):**
+  1. **Provision `DEPLOY_SSH_KEY`** in the repo Settings → Secrets and variables → Actions UI per `docs/deployment/secrets.md` step 3. `gh secret list` currently shows only the other three (DEPLOY_HOST / DEPLOY_HOST_KEY / DEPLOY_USER). Without this, the workflow's `webfactory/ssh-agent@v0.9.0` step cannot authenticate. Run on the production server: `cat ~/.ssh/lingua_deploy_ed25519` and paste the output (including `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----` markers) into the secret value. (UI path: https://github.com/IsaacMorzy/lingua/settings/secrets/actions → New repository secret → Name: `DEPLOY_SSH_KEY` → paste → Add secret.)
+  The Node 20→22 blocker landed in PR #40 (`836b264`). The next push to `main` will pass the build step; once `DEPLOY_SSH_KEY` is set, the deploy will run end-to-end.
 - **Other fresh-ticket candidates** for when the deploy blockers are resolved:
   - **ui-avatars → Frappe portraits** on `/instructors` (blocked on #11 backend).
   - **Unsplash → Frappe-attached img** on `/blog` (blocked on a `lingua_blog_post` DocType).
