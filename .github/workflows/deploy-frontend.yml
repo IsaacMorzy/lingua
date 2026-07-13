@@ -111,10 +111,11 @@ jobs:
         # docs/deployment/secrets.md "Sudo configuration".
         #
         # Site name is `kenyaschooloflanguages.ac.ke` (the Frappe bench site
-        # directory name). NOT `ijlaps.ac.ke` (legacy host_name in
-        # site_config.json) and NOT `morzy.kenyaschooloflanguages.ac.ke` (the
-        # nginx server_name). The `bench --site <name>` command resolves `<name>`
-        # to /home/grand/frappe-bench/sites/<name>/, so it must be the directory name.
+        # directory name). NOT `ijlaps.ac.ke` (the public domain / nginx
+        # server_name / site_config.json host_name). The `bench --site <name>`
+        # command resolves `<name>` to /home/grand/frappe-bench/sites/<name>/,
+        # so it must be the directory name. The two happen to differ on this
+        # server because the public domain was renamed.
         #
         # The `if` compares the boolean input to the boolean `true` (NOT the
         # string 'true' — GitHub Actions expressions don't coerce, so
