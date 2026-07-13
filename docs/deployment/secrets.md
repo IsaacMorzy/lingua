@@ -78,18 +78,20 @@ The runner runs as the same user that owns the bench (`grand`) so it inherits:
 
 ## Sudo configuration
 
-The runner needs three NOPASSWD sudo rules — drop them into `/etc/sudoers.d/lingua-deploy` on the server:
+The runner needs four NOPASSWD sudo rules — drop them into `/etc/sudoers.d/lingua-deploy` on the server. **Each rule is scoped to the exact argv the workflow invokes; do not use wildcards or a broad `/usr/local/bin/bench` grant.** A change to the workflow command line is a change to this file too.
 
 ```bash
 sudo tee /etc/sudoers.d/lingua-deploy >/dev/null <<'EOF'
 grand ALL=(ALL) NOPASSWD: /usr/sbin/nginx -t
 grand ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
-grand ALL=(ALL) NOPASSWD: /usr/local/bin/bench
+grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh restart
+grand ALL=(ALL) NOPASSWD: /usr/local/bin/bench --site ijlaps.ac.ke migrate
 EOF
 sudo chmod 0440 /etc/sudoers.d/lingua-deploy
+sudo visudo -c -f /etc/sudoers.d/lingua-deploy
 ```
 
-`bench migrate` is intentionally **not** granted to the runner — the corresponding workflow step is `if: false` and is only uncommented in a separate human-approved PR after a manual review.
+The last rule (the `bench migrate` one) is the **only** path through which the runner can mutate the database. The corresponding workflow step is gated on a `workflow_dispatch` input that defaults to `false` (push-triggered deploys skip it), and `sudo -n` will reject any other `bench` invocation — `bench --site ijlaps.ac.ke console`, `bench restart`, etc. all fail closed.
 
 ## Emergency SSH access (optional)
 
@@ -104,7 +106,7 @@ The runner's working directory is `/home/grand/actions-runner/_work` and its ser
 - The deploy job runs on a runner the operator controls, not on GitHub-hosted infrastructure. The runner has the same filesystem and sudo access as the `grand` user — equivalent to giving the operator themselves push access to the repo, which they already have.
 - No raw credentials are committed to the repository. The four legacy `DEPLOY_*` secrets are no longer referenced by the workflow and can be removed if the operator no longer needs break-glass SSH.
 - The deploy workflow **deliberately excludes `pull_request`** triggers — only `push: branches: [main]` and `workflow_dispatch` fire it. Fork PRs cannot trigger a deploy even with the workflow file edited.
-- The bench-migrate step is gated `if: false` so a frontend-only push never touches the database schema. Activation requires a separate human-approved PR that uncomments the step and (if needed) extends the sudo drop-in.
+- The bench-migrate step is gated on `if: github.event_name == 'workflow_dispatch' && inputs.migrate == 'true'`. Push-triggered deploys (the common case) never touch the database. The `migrate` input defaults to `false` and must be explicitly ticked when running the workflow via the Actions tab. The sudoers drop-in scopes the `bench` rule to the **exact** argv `/usr/local/bin/bench --site ijlaps.ac.ke migrate` — any other `bench` subcommand fails `sudo -n`.
 - The runner registers against the public GitHub Actions service over HTTPS; it does not require inbound firewall rules.
 
 ## Local credentials (NEVER commit)
