@@ -78,20 +78,24 @@ The runner runs as the same user that owns the bench (`grand`) so it inherits:
 
 ## Sudo configuration
 
-The runner needs four NOPASSWD sudo rules — drop them into `/etc/sudoers.d/lingua-deploy` on the server. **Each rule is scoped to the exact argv the workflow invokes; do not use wildcards or a broad `/usr/local/bin/bench` grant.** A change to the workflow command line is a change to this file too.
+The runner needs six NOPASSWD sudo rules — drop them into `/etc/sudoers.d/lingua-deploy` on the server. **Each rule is scoped to the exact argv the workflow + manual recovery invoke; do not use wildcards or a broad `/usr/local/bin/bench` grant.** A change to the workflow or recovery command line is a change to this file too.
 
 ```bash
 sudo tee /etc/sudoers.d/lingua-deploy >/dev/null <<'EOF'
 grand ALL=(ALL) NOPASSWD: /usr/sbin/nginx -t
 grand ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
 grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh restart
+grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh start
+grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh stop
 grand ALL=(ALL) NOPASSWD: /usr/local/bin/bench --site ijlaps.ac.ke migrate
 EOF
 sudo chmod 0440 /etc/sudoers.d/lingua-deploy
 sudo visudo -c -f /etc/sudoers.d/lingua-deploy
 ```
 
-The last rule (the `bench migrate` one) is the **only** path through which the runner can mutate the database. The corresponding workflow step is gated on a `workflow_dispatch` input that defaults to `false` (push-triggered deploys skip it), and `sudo -n` will reject any other `bench` invocation — `bench --site ijlaps.ac.ke console`, `bench restart`, etc. all fail closed.
+The `bench --site ijlaps.ac.ke migrate` rule is the **only** path through which the runner can mutate the database. The corresponding workflow step is gated on a `workflow_dispatch` input that defaults to `false` (push-triggered deploys skip it), and `sudo -n` will reject any other `bench` invocation — `bench --site ijlaps.ac.ke console`, `bench restart`, etc. all fail closed.
+
+The `svc.sh start` and `svc.sh stop` rules were added on 2026-07-13 after a recovery incident: the runner went offline, and `sudo systemctl start` (the only path the operator knew by heart) requires a password from the runner user. The service's systemd unit name is `actions.runner.IsaacMorzy-lingua.lingua-deploy-morzy.kenyaschooloflanguages.ac.ke.service` — too long to type reliably. `svc.sh start` / `svc.sh stop` are the runner-bundled helpers that resolve the right unit name internally, and now they are NOPASSWD too. **Always** look up the exact service name with `systemctl list-unit-files --type=service --all | awk '/actions.runner/ {print $1; exit}'` if you need `systemctl` directly.
 
 ## Emergency SSH access (optional)
 
