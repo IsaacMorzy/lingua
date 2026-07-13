@@ -12,6 +12,12 @@ on:
       - 'deployment/**'
       - '.github/workflows/deploy-frontend.yml'
   workflow_dispatch:
+    inputs:
+      migrate:
+        description: 'Run `bench --site ijlaps.ac.ke migrate` after the deploy. Only enable when a Frappe schema change has been merged and the operator has reviewed the migration plan.'
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -95,8 +101,26 @@ jobs:
       # OOM-killed in run #29215076228, exit 137) and unnecessary for a pure-frontend deploy.
       # Run it manually on the server if Frappe-side assets need refreshing.
 
-      - name: Run Frappe migrate (manual schema changes only)
-        # Uncomment and run only when Frappe schema changes; not needed for pure frontend deploys.
-        if: false
+      - name: Run Frappe migrate (gated — never runs on push)
+        # Gated on the workflow_dispatch `migrate` input. Push-triggered deploys
+        # (the common case) skip this step entirely. To run a migration:
+        #   1. Review the migration plan in the corresponding DocType PR.
+        #   2. From the Actions tab → Deploy Astro Frontend → Run workflow,
+        #      tick "Run bench migrate after deploy", click "Run workflow".
+        # The runner's sudoers drop-in is scoped to ONLY this command — see
+        # docs/deployment/secrets.md "Sudo configuration".
+        if: github.event_name == 'workflow_dispatch' && inputs.migrate == 'true'
+        env:
+          # Guard against re-trigger surprises: confirm the input actually resolved
+          # to 'true' at step time. github.event.inputs is a string, not a bool.
+          MIGRATE_INPUT: ${{ inputs.migrate }}
         run: |
-          cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate
+          set -euo pipefail
+          if [ "$MIGRATE_INPUT" != "true" ]; then
+            echo "Refusing to run migrate: input resolved to '$MIGRATE_INPUT', expected 'true'" >&2
+            exit 1
+          fi
+          echo "Running: sudo /usr/local/bin/bench --site ijlaps.ac.ke migrate"
+          cd /home/grand/frappe-bench
+          sudo /usr/local/bin/bench --site ijlaps.ac.ke migrate
+          echo "Migration complete."
