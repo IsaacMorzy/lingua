@@ -4,73 +4,108 @@
 
 This document closes the operations half of issue #33 ("Frontend deployment automation"). The deploy workflow itself is already on `main`, plus the nginx config + local script; what remained was the operator-facing playbook for provisioning the four secrets it needs.
 
+## Architecture: self-hosted runner (2026-07-13)
+
+The deploy workflow no longer runs on a GitHub-hosted runner. A **self-hosted runner** is installed on the production server itself (`/home/grand/actions-runner`, running as user `grand` under systemd), and the `deploy` job targets it with `runs-on: [self-hosted, linux, x64, lingua-deploy]`. Because the runner is on the same machine as the bench, the deploy step is a local `rsync` + `bench build` + `sudo nginx -t` + `sudo systemctl reload nginx` — no SSH, no remote host key, no public-network SSH exposure.
+
+The `build` job stays on `ubuntu-latest` (fast, isolated). Artifacts flow build → deploy via the `lingua-www` upload/download artifact pair.
+
+This means the public firewall (UFW) can keep SSH (port 4122) restricted to the Tailscale interface only — no public port forwarding is required for the deploy to work.
+
 ## Required GitHub Actions secrets
 
-The deploy workflow (`.github/workflows/deploy-frontend.yml`) reads four secrets at runtime. They live under **Repository Settings → Secrets and variables → Actions** in `IsaacMorzy/lingua`. No raw credentials are committed to the repository.
+The deploy workflow (`.github/workflows/deploy-frontend.yml`) no longer reads the four legacy secrets at runtime. They remain in the repo for **emergency SSH access only** and may be removed once the operator is comfortable relying solely on the self-hosted runner path.
 
-| Secret name       | Type                  | Purpose                                                                                                              |
-|-------------------|-----------------------|----------------------------------------------------------------------------------------------------------------------|
-| `DEPLOY_SSH_KEY`  | SSH private key (PEM) | Authenticates the deploy user to the production server for `rsync` and `ssh` steps.                                  |
-| `DEPLOY_HOST_KEY` | SSH known_hosts line  | One line from `ssh-keyscan ijlaps.ac.ke`; binds `webfactory/ssh-agent@v0.9.0` to the host without fingerprint prompts. |
-| `DEPLOY_HOST`     | DNS host or IP        | Target for `rsync` and `ssh`. Currently `ijlaps.ac.ke`.                                                              |
-| `DEPLOY_USER`     | Unix username         | The non-root account that owns `/home/grand/frappe-bench` on the production server.                                   |
+| Secret name       | Status         | Purpose                                                                                                              |
+|-------------------|----------------|----------------------------------------------------------------------------------------------------------------------|
+| `DEPLOY_SSH_KEY`  | **legacy**     | Was used to authenticate the GitHub-hosted runner. Kept for emergency SSH; the workflow no longer references it.       |
+| `DEPLOY_HOST_KEY` | **legacy**     | Was the `ssh-keyscan` line for strict host-key checking. Kept for emergency SSH; the workflow no longer references it. |
+| `DEPLOY_HOST`     | **legacy**     | Was the rsync/ssh target. Kept for emergency SSH; the workflow no longer references it.                                |
+| `DEPLOY_USER`     | **legacy**     | Was the unix account for rsync/ssh. Kept for emergency SSH; the workflow no longer references it.                    |
 
-## Step-by-step provisioning
+If you also want to keep the on-server `~/.ssh/lingua_deploy_ed25519` keypair around, see "Emergency SSH access" below. Otherwise it can be deleted along with the four secrets.
 
-1. **Generate the SSH key pair on the production server** (as the deploy user, not root — and only for this workflow):
+## Self-hosted runner setup (one-time, on the production server)
 
-   ```bash
-   ssh-keygen -t ed25519 \
-     -C 'lingua-deploy@ijlaps.ac.ke' \
-     -f ~/.ssh/lingua_deploy_ed25519 \
-     -N ''
-   ```
+The runner runs as the same user that owns the bench (`grand`) so it inherits:
+- Read/write access to `/home/grand/frappe-bench/apps/lingua/lingua/{www,public/frontend}`
+- The existing `sudo` drop-in (nginx + systemctl + bench) — **see "Sudo configuration" below for the minimal set the workflow needs**
+- Tailscale network membership (the runner talks to the GitHub API over the Tailscale interface, but it also works over the public interface because the runner registration uses HTTPS outbound to `pipelinesghubeus5.azureedge.net`).
 
-   Empty passphrase is intentional — the runner cannot type one interactively. Use a dedicated keypair for this workflow; do not reuse `~/.ssh/id_*`.
-
-2. **Append the public key to the deploy user's `authorized_keys`**:
+1. **Download the latest official runner** to `/home/grand/actions-runner`:
 
    ```bash
-   cat ~/.ssh/lingua_deploy_ed25519.pub >> ~/.ssh/authorized_keys
-   chmod 600 ~/.ssh/authorized_keys
+   sudo mkdir -p /home/grand/actions-runner && sudo chown grand:grand /home/grand/actions-runner
+   cd /home/grand/actions-runner
+   RUNNER_VERSION=$(curl -sL https://api.github.com/repos/actions/runner/releases/latest | python3 -c 'import sys, json; print(json.load(sys.stdin)["tag_name"].lstrip("v"))')
+   curl -fsSL -o runner.tar.gz "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
+   tar xzf runner.tar.gz && rm runner.tar.gz
    ```
 
-3. **Capture the private key for `DEPLOY_SSH_KEY`** — copy the entire PEM block including the `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----` markers:
+2. **Mint a short-lived registration token** from the GitHub API (valid 1 hour):
 
    ```bash
-   cat ~/.ssh/lingua_deploy_ed25519
+   gh api -X POST repos/IsaacMorzy/lingua/actions/runners/registration-token --jq .token
    ```
 
-4. **Run `ssh-keyscan` to capture the host fingerprint for `DEPLOY_HOST_KEY`**:
+3. **Configure the runner** with the labels the deploy job targets:
 
    ```bash
-   ssh-keyscan -p 4122 -t ed25519,ecdsa,rsa ijlaps.ac.ke
+   ./config.sh --url https://github.com/IsaacMorzy/lingua \
+     --token "$TOKEN" \
+     --name "lingua-deploy-$(hostname)" \
+     --labels self-hosted,linux,x64,lingua-deploy \
+     --work _work \
+     --unattended --replace
    ```
 
-   Copy the matching line(s) verbatim. If the server advertises multiple key types, include one line per type — the runner will accept any of them.
+   `--replace` lets you re-run the step if the runner was previously registered under the same name. The four labels (`self-hosted,linux,x64,lingua-deploy`) are matched as a logical AND by the workflow's `runs-on: [self-hosted, linux, x64, lingua-deploy]`; keep the set narrow so future jobs in the repo don't accidentally land on this production runner.
 
-   **Note:** The production server's SSH daemon listens on **port 4122**, not the default 22. The `-p 4122` flag is required; without it, `ssh-keyscan` will silently time out and the resulting `DEPLOY_HOST_KEY` will be empty, breaking the workflow's strict host-key check. `ssh-keyscan` will write the known_hosts entry in `[hostname]:port` bracket form, which is the format the SSH client expects when connecting via a non-default port.
-
-5. **Configure passwordless sudo for the deploy user** so the workflow's `sudo nginx -t && sudo systemctl reload nginx` and `bench build` steps succeed:
+4. **Install and start as a systemd service** (runs as user `grand`):
 
    ```bash
-   sudo tee /etc/sudoers.d/lingua-deploy >/dev/null <<'EOF'
-   lingua-deploy ALL=(ALL) NOPASSWD: /usr/sbin/nginx -t
-   lingua-deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
-   lingua-deploy ALL=(ALL) NOPASSWD: /usr/local/bin/bench
-   EOF
-   sudo chmod 0440 /etc/sudoers.d/lingua-deploy
+   sudo ./svc.sh install grand
+   sudo ./svc.sh start
    ```
 
-   Limit sudo to the three commands the workflow actually invokes. `bench migrate` is intentionally **not** granted — schema migrations are run manually after a separate human-approved PR.
+   Verify:
+   ```bash
+   sudo systemctl status 'actions.runner.*' --no-pager
+   gh api repos/IsaacMorzy/lingua/actions/runners --jq '.runners[] | {name, status, labels: [.labels[].name]}'
+   ```
 
-6. **Provision the four secrets** in the GitHub repo settings UI under Secrets and variables → Actions. Paste:
-   - `DEPLOY_SSH_KEY` ← output of step 3
-   - `DEPLOY_HOST_KEY` ← output of step 4
-   - `DEPLOY_HOST` ← DNS name (e.g. `ijlaps.ac.ke`)
-   - `DEPLOY_USER` ← unix account name (e.g. `lingua-deploy`)
+5. **Auto-update (recommended)**. The official runner has `./run.sh` self-update behaviour on start. To pin a stable release, keep the runner directory readable only by `grand` and rely on the standard upgrade path (download a newer tarball, extract, restart `sudo ./svc.sh restart`).
 
-7. **First deploy** runs automatically on the next push to `main` once the workflow file is merged. The `concurrency: group: deploy-frontend, cancel-in-progress: true` setting prevents overlapping deploys from a fast-follow-up push.
+## Sudo configuration
+
+The runner needs three NOPASSWD sudo rules — drop them into `/etc/sudoers.d/lingua-deploy` on the server:
+
+```bash
+sudo tee /etc/sudoers.d/lingua-deploy >/dev/null <<'EOF'
+grand ALL=(ALL) NOPASSWD: /usr/sbin/nginx -t
+grand ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
+grand ALL=(ALL) NOPASSWD: /usr/local/bin/bench
+EOF
+sudo chmod 0440 /etc/sudoers.d/lingua-deploy
+```
+
+`bench migrate` is intentionally **not** granted to the runner — the corresponding workflow step is `if: false` and is only uncommented in a separate human-approved PR after a manual review.
+
+## Emergency SSH access (optional)
+
+If you want to keep the old `DEPLOY_*` secrets and the on-server `lingua_deploy_ed25519` keypair for break-glass SSH, the provisioning steps from earlier revisions of this document still apply (generate keypair, append to `authorized_keys`, paste private key into the secret). The deploy workflow does not need them, so this is purely for human-driven emergency access.
+
+## Local credentials (NEVER commit)
+
+The runner's working directory is `/home/grand/actions-runner/_work` and its service unit is `/etc/systemd/system/actions.runner.<org>-<repo>.<runner-name>.service`. Both are out-of-repo. The deploy keypair (if retained for emergency access) is in `~grand/.ssh/lingua_deploy_ed25519` with `chmod 600`. None of these are tracked by `git`.
+
+## Security model
+
+- The deploy job runs on a runner the operator controls, not on GitHub-hosted infrastructure. The runner has the same filesystem and sudo access as the `grand` user — equivalent to giving the operator themselves push access to the repo, which they already have.
+- No raw credentials are committed to the repository. The four legacy `DEPLOY_*` secrets are no longer referenced by the workflow and can be removed if the operator no longer needs break-glass SSH.
+- The deploy workflow **deliberately excludes `pull_request`** triggers — only `push: branches: [main]` and `workflow_dispatch` fire it. Fork PRs cannot trigger a deploy even with the workflow file edited.
+- The bench-migrate step is gated `if: false` so a frontend-only push never touches the database schema. Activation requires a separate human-approved PR that uncomments the step and (if needed) extends the sudo drop-in.
+- The runner registers against the public GitHub Actions service over HTTPS; it does not require inbound firewall rules.
 
 ## Local credentials (NEVER commit)
 
@@ -115,6 +150,8 @@ This file intentionally does not store any credential value. The four secrets ab
 - Workflow file: `.github/workflows/deploy-frontend.yml`
 - Nginx site config: `deployment/nginx/ijlaps.ac.ke.conf`
 - Local deploy script: `deployment/deploy-frontend.sh`
-- Tracking issue: `GitHub #33 — Frontend deployment automation (deploy-frontend.yml + nginx + script)` (label `ready-for-human` until the four secrets are provisioned)
+- Self-hosted runner directory: `/home/grand/actions-runner` (on the production server)
+- Systemd service: `actions.runner.IsaacMorzy-lingua.lingua-deploy-*.service`
+- Tracking issue: `GitHub #33 — Frontend deployment automation (deploy-frontend.yml + nginx + script)` (label `ready-for-human` until the self-hosted runner is registered and the four legacy secrets are reconciled)
 - Loop-engineering policy: `loop-constraints.md` Secret hygiene section
 - Agent instructions: `AGENTS.md` Human-tasks section
