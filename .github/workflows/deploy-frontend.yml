@@ -47,47 +47,56 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    # Self-hosted runner on the production server (Tailscale-protected).
+    # See docs/deployment/secrets.md "Self-hosted runner setup" for registration + maintenance.
+    runs-on: [self-hosted, linux, x64, lingua-deploy]
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: lingua-www
-          path: .
+          path: ${{ runner.temp }}/lingua-www
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
-          log-public-key: false
-
-      - name: Add host to known hosts
-        env:
-          DEPLOY_HOST_KEY: ${{ secrets.DEPLOY_HOST_KEY }}
+      - name: Copy frontend build into the bench
+        # Local file operations: runner runs on the same machine as the bench.
+        # Build job uploads with paths `lingua/www` and `lingua/public/frontend` relative to
+        # its `working-directory: frontend`, so actions/upload-artifact@v4 resolves them to
+        # `frontend/lingua/www` and `frontend/lingua/public/frontend` and the tarball lays
+        # them out as `www/` and `public/frontend/` at the root.
         run: |
-          mkdir -p ~/.ssh
-          if [ -z "$DEPLOY_HOST_KEY" ]; then
-            echo "Error: DEPLOY_HOST_KEY secret is not set" >&2
+          ARTIFACT_DIR=${{ runner.temp }}/lingua-www
+          WWW_SRC="$ARTIFACT_DIR/www"
+          PUBLIC_SRC="$ARTIFACT_DIR/public/frontend"
+          if [ ! -d "$WWW_SRC" ] || [ ! -d "$PUBLIC_SRC" ]; then
+            echo "ERROR: expected $WWW_SRC and $PUBLIC_SRC to exist after artifact download"
+            echo "Artifact root contents:"
+            ls -la "$ARTIFACT_DIR"
+            echo "All directories:"
+            find "$ARTIFACT_DIR" -type d | head -20
             exit 1
           fi
-          printf '%s\n' "$DEPLOY_HOST_KEY" >> ~/.ssh/known_hosts
+          echo "Copying $WWW_SRC/ -> /home/grand/frappe-bench/apps/lingua/lingua/www/"
+          rsync -a --delete "$WWW_SRC/" /home/grand/frappe-bench/apps/lingua/lingua/www/
+          echo "Copying $PUBLIC_SRC/ -> /home/grand/frappe-bench/apps/lingua/lingua/public/frontend/"
+          rsync -a --delete "$PUBLIC_SRC/" /home/grand/frappe-bench/apps/lingua/lingua/public/frontend/
 
-      - name: Deploy to server
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-        run: |
-          # Server SSH daemon listens on port 4122 (not 22). Pass -p 4122 to rsync and ssh.
-          rsync -avz --delete -e "ssh -p 4122" ./lingua/www/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/www/"
-          rsync -avz --delete -e "ssh -p 4122" ./lingua/public/frontend/ "${DEPLOY_USER}@${DEPLOY_HOST}:/home/grand/frappe-bench/apps/lingua/lingua/public/frontend/"
-          ssh -p 4122 "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench build && sudo nginx -t && sudo systemctl reload nginx'
+      - name: Validate nginx config
+        run: sudo nginx -t
+
+      - name: Reload nginx
+        run: sudo systemctl reload nginx
+
+      # Note: `bench build` is intentionally NOT part of this deploy. It was in the original
+      # workflow because the GitHub-hosted runner had to SSH into the server to run it, and
+      # Frappe served the new static files after the build. With the self-hosted runner on
+      # the same machine as the bench, the Astro output is served directly from
+      # `apps/lingua/lingua/{www,public/frontend}` by Frappe's static file handler without a
+      # rebuild. `bench build` is also memory-hungry (vite build for the hrms app was
+      # OOM-killed in run #29215076228, exit 137) and unnecessary for a pure-frontend deploy.
+      # Run it manually on the server if Frappe-side assets need refreshing.
 
       - name: Run Frappe migrate (manual schema changes only)
         # Uncomment and run only when Frappe schema changes; not needed for pure frontend deploys.
         if: false
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
-          # Server SSH daemon listens on port 4122 (not 22). Match the deploy step above.
-          ssh -p 4122 "${DEPLOY_USER}@${DEPLOY_HOST}" 'cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate'
+          cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate
