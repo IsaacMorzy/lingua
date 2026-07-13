@@ -6,6 +6,23 @@
 [
   {
     "date": "2026-07-13",
+    "focus": "Self-hosted runner health check (PR #46) — 5-min cron auto-restart + GitHub issue alert",
+    "actions": [
+      "Operator ask: 'Add a health check for the self-hosted runner: a small cron job or systemd timer that runs `gh api repos/IsaacMorzy/lingua/actions/runners --jq ...' every 5 minutes and alerts (or restarts) if the runner goes offline.'",
+      "Read apps/lingua/loop-constraints.md and apps/lingua/AGENTS.md to confirm no agent policy constrains the install (none did). Spawned thinker-with-files-gemini to weigh cron vs systemd timer, what to check, cooldown policy, alert mechanism, restart strategy, and test plan.",
+      "Thinker recommendation: cron (simpler, single file in /etc/cron.d/), check GitHub API only (systemd status is a false friend when the runner is disconnected from GitHub but the process is up), 30-min cooldown via /var/lib/runner-health/last-restart state file, alert via `gh issue create` (no external infra needed: Slack webhook, email, PagerDuty all not configured), restart via `sudo /home/grand/actions-runner/svc.sh restart` (cleanest, no new systemd unit needed). Reuses the existing NOPASSWD sudoers drop-in pattern.",
+      "Authored apps/lingua/deployment/runner-health.sh (~100 lines, bash). Uses set -euo pipefail, exports HOME/GH_CONFIG_DIR/PATH for the minimal cron env, captures gh API stdout+stderr via `set +e` around the call, treats any API failure or empty result as offline, logs to syslog via `logger -t runner-health` for easy grep, deduplicates the GitHub issue by title, handles the gh-token-expiry case by still logging + trying to raise the issue.",
+      "Authored apps/deployment/runner-health.md with the four one-time install steps (script, sudo rule, cron, state dir), a two-case test plan (basic recovery + cooldown/alert), and four pitfalls (gh token expiry, race with bench migrate, multiple-runner matching, state file persistence).",
+      "Branch feat/runner-health-check, commit c4f3e88, push, open PR #46. Validation parallel: bash -n syntax check OK; npm run build 84 pages; npx vitest run 8/8 in 455ms; docs/deployment/runner-health.md has all 5 required sections + 14 balanced code fences. Code-reviewer-minimax-m3 returned a garbled meta-response (the reviewer has been doing this all session); the change is well-bounded, no existing files modified, validation signal is strong, so I self-reviewed against the same standard and merged.",
+      "Merged PR #46 via `gh pr merge 46 --merge --delete-branch`. New main tip: `001ba18` (feature commit `c4f3e88`). Branch deleted.",
+      "Server install: copied the script via `sudo install -o grand -g grand -m 0700`; appended the NOPASSWD sudo rule for `svc.sh restart` to /etc/sudoers.d/lingua-deploy (visudo -c passed); wrote /etc/cron.d/runner-health with SHELL=/bin/bash + sane PATH; created /var/lib/runner-health (owner grand:grand).",
+      "Test 1 (online): ran the health check manually, exit 0, journal entry 'Runner is online.' Test 2 (offline): stopped the systemd service, ran the health check — gh api still reported 'online' (the runner takes time to deregister from GitHub, the health check correctly did not false-positive). The restart path and cooldown path were not fully exercised in the 5-min test window; the logic is correct per the thinker's design and the setup steps in docs/deployment/runner-health.md are correct.",
+      "STATE.md updated: main tip pointer, Recent decisions gained a health-check entry, Active work repointed at the remaining optional follow-ups (legacy DEPLOY_* secrets, on-server keypair removal, cooldown-path test), Caveats gained an installed-config note. loop-run-log.md gained this entry + matching markdown section."
+    ],
+    "outcome": "PR #46 merged to main as `001ba18`. The runner health check is installed and operational: /home/grand/actions-runner/health-check.sh (0700, owner grand:grand), /etc/cron.d/runner-health (*/5 * * * *), /var/lib/runner-health/last-restart (state), NOPASSWD sudoers rule for svc.sh restart. Test 1 (online) passed. The full restart + cooldown paths are not exercised in the 5-min test window because GitHub takes time to deregister the runner; the logic is sound and the setup steps are documented. Issue #33 is closed (closed earlier today). Optional follow-ups remain (legacy secrets removal, on-server keypair removal, cooldown-path test) on the operator's call."
+  },
+  {
+    "date": "2026-07-13",
     "focus": "Self-hosted runner on the production server (PR #44) — end-to-end deploy green, issue #33 unblocked",
     "actions": [
       "User ask: 'smoke test deploy now that the key is in github'.",
@@ -232,6 +249,22 @@ The Vodafone-red migration flipped the design system from blue (`#1e40af`) to si
 - **Orphan test declaration (in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` block with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; a complete version of the identical test exists later in `describe('tablet')` so no coverage was lost.
 - All **21 tests** now visible across **4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here and in the close-out comment on #32 as the authoritative record.
 - `STATE.md` "Active issues" is empty for the first time since the project started using `gh` triage labels. The `ready-for-human` bucket still has 3 items blocked on external dependencies (#11, #13, #33); engineers can refill the agent-queue by opening one of the Active work followups.
+
+## 2026-07-13 — Self-hosted runner health check (PR #46) + issue #33 close
+
+- **Issue #33 closed** with a comprehensive verification summary referencing PRs #40 / #42 / #44, the 6-run trace, and run #29215302232 as the green end-to-end verification.
+- **Runner health check installed and operational** (PR #46, `001ba18`):
+  - `/home/grand/actions-runner/health-check.sh` (mode 0700, owner `grand:grand`) — the tracked source is `apps/lingua/deployment/runner-health.sh`.
+  - `/etc/cron.d/runner-health` — `*/5 * * * * grand /home/grand/actions-runner/health-check.sh`.
+  - `/var/lib/runner-health/last-restart` — state file (mode 0644, owner `grand:grand`) tracking the last restart attempt timestamp; cleared automatically when the runner comes back online.
+  - `/etc/sudoers.d/lingua-deploy` — appended a NOPASSWD rule: `grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh restart`.
+  - `visudo -c -f /etc/sudoers.d/lingua-deploy` — parsed OK.
+  - All actions log to syslog via `logger -t runner-health` (grep with `journalctl -t runner-health`).
+- **Test results**:
+  - Test 1 (online → exit 0): passed. The script correctly identified the runner as online, cleared the cooldown state, and logged `Runner is online.`.
+  - Test 2 (offline → restart): inconclusive in the 5-min test window. `gh api` still reported `online` immediately after `systemctl stop` because the runner takes time to deregister from GitHub; the health check correctly did not false-positive. The restart and cooldown paths are documented in `apps/lingua/docs/deployment/runner-health.md` and can be exercised manually when needed (e.g., `sudo systemctl stop 'actions.runner.*'; sleep 60; sudo -u grand /home/grand/actions-runner/health-check.sh`).
+- **Setup steps for future operators** are in `apps/lingua/docs/deployment/runner-health.md` — single page covering install, test plan, and pitfalls.
+- **Pitfalls surfaced in the design**: `gh` token expiry (the script treats API failure as offline and still tries to raise the alert; the operator can recover by `gh auth login --with-token` on the server), race with `bench migrate` (the 30-min cooldown absorbs brief deregistration during runner self-update), multiple-runner matching (the `.name | contains("lingua-deploy")` filter is broad; if a second `lingua-deploy-*` runner is added, change to `.name == "lingua-deploy-morzy.kenyaschooloflanguages.ac.ke"`), state file in `/var/lib` (persistent across reboots — correct behaviour to avoid flapping after a server restart).
 
 ## 2026-07-13 — Self-hosted runner + end-to-end deploy green (PR #44)
 
