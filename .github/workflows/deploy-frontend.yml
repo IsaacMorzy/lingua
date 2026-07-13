@@ -55,13 +55,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lingua-www
-          path: .
+          path: ${{ runner.temp }}/lingua-www
 
       - name: Copy frontend build into the bench
         # Local file operations: runner runs on the same machine as the bench.
+        # The artifact tarball has lingua/www/... and lingua/public/frontend/... at the top.
+        # Download to runner.temp first so the source paths are explicit and not dependent
+        # on the runner's _work working directory.
         run: |
-          rsync -a --delete ./lingua/www/ /home/grand/frappe-bench/apps/lingua/lingua/www/
-          rsync -a --delete ./lingua/public/frontend/ /home/grand/frappe-bench/apps/lingua/lingua/public/frontend/
+          ls -la ${{ runner.temp }}/lingua-www/
+          rsync -a --delete ${{ runner.temp }}/lingua-www/lingua/www/ /home/grand/frappe-bench/apps/lingua/lingua/www/
+          rsync -a --delete ${{ runner.temp }}/lingua-www/lingua/public/frontend/ /home/grand/frappe-bench/apps/lingua/lingua/public/frontend/
 
       - name: Run bench build to refresh Frappe assets
         run: |
