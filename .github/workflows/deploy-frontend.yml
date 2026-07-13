@@ -57,28 +57,23 @@ jobs:
           name: lingua-www
           path: ${{ runner.temp }}/lingua-www
 
-      - name: Inspect downloaded artifact (debug)
-        run: |
-          echo "=== Artifact root: ${{ runner.temp }}/lingua-www ==="
-          ls -la ${{ runner.temp }}/lingua-www/
-          echo "=== Directory tree (first 40 entries) ==="
-          find ${{ runner.temp }}/lingua-www -maxdepth 4 | head -40
-          echo "=== Files inside (first 20) ==="
-          find ${{ runner.temp }}/lingua-www -type f | head -20
-
       - name: Copy frontend build into the bench
         # Local file operations: runner runs on the same machine as the bench.
-        # Locate lingua/www/ and lingua/public/frontend/ inside the extracted artifact using
-        # find (rather than assuming the exact tarball layout) and rsync them into the bench.
+        # Build job uploads with paths `lingua/www` and `lingua/public/frontend` relative to
+        # its `working-directory: frontend`, so actions/upload-artifact@v4 resolves them to
+        # `frontend/lingua/www` and `frontend/lingua/public/frontend` and the tarball lays
+        # them out as `www/` and `public/frontend/` at the root. Verify with the inspect
+        # step below if this ever changes again.
         run: |
           ARTIFACT_DIR=${{ runner.temp }}/lingua-www
-          WWW_SRC=$(find "$ARTIFACT_DIR" -type d -path '*/lingua/www' | head -1)
-          PUBLIC_SRC=$(find "$ARTIFACT_DIR" -type d -path '*/lingua/public/frontend' | head -1)
-          if [ -z "$WWW_SRC" ] || [ -z "$PUBLIC_SRC" ]; then
-            echo "ERROR: could not locate lingua/www or lingua/public/frontend in artifact"
-            echo "Looking for: $ARTIFACT_DIR/lingua/www and $ARTIFACT_DIR/lingua/public/frontend"
-            echo "Found lingua/www: '$WWW_SRC'"
-            echo "Found lingua/public/frontend: '$PUBLIC_SRC'"
+          WWW_SRC="$ARTIFACT_DIR/www"
+          PUBLIC_SRC="$ARTIFACT_DIR/public/frontend"
+          if [ ! -d "$WWW_SRC" ] || [ ! -d "$PUBLIC_SRC" ]; then
+            echo "ERROR: expected $WWW_SRC and $PUBLIC_SRC to exist after artifact download"
+            echo "Artifact root contents:"
+            ls -la "$ARTIFACT_DIR"
+            echo "All directories:"
+            find "$ARTIFACT_DIR" -type d | head -20
             exit 1
           fi
           echo "Copying $WWW_SRC/ -> /home/grand/frappe-bench/apps/lingua/lingua/www/"
