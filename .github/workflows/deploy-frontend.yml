@@ -62,8 +62,7 @@ jobs:
         # Build job uploads with paths `lingua/www` and `lingua/public/frontend` relative to
         # its `working-directory: frontend`, so actions/upload-artifact@v4 resolves them to
         # `frontend/lingua/www` and `frontend/lingua/public/frontend` and the tarball lays
-        # them out as `www/` and `public/frontend/` at the root. Verify with the inspect
-        # step below if this ever changes again.
+        # them out as `www/` and `public/frontend/` at the root.
         run: |
           ARTIFACT_DIR=${{ runner.temp }}/lingua-www
           WWW_SRC="$ARTIFACT_DIR/www"
@@ -81,19 +80,23 @@ jobs:
           echo "Copying $PUBLIC_SRC/ -> /home/grand/frappe-bench/apps/lingua/lingua/public/frontend/"
           rsync -a --delete "$PUBLIC_SRC/" /home/grand/frappe-bench/apps/lingua/lingua/public/frontend/
 
-      - name: Run bench build to refresh Frappe assets
-        run: |
-          cd /home/grand/frappe-bench && bench build
-
       - name: Validate nginx config
         run: sudo nginx -t
 
       - name: Reload nginx
         run: sudo systemctl reload nginx
 
+      # Note: `bench build` is intentionally NOT part of this deploy. It was in the original
+      # workflow because the GitHub-hosted runner had to SSH into the server to run it, and
+      # Frappe served the new static files after the build. With the self-hosted runner on
+      # the same machine as the bench, the Astro output is served directly from
+      # `apps/lingua/lingua/{www,public/frontend}` by Frappe's static file handler without a
+      # rebuild. `bench build` is also memory-hungry (vite build for the hrms app was
+      # OOM-killed in run #29215076228, exit 137) and unnecessary for a pure-frontend deploy.
+      # Run it manually on the server if Frappe-side assets need refreshing.
+
       - name: Run Frappe migrate (manual schema changes only)
         # Uncomment and run only when Frappe schema changes; not needed for pure frontend deploys.
-        # Requires the bench migrate sudo permission on the runner user.
         if: false
         run: |
           cd /home/grand/frappe-bench && bench --site ijlaps.ac.ke migrate
