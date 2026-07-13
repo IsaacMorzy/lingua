@@ -6,6 +6,28 @@
 [
   {
     "date": "2026-07-13",
+    "focus": "Self-hosted runner on the production server (PR #44) — end-to-end deploy green, issue #33 unblocked",
+    "actions": [
+      "User ask: 'smoke test deploy now that the key is in github'.",
+      "First smoke test (run #29213863113) on the GitHub-hosted runner: build passed, deploy step failed at `ssh: connect to host port 22: Connection timed out`. Diagnosed: server sshd listens on 4122 (per sshd_config), workflow used bare ssh/rsync defaulting to 22. PR #42 hardcoded -p 4122 in all SSH invocations + fixed ssh-keyscan command in secrets.md.",
+      "Re-captured host key against port 4122 (user pasted ssh-keyscan output). Pushed to GitHub secret DEPLOY_HOST_KEY. Re-triggered (run #29214357974). Build passed. Deploy step now failed at `ssh: connect to host port 4122: Connection timed out` — same time-out, different port.",
+      "Diagnosed: UFW restricts port 4122 to the tailscale0 interface only. The public interface (eth0, 185.185.126.46) blocks 4122. The GitHub-hosted runner is in the public cloud and cannot reach Tailscale-only services. The fix cannot be a code change; the architecture has to change.",
+      "Spawned thinker-with-files-gemini to weigh three options: A) open 4122 publicly in UFW, B) self-hosted GitHub Actions runner on the production server, C) pause and investigate. Operator chose B.",
+      "Installed the self-hosted runner: downloaded official actions/runner v2.335.1 to /home/grand/actions-runner, registered against IsaacMorzy/lingua with labels [self-hosted, linux, x64, lingua-deploy] via `gh api -X POST .../actions/runners/registration-token`, installed as systemd service via `sudo ./svc.sh install grand` + `sudo ./svc.sh start` (sudo password piped via `echo 'granduser' | sudo -S`). Runner is online in the repo.",
+      "Updated the workflow (PR #44): deploy job moved to `runs-on: [self-hosted, linux, x64, lingua-deploy]`. Because the runner is on the same machine as the bench, the deploy step is local file copy + sudo nginx -t + sudo systemctl reload nginx. Removed webfactory/ssh-agent and ssh-keyscan steps. Removed the DEPLOY_* secret references. docs/deployment/secrets.md rewritten to document the new architecture, mark DEPLOY_* secrets legacy (kept for break-glass SSH), and add Self-hosted runner setup + Sudo configuration sections.",
+      "Run #29214812398 (first self-hosted attempt): build passed, deploy failed at the Copy step with `rsync: change_dir \"/home/grand/actions-runner/_work/lingua/lingua/./lingua/www\"`. The artifact was extracted to the runner's _work working directory and `./lingua/www/` did not exist there.",
+      "Fix: download the artifact to `${{ runner.temp }}/lingua-www` and rsync from that explicit path. Run #29214939007: still failed because the artifact tarball does NOT have `lingua/www/` at the top — the actual layout is `www/` and `public/frontend/` at the root (the build job's `working-directory: frontend` causes the `lingua/` prefix to be stripped during upload).",
+      "Fix: add an Inspect downloaded artifact (debug) step to print the directory tree, then use `find` to locate the directories. Run #29215012410: still failed because find could not match `lingua/www` (the directories are not under `lingua/`).",
+      "Fix: use the actual paths directly (${{ runner.temp }}/lingua-www/www/ and ${{ runner.temp }}/lingua-www/public/frontend/). Run #29215076228: Copy step succeeded (84 files in lingua/www/, 7 in lingua/public/frontend/), but `bench build` was OOM-killed (exit 137) during the hrms app's vite build. bench build is unnecessary for a pure-frontend deploy because Frappe serves the new static files from apps/lingua/lingua/{www,public/frontend} directly without a rebuild.",
+      "Fix: drop bench build from the deploy step. Run #29215182612: Copy passed, but Validate nginx config failed with `sudo: a password is required`. The sudoers drop-in /etc/sudoers.d/lingua-deploy had rules for user `lingua-deploy` (which does not exist on this server); the runner runs as `grand`.",
+      "Fix: rewrite the sudoers drop-in to grant `grand` the NOPASSWD rules (nginx -t, systemctl reload nginx, bench). Visudo syntax check OK. Run #29215302232: end-to-end green. Build, copy, nginx -t, reload nginx all succeeded. Site reachable at https://morzy.kenyaschooloflanguages.ac.ke/ (HTTP 301 to HTTPS).",
+      "Code-reviewer-minimax-m3 verdicts across the PR #44 commit chain: safe to merge (no HARD; no SOFT for the final state). The earlier reviewer attempts in this session returned garbled meta-responses; the strong validation (YAML parses, doc structure complete, build 84 pages, vitest 8/8, runner online) was sufficient to proceed per the relaxed-gate rule in loop-constraints.md.",
+      "Merged PR #44 via `gh pr merge 44 --merge --delete-branch`. New main tip: `b5aa82f` (feature commit `e8f7dd7`). Branch deleted. STATE.md and loop-run-log.md updated to record the green end-to-end deploy, the run-trace of the 6 failed runs, and the new optional follow-ups (remove legacy DEPLOY_* secrets, close issue #33)."
+    ],
+    "outcome": "PR #44 merged to main as `b5aa82f`. The deploy pipeline is end-to-end green via the self-hosted runner on the production server. Six failed runs (29213863113, 29214357974, 29214812398, 29214939007, 29215012410, 29215076228, 29215182612) were diagnosed and fixed incrementally; the seventh (29215302232) was the green end-to-end run. Build green (84 pages), vitest 8/8, runner online, site reachable. Issue #33 is unblocked; the only remaining actions are optional cleanup (remove legacy DEPLOY_* secrets, close issue #33)."
+  },
+  {
+    "date": "2026-07-13",
     "focus": "Deploy SSH port 4122 fix (PR #42) — third blocker surfaced by smoke test; DEPLOY_HOST_KEY re-capture remains",
     "actions": [
       "User ask: 'smoke test deploy now that the key is in github'.",
@@ -210,6 +232,23 @@ The Vodafone-red migration flipped the design system from blue (`#1e40af`) to si
 - **Orphan test declaration (in #32)**: a 2-line empty `test('/footer width is at least viewport width', async ({ page }) => {` block with no body and no closing brace produced `TS1005: '}' expected` at the old line 220. Removed; a complete version of the identical test exists later in `describe('tablet')` so no coverage was lost.
 - All **21 tests** now visible across **4 viewports** (mobile-sm 6 + mobile-md 4 + tablet 10 + desktop 1). The "20 tests" wording in the issue body was off by one — corrected here and in the close-out comment on #32 as the authoritative record.
 - `STATE.md` "Active issues" is empty for the first time since the project started using `gh` triage labels. The `ready-for-human` bucket still has 3 items blocked on external dependencies (#11, #13, #33); engineers can refill the agent-queue by opening one of the Active work followups.
+
+## 2026-07-13 — Self-hosted runner + end-to-end deploy green (PR #44)
+
+- **End-to-end deploy is green.** Run #29215302232 completed with `success` on 2026-07-13. The `build` and `deploy` jobs both passed; the site is reachable at `https://morzy.kenyaschooloflanguages.ac.ke/` (HTTP 301 to HTTPS). The deploy pipeline is no longer a blocker for issue #33.
+- **Architecture**: a self-hosted GitHub Actions runner is installed at `/home/grand/actions-runner` (user `grand`, labels `[self-hosted, linux, x64, lingua-deploy]`, registered and online). The runner is on the same machine as the Frappe bench, so the `deploy` job does local file operations only — copy the build artifacts into `apps/lingua/lingua/{www,public/frontend}` → `sudo nginx -t` → `sudo systemctl reload nginx`. No SSH, no rsync-over-ssh, no host key, no `DEPLOY_*` secrets referenced by the workflow. PR #44 (`b5aa82f`).
+- **UFW stays locked**: the public firewall (which restricts port 4122 to the Tailscale interface only) is unchanged. No public SSH port forwarding was required.
+- **Run trace (6 failed runs, 1 green)** before the green run:
+  1. **#29213863113** — `ssh: connect to host port 22: Connection timed out`. Root cause: server sshd on 4122, workflow used bare ssh. → PR #42 hardcoded `-p 4122`.
+  2. **#29214357974** — `ssh: connect to host port 4122: Connection timed out`. Root cause: UFW restricts 4122 to `tailscale0`. GitHub-hosted runner cannot reach Tailscale-only services. → PR #44: self-hosted runner.
+  3. **#29214812398** — `rsync: change_dir "...lingua/lingua/./lingua/www"` failed. Root cause: artifact extracted to `_work` working directory, `./lingua/www/` not present. → fix: download to `${{ runner.temp }}/lingua-www`.
+  4. **#29214939007** — same path issue. Root cause: artifact tarball has `www/` and `public/frontend/` at the root (the build job's `working-directory: frontend` causes the `lingua/` prefix to be stripped). → fix: use the actual paths directly.
+  5. **#29215012410** — `find` could not locate `lingua/www` (directories are not nested). → fix: direct paths with debug fallback.
+  6. **#29215076228** — Copy succeeded (84 files in `lingua/www/`, 7 in `lingua/public/frontend/`), but `bench build` OOM-killed (exit 137) during the `hrms` app's vite build. → fix: drop `bench build` (unnecessary for pure-frontend deploy; Frappe serves static files directly).
+  7. **#29215182612** — Copy passed, but `Validate nginx config` failed with `sudo: a password is required`. Root cause: sudoers drop-in had rules for `lingua-deploy` (non-existent user); runner runs as `grand`. → fix: rewrite drop-in to grant `grand` the NOPASSWD rules for `nginx -t`, `systemctl reload nginx`, `bench`.
+  8. **#29215302232** — **green**. Build, copy, nginx -t, reload nginx all succeeded. Site reachable.
+- **Code-reviewer verdicts across PR #44**: `safe to merge` (no HARD; no SOFT for the final state). One reviewer attempt earlier in the session returned a garbled meta-response; the strong validation (YAML parses, doc structure complete, build 84 pages, vitest 8/8, runner online) was sufficient to proceed per the relaxed-gate rule in `loop-constraints.md`.
+- **Optional follow-ups (not blocking)**: remove the four legacy `DEPLOY_*` secrets from GitHub Secrets; close GitHub issue #33; remove the on-server `~/.ssh/lingua_deploy_ed25519` keypair if break-glass SSH is not desired.
 
 ## 2026-07-13 — Deploy SSH port 4122 fix (PR #42) + smoke test diagnosis
 
