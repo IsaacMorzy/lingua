@@ -87,13 +87,15 @@ grand ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx
 grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh restart
 grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh start
 grand ALL=(ALL) NOPASSWD: /home/grand/actions-runner/svc.sh stop
-grand ALL=(ALL) NOPASSWD: /usr/local/bin/bench --site ijlaps.ac.ke migrate
+grand ALL=(ALL) NOPASSWD: /usr/local/bin/bench --site kenyaschooloflanguages.ac.ke migrate
 EOF
 sudo chmod 0440 /etc/sudoers.d/lingua-deploy
 sudo visudo -c -f /etc/sudoers.d/lingua-deploy
 ```
 
-The `bench --site ijlaps.ac.ke migrate` rule is the **only** path through which the runner can mutate the database. The corresponding workflow step is gated on a `workflow_dispatch` input that defaults to `false` (push-triggered deploys skip it), and `sudo -n` will reject any other `bench` invocation — `bench --site ijlaps.ac.ke console`, `bench restart`, etc. all fail closed.
+The `bench --site kenyaschooloflanguages.ac.ke migrate` rule is the **only** path through which the runner can mutate the database. The corresponding workflow step is gated on a `workflow_dispatch` input that defaults to `false` (push-triggered deploys skip it), and `sudo -n` will reject any other `bench` invocation — `bench --site kenyaschooloflanguages.ac.ke console`, `bench restart`, etc. all fail closed.
+
+The site name is the **Frappe bench site directory name** (`/home/grand/frappe-bench/sites/kenyaschooloflanguages.ac.ke/`), NOT the public hostname (`morzy.kenyaschooloflanguages.ac.ke`, the nginx `server_name`) and NOT the legacy `host_name` in `site_config.json` (`https://ijlaps.ac.ke`). The `bench --site <name>` command resolves `<name>` to a directory under `sites/`. Discover the right name with `ls -d /home/grand/frappe-bench/sites/*/ | grep -v assets | head`.
 
 The `svc.sh start` and `svc.sh stop` rules were added on 2026-07-13 after a recovery incident: the runner went offline, and `sudo systemctl start` (the only path the operator knew by heart) requires a password from the runner user. The service's systemd unit name is `actions.runner.IsaacMorzy-lingua.lingua-deploy-morzy.kenyaschooloflanguages.ac.ke.service` — too long to type reliably. `svc.sh start` / `svc.sh stop` are the runner-bundled helpers that resolve the right unit name internally, and now they are NOPASSWD too. **Always** look up the exact service name with `systemctl list-unit-files --type=service --all | awk '/actions.runner/ {print $1; exit}'` if you need `systemctl` directly.
 

@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       migrate:
-        description: 'Run `bench --site ijlaps.ac.ke migrate` after the deploy. Only enable when a Frappe schema change has been merged and the operator has reviewed the migration plan.'
+        description: 'Run `bench --site kenyaschooloflanguages.ac.ke migrate` after the deploy. Only enable when a Frappe schema change has been merged and the operator has reviewed the migration plan.'
         type: boolean
         required: false
         default: false
@@ -109,7 +109,17 @@ jobs:
         #      tick "Run bench migrate after deploy", click "Run workflow".
         # The runner's sudoers drop-in is scoped to ONLY this command — see
         # docs/deployment/secrets.md "Sudo configuration".
-        if: github.event_name == 'workflow_dispatch' && inputs.migrate == 'true'
+        #
+        # Site name is `kenyaschooloflanguages.ac.ke` (the Frappe bench site
+        # directory name). NOT `ijlaps.ac.ke` (legacy host_name in
+        # site_config.json) and NOT `morzy.kenyaschooloflanguages.ac.ke` (the
+        # nginx server_name). The `bench --site <name>` command resolves `<name>`
+        # to /home/grand/frappe-bench/sites/<name>/, so it must be the directory name.
+        #
+        # The `if` compares the boolean input to the boolean `true` (NOT the
+        # string 'true' — GitHub Actions expressions don't coerce, so
+        # `inputs.migrate == 'true'` is always false and the step never runs).
+        if: github.event_name == 'workflow_dispatch' && inputs.migrate == true
         env:
           # Guard against re-trigger surprises: confirm the input actually resolved
           # to 'true' at step time. github.event.inputs is a string, not a bool.
@@ -120,7 +130,7 @@ jobs:
             echo "Refusing to run migrate: input resolved to '$MIGRATE_INPUT', expected 'true'" >&2
             exit 1
           fi
-          echo "Running: sudo /usr/local/bin/bench --site ijlaps.ac.ke migrate"
+          echo "Running: sudo /usr/local/bin/bench --site kenyaschooloflanguages.ac.ke migrate"
           cd /home/grand/frappe-bench
-          sudo /usr/local/bin/bench --site ijlaps.ac.ke migrate
+          sudo /usr/local/bin/bench --site kenyaschooloflanguages.ac.ke migrate
           echo "Migration complete."
