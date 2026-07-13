@@ -8,8 +8,9 @@ Course catalogue synced with ijlapsukunda.com: 19 languages, 14 tech, 7 business
 
 ## Main tip
 
-- `main` tip — TBD by merge of PR #49. Feature commit `feat(ci): gate bench migrate on workflow_dispatch input`.
-- PR: https://github.com/IsaacMorzy/lingua/pull/49 (TBD by merge 2026-07-13). Feature branch deleted via `--delete-branch`.
+- `main` tip — `Merge pull request #50 from IsaacMorzy/chore/state-tip-bench-migrate-gate` (`062f647`), with feature commit `chore(state): record PR #49 (bench migrate gate) + cooldown test + recovery incident`.
+- PR: https://github.com/IsaacMorzy/lingua/pull/50 (MERGED 2026-07-13). Feature branch deleted via `--delete-branch`.
+- PR https://github.com/IsaacMorzy/lingua/pull/49 (bench migrate gate) is the last feature merged before this chore PR; PR #46 (runner health check) was the prior feature merge.
 - 84-page build clean; vitest 8/8; `playwright test tests/visual/mobile-responsive.spec.ts --list` reports 21 tests across 4 viewports; `apps/lingua/yarn.lock` is gitignored and absent from the working tree; deploy workflow uses Node `'22'` and a self-hosted runner on the production server (`runs-on: [self-hosted, linux, x64, lingua-deploy]`); deploy step is local file copy + `sudo nginx -t` + `sudo systemctl reload nginx`; no SSH, no rsync-over-ssh, no `bench build`; a 5-minute cron health check (`/home/grand/actions-runner/health-check.sh`, tracked at `apps/lingua/deployment/runner-health.sh`) auto-restarts the runner on first offline detection and opens a deduplicated GitHub issue if still offline 30 min later.
 
 ## Active issues
