@@ -82,32 +82,64 @@ gh api repos/IsaacMorzy/lingua/actions/runners --jq '.runners[] | select(.name |
 
 ### 2. Cooldown + alert (open GitHub issue)
 
+The cooldown path fires when **all three** are true: the runner is offline, the state file `last-restart` exists, and `(now - last-restart) < 30 min`. The state file is created by the first-detection path on every offline tick. So the simplest test is: stop the service → break the sudo restart → run the health check TWICE (first tick records the timestamp, second tick sees the recent timestamp + offline + fails-closed restart = opens issue).
+
+Note: setting the state file to `0` does NOT exercise the cooldown path. The script checks `LAST_RESTART > 0`, so `0` falls through to the first-detection branch (tries restart, records new timestamp). To force cooldown, the value must be > 0 AND `(now - value) < 30 min`. The natural way to reach that state is to let the first-detection branch write it.
+
 ```bash
-# 2a. Force the runner offline AND break the sudo restart so the cooldown path runs.
-sudo systemctl stop 'actions.runner.*'
-# (temporarily revoke the sudo rule to simulate a broken restart)
-sudo chmod 0440 /etc/sudoers.d/lingua-deploy.bak 2>/dev/null || true
+# 2a. Find the exact service name (the glob 'actions.runner.*' is unreliable).
+SVC=$(sudo systemctl list-unit-files --type=service --all | awk '/actions.runner/ {print $1; exit}')
+echo "service: $SVC"
+
+# 2b. Stop the runner and break the sudo restart rule so the first-detection path fails.
+sudo systemctl stop "$SVC"
 sudo cp /etc/sudoers.d/lingua-deploy /etc/sudoers.d/lingua-deploy.bak
-echo '# disabled for test' > /etc/sudoers.d/lingua-deploy
+printf '# disabled for test\n' | sudo tee /etc/sudoers.d/lingua-deploy >/dev/null
+sudo visudo -c -f /etc/sudoers.d/lingua-deploy
 
-# 2b. Run the health check twice (or wait 5 min between runs).
+# 2c. First tick: state file is empty, first-detection branch runs. Records timestamp, tries restart (fails because sudo is broken). State file now exists with a recent timestamp.
 sudo -u grand /home/grand/actions-runner/health-check.sh
-# ... wait 5 min, or manually fudge the state file:
-echo "0" > /var/lib/runner-health/last-restart  # force cooldown expiry
+echo "state file after 1st run:"
+ls -la /var/lib/runner-health/last-restart
+cat /var/lib/runner-health/last-restart
+echo " (interpreted: $(date -d @$(cat /var/lib/runner-health/last-restart) -u +%Y-%m-%dT%H:%M:%SZ))"
+
+# 2d. Second tick: state file is recent, runner is still offline, sudo is still broken -> cooldown branch opens a deduplicated GitHub issue.
 sudo -u grand /home/grand/actions-runner/health-check.sh
 
-# 2c. Verify the GitHub issue was opened.
+# 2e. Verify the GitHub issue was opened (and is the only one with this title).
 gh issue list --repo IsaacMorzy/lingua --state open --search "lingua-deploy is OFFLINE in:title"
 
-# 2d. Restore the sudo rule and start the service.
+# 2f. Third tick: should DEDUPLICATE (not open a second issue).
+sudo -u grand /home/grand/actions-runner/health-check.sh
+gh issue list --repo IsaacMorzy/lingua --state open --search "lingua-deploy is OFFLINE in:title" --json number --jq 'length'
+
+# 2g. Restore the sudo rule and start the service.
 sudo cp /etc/sudoers.d/lingua-deploy.bak /etc/sudoers.d/lingua-deploy
 sudo chmod 0440 /etc/sudoers.d/lingua-deploy
-sudo systemctl start 'actions.runner.*'
+sudo visudo -c -f /etc/sudoers.d/lingua-deploy
+sudo systemctl start "$SVC"
 
-# 2e. Confirm the runner comes back and the cooldown state is cleared.
+# 2h. Wait for GitHub to register online, then run the health check to clear the state file.
+for i in 1 2 3 4 5 6 7 8; do
+  sleep 10
+  STATUS=$(gh api repos/IsaacMorzy/lingua/actions/runners --jq '.runners[] | select(.name | contains("lingua-deploy")) | .status' 2>/dev/null)
+  echo "  t=$((i*10))s: status=$STATUS"
+  [ "$STATUS" = "online" ] && break
+done
 sudo -u grand /home/grand/actions-runner/health-check.sh
-gh api repos/IsaacMorzy/lingua/actions/runners --jq '.runners[] | select(.name | contains("lingua-deploy")) | .status'
+ls -la /var/lib/runner-health/  # state file should be gone
+
+# 2i. Close the test issue (mark as not planned, leave a test comment).
+ISSUE=$(gh issue list --repo IsaacMorzy/lingua --state open --search "lingua-deploy is OFFLINE in:title" --json number --jq '.[0].number')
+[ -n "$ISSUE" ] && gh issue close "$ISSUE" --comment "Cooldown-path test of /home/grand/actions-runner/health-check.sh — see STATE.md and docs/deployment/runner-health.md."
 ```
+
+**Expected results from the 2026-07-13 run**:
+- After 2c: state file `last-restart` exists, value is a unix timestamp from a few seconds ago.
+- After 2d: syslog shows `Runner still offline within 30m cooldown... Alert issue already open... Skipping.` (in earlier test runs) or opens a new issue (in clean runs).
+- After 2f: open issue count is 1 (dedup works).
+- After 2h: runner is `online` on GitHub, state file is removed.
 
 ## Pitfalls
 
